@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 definicja klas postaci
 
@@ -48,6 +49,7 @@ generalnie te klasy nie będą miały metod więc możnaby je wstawiać jako tup
 ale to będzie mało czytelne. daj znać co myślisz
 """
 from random import random
+"""
 from enum import Enum
 
 
@@ -57,11 +59,11 @@ class ArmorWeight(Enum):
     light = 3
 
 
-class TypeOfInjury(Enum):
-    slashing = 1
+class TypeOfInjury(Enum):#chujowy pomysł, lepsze jest trzymać to jako statystyki
+    slashing = 1         # w namedtuple tak jak ustalaliśmy
     stab = 2
     crushing = 3
-
+"""
 
 class Damage(object):
     pass

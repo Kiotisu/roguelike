@@ -4,6 +4,7 @@ main app
 import pygame
 import pygame.locals as loc
 from maps import Map
+import characters
 
 loc = pygame.locals
 class App(object):
@@ -16,7 +17,6 @@ class App(object):
         self._map = Map(50, (10, 10))
         self._posx = 250
         self._posy = 250
-        print self._map[self._posx,self._posy]
 
     def init(self):
         """ s """

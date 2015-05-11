@@ -61,3 +61,8 @@ class Map:
         #Map[x,y]
         x,y = pos
         return self.board[x][y]
+
+
+class Room:
+    def __init__(self):
+        pass
