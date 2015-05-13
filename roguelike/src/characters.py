@@ -59,7 +59,7 @@ class ArmorWeight(Enum):
     light = 3
 
 
-class TypeOfInjury(Enum):#chujowy pomysł, lepsze jest trzymać to jako statystyki
+class TypeOfInjury(Enum):#slaby pomysł, lepsze jest trzymać to jako statystyki
     slashing = 1         # w namedtuple tak jak ustalaliśmy
     stab = 2
     crushing = 3
