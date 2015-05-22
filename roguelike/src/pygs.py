@@ -10,7 +10,9 @@ import os
 from characters import Hero
 
 loc = pygame.locals
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class App(object):
+
     def execute(self):
         """ s """
         self.init()
@@ -22,6 +24,7 @@ class App(object):
             self.loop()
             self.render()
         # self.cleanup()
+
     """ a """
     def __init__(self):
         """ s """
@@ -63,10 +66,10 @@ class App(object):
          # (power, dexterity, attack, defense, damage, hp) 
 
         self.write(str(self._hero._hp     )    , 14, 615 + 60, 0 + 6*40 + 35 )
-        self.write(str(self._hero._attack )       , 14, 615 + 60, 0 + 6*40 + 50 )
-        self.write(str(self._hero._defense)     , 14, 615 + 60, 0 + 6*40 + 65 )
+        self.write(str(self._hero._attack )    , 14, 615 + 60, 0 + 6*40 + 50 )
+        self.write(str(self._hero._defense)    , 14, 615 + 60, 0 + 6*40 + 65 )
 
-
+#--------------------------------------------------------------------------------------------------------#
 
     def event(self, event):
         """ to do, soon"""
@@ -115,9 +118,9 @@ class App(object):
 
     def render(self):
         """ in prog """
-        _40 = 32                    #crime against logic
-        _7 = (608/_40-1)/2 #9
-        _15 = 608/_40 #19
+        _A = 32                    #crime against logic
+        _7 = (608/_A-1)/2 #9
+        _15 = 608/_A #19
         if self._posx < _7:
             x_o = 0
         elif self._posx > self._map.size[0]-_7-1:
@@ -130,24 +133,24 @@ class App(object):
             y_o = self._map.size[1]-_15
         else:
             y_o = self._posy-_7
-        for y in xrange(608/_40):
-            for x in xrange(608/_40):
+        for y in xrange(608/_A):
+            for x in xrange(608/_A):
                 #not wall
                 if self._map[(x_o+x),(y_o+y)][0] != '_': 
                     pygame.draw.rect(self._surface, ((self._map[(x_o+x),(y_o+y)][0]*64)%256, 100,
-                    (self._map[(x_o+x),(y_o+y)][0]*32)%256),(x * _40, y * _40, _40, _40))
-                    self._display_surf.blit(self.terrain,(x *_40, y* _40))
+                    (self._map[(x_o+x),(y_o+y)][0]*32)%256),(x * _A, y * _A, _A, _A))
+                    self._display_surf.blit(self.terrain,(x *_A, y* _A))
                 #elif (x_o+x) % 5 == 0 or (y_o+y) % 5 == 0:
                 #    pygame.draw.rect(self._surface, (0, 255, 0), (x * 40, y * 40, 40, 40))
                 #wall
                 else: 
-                    # pygame.draw.rect(self._surface, (0, 0, 0),(x * _40, y * _40, _40, _40))
-                    self._display_surf.blit(self.wall,(x * _40, y * _40))
+                    # pygame.draw.rect(self._surface, (0, 0, 0),(x * _A, y * _A, _A, _A))
+                    self._display_surf.blit(self.wall,(x * _A, y * _A))
                 #hero
                 if (self._posx, self._posy) == (x_o+x, y_o+y):  
                     #pos = ((x*40+20, y*40), (x*40+40, y*40+40), (x*40, y*40+15),(x*40+40, y*40+15), (x*40, y*40+40))
                     #pygame.draw.polygon(self._surface, (255, 0, 0), pos)
-                    self._display_surf.blit(self.hero_image,(x * _40, y * _40))
+                    self._display_surf.blit(self.hero_image,(x * _A, y * _A))
                 #enemy
                 # if self._map[(x_o+x),(y_o+y)][2] != None:
                     # pygame.draw.rect(self._surface, )
@@ -168,6 +171,8 @@ class App(object):
     # def cleanup(self):
     #     pygame.quit()
 
+#____________________________________________________________________________________________________________#
+
     def files(self, dir_): #lists files in directory
         files=[]
         p = os.popen("ls \"" + dir_+ "\"","r")# \" w przypadku spacji
@@ -176,6 +181,7 @@ class App(object):
             files.append(line.replace('\n',''))
             line = p.readline()
         return files
+
     def load_images(self):
         path =r"./items/"
         lista = self.files("items")
@@ -189,6 +195,8 @@ class App(object):
         self.hero_image = self._image_library["ball.png"]
         self.wall = self._image_library["texture9.png"]
         self.terrain = self._image_library["texture18.png"]# 12 lub 18
+        self.enemy =self._image_library["enemy1.png"]
+
     def load_music(self):
         '''load music from /music'''
         #https://freemusicarchive.org/music/Sycamore_Drive/The_Waves_The_Sea/
@@ -199,6 +207,7 @@ class App(object):
         SONG_END = pygame.USEREVENT + 1
         pygame.mixer.music.set_endevent(SONG_END)
         pygame.mixer.pre_init(44100, -16, 2, 2048)
+
     def play_music(self):
         path =r"./music/"
         uni_path = path.replace('/', os.sep).replace('\\', os.sep)
@@ -206,6 +215,7 @@ class App(object):
         pygame.mixer.music.set_volume(self.volume)
         pygame.mixer.music.play()
         self.song_num = (self.song_num +1)%len(self.songs)
+
 
     def do_nice_outlines(self,surface):
         color1 = (128, 0, 0) # red
@@ -271,3 +281,7 @@ class App(object):
 if __name__ == '__main__':
     __TheApp__ = App()
     __TheApp__.execute()
+
+
+
+#.........................................................................................................#
