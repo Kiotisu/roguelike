@@ -95,8 +95,8 @@ class Character(object):
 
 class Hero(Character):
     """Klasa postaci"""
-    def __init__(self, power, dexterity, attack, defense, hp):
-        super(Hero, self).__init__(attack, defense, hp)
+    def __init__(self, power, dexterity, attack, defense, damage, hp):
+        super(Hero, self).__init__(attack, defense, damage, hp)
         #docelowo = Equipment()
         self._equipment = None
         self._power = power
@@ -104,6 +104,7 @@ class Hero(Character):
         self._breastplate = None #dobra inicjatywa,
         #ale w sumie przeciwnik też może mieć jakiś pancerz
 
+        # czy breastplate nie jest jako Equipment? -Tom
 
 class Enemy(Character):
     """Klasa przeciwnika"""
