@@ -49,6 +49,8 @@ generalnie te klasy nie będą miały metod więc możnaby je wstawiać jako tup
 ale to będzie mało czytelne. daj znać co myślisz
 """
 from random import random
+from collections import namedtuple
+from equipment import Equipment
 """
 from enum import Enum
 
@@ -61,7 +63,7 @@ class ArmorWeight(Enum):
 
 class TypeOfInjury(Enum):#slaby pomysł, lepsze jest trzymać to jako statystyki
     slashing = 1         # w namedtuple tak jak ustalaliśmy
-    stab = 2
+    stabing = 2
     crushing = 3
 """
 
@@ -98,15 +100,19 @@ class Hero(Character):
     def __init__(self, power, dexterity, attack, defense, damage, hp):
         super(Hero, self).__init__(attack, defense, damage, hp)
         #docelowo = Equipment()
-        self._equipment = None
+        self._equipment = Equipment()
         self._power = power
         self._dexterity = dexterity
         self._breastplate = None #dobra inicjatywa,
         #ale w sumie przeciwnik też może mieć jakiś pancerz
 
-        # czy breastplate nie jest jako Equipment? -Tom
+        # czy breastplate nie jest jako Equipment?
 
 class Enemy(Character):
     """Klasa przeciwnika"""
-    def __init__(self, attack, defense, damage, hp):
+    def __init__(self, attack, defense, damage, hp, posx, posy):
         super(Enemy, self).__init__(attack, defense, damage, hp)
+        self._posx = posx
+        self._posy = posy
+# czy wrzucamy pozycje do Character ?
+# w pygs tez jest pozycja Hero
