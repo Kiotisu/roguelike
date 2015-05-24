@@ -67,6 +67,7 @@ class TypeOfInjury(Enum):#slaby pomysł, lepsze jest trzymać to jako statystyki
     crushing = 3
 """
 
+
 class Damage(object):
     pass
 
@@ -107,6 +108,7 @@ class Hero(Character):
         #ale w sumie przeciwnik też może mieć jakiś pancerz
 
         # czy breastplate nie jest jako Equipment?
+
 
 class Enemy(Character):
     """Klasa przeciwnika"""

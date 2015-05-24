@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from random import random, choice
 
-class Map:
+
+class Map(object):
     def __init__(self, rmnum, rsize):
         #generacja mapy ŻYDOWSKĄ METODĄ
         #nie no, żartuje. Metodą Szumuna-Knutha [;
@@ -63,6 +64,6 @@ class Map:
         return self.board[x][y]
 
 
-class Room:
+class Room(object):
     def __init__(self):
         pass
