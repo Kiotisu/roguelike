@@ -1,77 +1,49 @@
 # -*- coding: utf-8 -*-
 """
 definicja klas postaci
-
-
-Są trzy typy pancerza:
-lekki - 25%
-średni - 50%
-ciężki - 75%
-i trzy typy obrażeń:
-Miażdżone/Obuchowe - pancerz * 2; obrażenia zadawane do hp * 1,5
-Sieczne - standard
-Przebijające/Kłute - pancerz * 0,5; obrażenia zadawane do hp 0,75
-I teraz jeżeli zadajesz x obrażeń przeciwnikowi o y pancerza to y obrażeń
-(x jeżeli x < y) zostaje zmiejszone o tyle procent ile masz przy typie
-To do:
-
-
-
-
-Klasa Pancerz(Armor):
-pola:
-etykieta(?) = ciężki/lekki/średni
-typ/klasa(type/class) = liczba z zakresu 0 do 100 lub 0 do 1 (procenty)
-odporność/grubość(thickness) = liczba całkowita
-
-
-
-
-
-
-Klasa Obrażenia(Damage):
-pola:
-etykieta(?) = Sieczne/Kłute/Obuchowe
-przebicie(pierce) = liczba ~ 1.0 +-1.0 (vs armor)
-efektywność(efficiency) = liczba ~ 1.0 +-1.0 (vs hp)
-
-
-
-
-bazowe obrażenia = liczba całkowita
-zasięg obrażeń = liczba całkowita
-
-
-tu chodzi o to że jak masz obrażenia 50-70 to bazowe = 50; zasięg = 20
-wyliczasz: bazowe + random()*zasięg
-
-generalnie te klasy nie będą miały metod więc możnaby je wstawiać jako tuple,
-ale to będzie mało czytelne. daj znać co myślisz
 """
 from random import random
 from collections import namedtuple
 from equipment import Equipment
 
 
-Damage = namedtuple('Damage', 'pierce hurt min max')
+Damage = namedtuple('Damage', 'pierce hurt base extra')
+"""
+Struktura Obrażeń(Damage):
+przebicie(pierce) = liczba ~ 1.0 +-1.0
+zranienie(hurt) = liczba ~ 1.0 +-1.0
+baza(base) = liczba całkowita
+dodatkowe(extra) = liczba całkowita
+"""
 Armor = namedtuple('Armor', 'gauge durability')
+"""
+Struktura Pancerza(Armor):
+kaliber(gauge) = liczba z zakresu <0.0 , 1.0>
+wytrzymałość(durability) = liczba całkowita
+"""
 
 class Character(object):
     """Interfejs dla wszystkich postaci"""
-    def __init__(self, attack, defense, damage, hp):
+    def __init__(self, attack, defense, damage, armor, hp, x, y):
         self._attack = attack
         self._defense = defense
-        #zróbmy klasę do otypów obrażeń albo coś, nie wiem XD
         self._damage = damage
+        self._armor = armor
         self._max_hp = hp
         self._hp = hp
+        self._position = (x, y)
 
     def attack(self, opponent):
         if (self._attack/opponent.get_defense)*0.5 > random.random(0, 1):
             opponent.hurt(self._damage)
 
-    def hurt(self, damage):#== lost_life; tu będziemy te obrażenia wyliczać,
-        pass               #może w sumie się przyda też klasa do pancerza
+    def hurt(self, damage):
+        """Wyliczanie zadanych obrażeń"""
+        armor = self._armor #just for beauty :)
+        deliverd_damage = damage.base + (random() * damage.extra)       #broń zadaje "domyślnie" obrażenia z zakresu base do base+extra
+        reduction_base = min(dam * damage.pierce, armor.durability)     #bierzemy poprawkę na grubość pancerza
+        damage_reduction = reduction_base/damage.pierce * armor.gauge   #oraz jego jakość
+        self._hp -= (deliverd_damage - damage_reduction) * damage.hurt  #finalnie mnożymy jeszcze zredukowane obrażenia przez współczynnik zranienia
 
     def get_defense(self):
         return self._defense
@@ -82,16 +54,12 @@ class Character(object):
 
 class Hero(Character):
     """Klasa postaci"""
-    def __init__(self, power, dexterity, attack, defense, damage, hp):
+    def __init__(self, strength, dexterity, attack, defense, damage, hp):
         super(Hero, self).__init__(attack, defense, damage, hp)
         #docelowo = Equipment()
         self._equipment = Equipment()
-        self._power = power
+        self._strength = strength
         self._dexterity = dexterity
-        self._breastplate = None #dobra inicjatywa,
-        #ale w sumie przeciwnik też może mieć jakiś pancerz
-
-        # czy breastplate nie jest jako Equipment?
 
 
 class Enemy(Character):
