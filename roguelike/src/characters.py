@@ -51,26 +51,10 @@ ale to będzie mało czytelne. daj znać co myślisz
 from random import random
 from collections import namedtuple
 from equipment import Equipment
-"""
-from enum import Enum
 
 
-class ArmorWeight(Enum):
-    heavy = 1
-    medium = 2
-    light = 3
-
-
-class TypeOfInjury(Enum):#slaby pomysł, lepsze jest trzymać to jako statystyki
-    slashing = 1         # w namedtuple tak jak ustalaliśmy
-    stabing = 2
-    crushing = 3
-"""
-
-
-class Damage(object):
-    pass
-
+Damage = namedtuple('Damage', 'pierce hurt min max')
+Armor = namedtuple('Armor', 'gauge durability')
 
 class Character(object):
     """Interfejs dla wszystkich postaci"""
