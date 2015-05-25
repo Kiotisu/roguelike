@@ -10,6 +10,8 @@ from characters import Hero
 from characters import Enemy
 from collections import deque
 from aux1 import Aux
+from music import Music
+
 LOC = pygame.locals
 
 
@@ -48,15 +50,22 @@ class App(object):
         self._display_surf = None
 
         self._image_library = None
-        self.hero_image = None
-        self.wall = None
-        self.terrain = None
-        self.enemy1 = None
+        # self.hero_image = None
+        # self.wall = None
+        # self.terrain = None
+        # self.enemy1 = None
+
+    #Dorzucam deklaracje tych wszystkich self.cos do __init__
+    #ale jesli serio ma byc tego tak duzo to bedzie to trzeba niestety przeniesc
+    #do innej klasy pewnie... @WJ
+
+    #Dobra, niektóre nawet nie są potrzebne
 
         self._action = None
-        self._marked_x = None
-        self._marked_y = None
+        self._marked = (None, None)
+
         self.aux = Aux()
+        self.mus = Music()
 
     def init(self):
         """ s """
@@ -67,8 +76,14 @@ class App(object):
         self._display_surf = pygame.display.set_mode(self._size,
                                                      pygame.HWSURFACE)
         self.load_images()
-        self.aux.load_music()
-        self.aux.play_music()
+        self.mus.load_music()
+        self.mus.play_music()
+
+        #Create Hero
+        self._hero = Hero(0, 0, 1, 1, 1, 0, 100, self._posx, self._posx)
+        #Create Enemy
+        self._enemy1 = Enemy(1, 1, 1, 0, 100, 260, 260)
+        # attack, defense, damage, armor, hp, x, y
 
         self.aux.do_nice_outlines(self._surface)
         pygame.key.set_repeat(5, 100)  #(delay, interval) in milisec
@@ -81,17 +96,11 @@ class App(object):
         self.aux.write(self._surface, "Defense", 14, 615, 6*40+65)
         self.aux.write(self._surface, "Armor", 14, 615, 6*40+80)
 
-        #Create Hero
-        self._hero = Hero(0, 0, 1, 1, 1, 0, 100, self._posx, self._posx)
-
         self.aux.write(self._surface, str(self._hero._hp), 14, 675, 6*40+35)
         self.aux.write(self._surface, str(self._hero._attack), 14, 675, 6*40+50)
         self.aux.write(self._surface, str(self._hero._defense), 14, 675, 240+65)
         self.aux.write(self._surface, str(self._hero._armor), 14, 675, 6*40+80)
 
-        #Create Enemy
-        self._enemy1 = Enemy(1, 1, 1, 0, 100, 260, 260)
-        # attack, defense, damage, armor, hp, x, y
 
     def event(self, event):
         """ to do, soon"""
@@ -131,13 +140,13 @@ class App(object):
             if event.key == LOC.K_ESCAPE:  #quit
                 self._running = False
             if event.key == LOC.K_m:  #volume up
-                if self.aux.volume <= 1:
-                    self.aux.volume += 0.05
-                    pygame.mixer.music.set_volume(self.aux.volume)
+                if self.mus.volume <= 1:
+                    self.mus.volume += 0.05
+                    pygame.mixer.music.set_volume(self.mus.volume)
             if event.key == LOC.K_n:  #volume down
-                if self.aux.volume >= 0:
-                    self.aux.volume -= 0.05
-                    pygame.mixer.music.set_volume(self.aux.volume)
+                if self.mus.volume >= 0:
+                    self.mus.volume -= 0.05
+                    pygame.mixer.music.set_volume(self.mus.volume)
 
         if event.type == pygame.USEREVENT + 1:
             print(self.aux.song_num, "song ended")
@@ -149,8 +158,7 @@ class App(object):
                 #mouse pointer in the equipment zone
                 if po_x >= 610 and po_y >= 20 and po_y <= 20+6*40:
                     (square_x, square_y) = ((po_x-610)/40, (po_y-20)/40)
-                    self._marked_x = square_x
-                    self._marked_y = square_y
+                    self._marked = (square_x, square_y)
 
 
     def render(self):
@@ -176,7 +184,8 @@ class App(object):
                                       100,
                                       (self._map[(x_o+x), (y_o+y)][0]*32)%256),
                                      (x * 32, y * 32, 32, 32))
-                    self._display_surf.blit(self.terrain, (x * 32, y * 32))
+                    self._display_surf.blit(self._image_library["texture18.png"],
+                                            (x * 32, y * 32))
                 #elif (x_o+x) % 5 == 0 or (y_o+y) % 5 == 0:
                 #    pygame.draw.rect(self._surface,
                 #                     (0, 255, 0),
@@ -187,10 +196,12 @@ class App(object):
                                      (x * 32, y * 32, 32, 32))
                 #hero
                 if (x_o+x, y_o+y) == (self._posx, self._posy):
-                    self._display_surf.blit(self.hero_image, (x * 32, y * 32))
+                    self._display_surf.blit(self._image_library["ball.png"],
+                                            (x * 32, y * 32))
                 #enemy
                 # if self._map[(x_o+x),(y_o+y)][2] != None:
-                    # self._display_surf.blit(self.enemy1, (x * 32, y * 32))
+                    # self._display_surf.blit(self._image_library["enemy1.png"],
+                                            # (x * 32, y * 32))
 
                 #vision
                 if not (abs(x_o+x - self._posx) <= self._horizon
@@ -205,7 +216,7 @@ class App(object):
         wid = 5
 
         for strap in xrange(20):
-            if strap < self.aux.volume*20:
+            if strap < self.mus.volume*20:
                 pygame.draw.rect(self._surface, light_straps,
                                  (20+strap*wid, 650-strap*2, wid-1, strap*2))
             else:
@@ -213,9 +224,6 @@ class App(object):
                                  (20+strap*wid, 650-strap*2, wid-1, strap*2))
         pygame.display.update()
 
-    #Dorzucam deklaracje tych wszystkich self.cos do __init__
-    #ale jesli serio ma byc tego tak duzo to bedzie to trzeba niestety przeniesc
-    #do innej klasy pewnie... @WJ
 
     def load_images(self):
         """ load images from /items """
@@ -230,12 +238,10 @@ class App(object):
 .convert_alpha()
 
         #define short names
-        self.hero_image = self._image_library["ball.png"]
-        self.wall = self._image_library["texture9.png"]
-        self.terrain = self._image_library["texture18.png"]  # 12 lub 18
-        self.enemy1 = self._image_library["enemy1.png"]
-
-
+        # self.hero_image = self._image_library["ball.png"]
+        # self.wall = self._image_library["texture9.png"]
+        # self.terrain = self._image_library["texture18.png"]  # 12 lub 18
+        # self.enemy1 = self._image_library["enemy1.png"]
 
 
     def turn(self):
@@ -250,7 +256,7 @@ class App(object):
         """ execute what player did in his turn """
         while len(self._action) > 0:
             act = self._action.popleft()  # zwroc akcje
-            print act  # na razie nie wiem co z tym zrobic, bo nie mamy ataku
+            # print act  #na razie nie wiem co z tym zrobic, bo nie mamy ataku
 
     def enemy_turn(self):
         """ move enemies """
