@@ -54,9 +54,8 @@ class Character(object):
 
 class Hero(Character):
     """Klasa postaci"""
-    def __init__(self, strength, dexterity, attack, defense, damage, hp):
-        super(Hero, self).__init__(attack, defense, damage, hp)
-        #docelowo = Equipment()
+    def __init__(self, strength, dexterity, attack, defense, damage, armor, hp, x, y):
+        super(Hero, self).__init__(attack, defense, damage, armor, hp, x, y)
         self._equipment = Equipment()
         self._strength = strength
         self._dexterity = dexterity
@@ -64,9 +63,5 @@ class Hero(Character):
 
 class Enemy(Character):
     """Klasa przeciwnika"""
-    def __init__(self, attack, defense, damage, hp, posx, posy):
-        super(Enemy, self).__init__(attack, defense, damage, hp)
-        self._posx = posx
-        self._posy = posy
-# czy wrzucamy pozycje do Character ?
-# w pygs tez jest pozycja Hero
+    def __init__(self, attack, defense, damage, armor, hp, x, y):
+        super(Enemy, self).__init__(attack, defense, damage, armor, hp, x, y)

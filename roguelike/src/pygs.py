@@ -7,7 +7,8 @@ import pygame.locals as loc
 import os
 from maps import Map
 from characters import Hero
-
+from characters import Enemy
+from collections import deque
 loc = pygame.locals
 
 
@@ -18,14 +19,12 @@ class App(object):
         self.init()
 
         while self._running:
-            self.turn()
             for event in pygame.event.get():
                 self.event(event)
-            self.loop()
+            self.turn()
             self.render()
         # self.cleanup()
 
-    """ a """  # co to jest? bo na pewno nie docstring
     def __init__(self):
         """ s """
         self._running = True
@@ -35,31 +34,36 @@ class App(object):
         self._posx = 250
         self._posy = 250
         
-        self._horizon = 2
-        self._moves_in_turn = 5
-        self._moves_left = self._moves_in_turn
-        # self._turn = 0
+        self._horizon = 3  # zasieg wzroku w kazda strone  if == 3 => [][][] postac [][][]
+        self._myturn = True
+
+        # gosc czasem rodzi sie w pustce
+        while self._map[self._posx,self._posy][0] == '_':
+            self._posx +=1
 
         self._hero = None
+        self._enemy1 = None
         self._display_surf = None
 
         self._image_library = None
         self.hero_image = None
         self.wall = None
         self.terrain = None
-        self.enemy = None
+        self.enemy1 = None
 
         self.song_num = None
         self.songs = None
         self.volume = None
 
+        self._action = None
+
     def init(self):
         """ s """
         pygame.init()
-        pygame.display.set_caption('Rogaliq')
+        pygame.display.set_caption('Rogal')
         self._surface = pygame.display.set_mode(self._size)
         self._running = True
-        self._display_surf = pygame.display.set_mode(self._size, pygame.HWSURFACE)  #
+        self._display_surf = pygame.display.set_mode(self._size, pygame.HWSURFACE)
         self.load_images()
         self.load_music()
         self.play_music()
@@ -70,17 +74,20 @@ class App(object):
         #napisy
         self.write("EQ", 22, 700, 0)
         self.write("Stats:", 14, 615, 0+6*40+20)
-        self.write("HP", 14, 615, 0+6*40+35)
+        self.write("HP", 14, 615, 0+6*40+35)  # +15 pix pionowo
         self.write("Attack", 14, 615, 0+6*40+50)
         self.write("Defense", 14, 615, 0+6*40+65)
 
-        # self._character = Character()
-        self._hero = Hero(0, 0, 1, 1, 1, 100)
-        # (power, dexterity, attack, defense, damage, hp)
+        #Create Hero
+        self._hero = Hero(0, 0, 1, 1, 1, 0, 100, self._posx, self._posx)
 
         self.write(str(self._hero._hp), 14, 615+60, 0+6*40+35)
         self.write(str(self._hero._attack), 14, 615+60, 0+6*40+50)
         self.write(str(self._hero._defense), 14, 615+60, 0+6*40+65)
+
+        #Create Enemy
+        self._enemy1 = Enemy(1, 1, 1, 0, 100, 260, 260)
+        # attack, defense, damage, armor, hp, x, y
 
     def event(self, event):
         """ to do, soon"""
@@ -91,31 +98,36 @@ class App(object):
         if event.type == pygame.QUIT:
             self._running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == loc.K_UP or event.key == loc.K_w:
-                if self._posy > 0 and self._map[self._posx,self._posy-1][0] != '_':
-                    self._posy -= 1
-                    self._moves_left -= 1
-            if event.key == loc.K_DOWN or event.key == loc.K_s:
-                if self._posy < self._map.size[1]-1 and self._map[self._posx,self._posy+1][0] != '_':
-                    self._posy += 1
-                    self._moves_left -= 1
-            if event.key == loc.K_LEFT  or event.key == loc.K_a:
-                if self._posx > 0 and self._map[self._posx-1, self._posy][0] != '_':
-                    self._posx -= 1
-                    self._moves_left -= 1
-            if event.key == loc.K_RIGHT or event.key == loc.K_d:
-                if self._posx < self._map.size[0]-1 and self._map[self._posx+1,self._posy][0] != '_':
-                    self._posx += 1
-                    self._moves_left -= 1
+            if self._myturn == True:
+                if event.key == loc.K_UP or event.key == loc.K_w:
+                    if self._posy > 0 and self._map[self._posx,self._posy-1][0] != '_':
+                        self._posy -= 1
+                        self._action.append('w')
+                        self._myturn = False
+                if event.key == loc.K_DOWN or event.key == loc.K_s:
+                    if self._posy < self._map.size[1]-1 and self._map[self._posx,self._posy+1][0] != '_':
+                        self._posy += 1
+                        self._action.append('s')
+                        self._myturn = False
+                if event.key == loc.K_LEFT or event.key == loc.K_a:
+                    if self._posx > 0 and self._map[self._posx-1, self._posy][0] != '_':
+                        self._posx -= 1
+                        self._action.append('a')
+                        self._myturn = False
+                if event.key == loc.K_RIGHT or event.key == loc.K_d:
+                    if self._posx < self._map.size[0]-1 and self._map[self._posx+1,self._posy][0] != '_':
+                        self._posx += 1
+                        self._action.append('d')
+                        self._myturn = False
+
             if event.key == loc.K_ESCAPE:  #quit
                 self._running = False
-
             if event.key == loc.K_m:  #volume up
-                if self.volume < 1:
+                if self.volume <= 1:
                     self.volume += 0.05
                     pygame.mixer.music.set_volume(self.volume)
             if event.key == loc.K_n:  #volume down
-                if self.volume > 0:
+                if self.volume >= 0:
                     self.volume -= 0.05
                     pygame.mixer.music.set_volume(self.volume)
 
@@ -123,51 +135,52 @@ class App(object):
             print(self.song_num, "song ended")
             self.play_music()
 
-    def loop(self):
-        """ to do, soon """
-        pass
+        if event.type == pygame.MOUSEBUTTONDOWN: 
+            if event.button == 1:
+                (po_x, po_y)  = pygame.mouse.get_pos()
+                if po_x >= 610 and po_y >= 20 and po_y <= 20+6*40:   #mouse pointer in the equipment zone
+                    (square_x, square_y) =((po_x-610)/40, (po_y-20)/40)
+                    self._marked_y = square_x
+                    self._marked_x = square_y
+
 
     def render(self):
         """ in prog """
-        _A = 32  #crime against logic
-        _7 = (608/_A-1)/2  #9
-        _15 = 608/_A  #19
-        if self._posx < _7:
+        _boczne_pola = (608/32-1)/2  # powinno byc 9
+        if self._posx < _boczne_pola:
             x_o = 0
-        elif self._posx > self._map.size[0]-_7-1:
-            x_o = self._map.size[0]-_15
+        elif self._posx > self._map.size[0]-_boczne_pola-1:
+            x_o = self._map.size[0] - (2*_boczne_pola+1)  # 2*_boczne_pola+1 = 19
         else:
-            x_o = self._posx-_7
-        if self._posy < _7:
+            x_o = self._posx-_boczne_pola
+        if self._posy < _boczne_pola:
             y_o = 0
-        elif self._posy > self._map.size[1]-_7-1:
-            y_o = self._map.size[1]-_15
+        elif self._posy > self._map.size[1]-_boczne_pola-1:
+            y_o = self._map.size[1] - (2*_boczne_pola+1)
         else:
-            y_o = self._posy-_7
-        for y in xrange(608/_A):
-            for x in xrange(608/_A):
-                #not wall
-                if self._map[(x_o+x), (y_o+y)][0] != '_':
+            y_o = self._posy-_boczne_pola
+        for y in xrange(608/32):
+            for x in xrange(608/32):
+                if self._map[(x_o+x), (y_o+y)][0] != '_':  # podloga
                     pygame.draw.rect(self._surface, ((self._map[(x_o+x), (y_o+y)][0]*64) % 256, 100,
                                                      (self._map[(x_o+x), (y_o+y)][0]*32) % 256),
-                                     (x * _A, y * _A, _A, _A))
-                    self._display_surf.blit(self.terrain, (x * _A, y * _A))
+                                     (x * 32, y * 32, 32, 32))
+                    self._display_surf.blit(self.terrain, (x * 32, y * 32))
                 #elif (x_o+x) % 5 == 0 or (y_o+y) % 5 == 0:
-                #    pygame.draw.rect(self._surface, (0, 255, 0), (x * 40, y * 40, 40, 40))
-                #wall
-                else: 
-                    # pygame.draw.rect(self._surface, (0, 0, 0),(x * _A, y * _A, _A, _A))
-                    self._display_surf.blit(self.wall, (x * _A, y * _A))
+                #    pygame.draw.rect(self._surface, (0, 255, 0), (x * 32, y * 32, 32, 32))
+                else:  # pustka - nie sciana
+                    # self._display_surf.blit(self.wall, (x * 32, y * 32))
+                    pygame.draw.rect(self._surface, (0, 0, 0),(x * 32, y * 32, 32, 32))
                 #hero
-                if (self._posx, self._posy) == (x_o+x, y_o+y):  
-                    #pos = ((x*40+20, y*40), (x*40+40, y*40+40), (x*40, y*40+15),(x*40+40, y*40+15), (x*40, y*40+40))
-                    #pygame.draw.polygon(self._surface, (255, 0, 0), pos)
-                    self._display_surf.blit(self.hero_image,(x * _A, y * _A))
+                if (x_o+x, y_o+y) == (self._posx, self._posy):  
+                    self._display_surf.blit(self.hero_image,(x * 32, y * 32))
                 #enemy
                 # if self._map[(x_o+x),(y_o+y)][2] != None:
-                    # pygame.draw.rect(self._surface, )
+                    # self._display_surf.blit(self.enemy1, (x * 32, y * 32))
         
-        # pygame.display.update()
+                #vision
+                if not (abs(x_o+x - self._posx) <= self._horizon and abs(y_o+y - self._posy) <= self._horizon ):
+                    self._display_surf.blit(self._image_library["black.png"],(x * 32, y * 32))
 
         #volume visual
         self._display_surf.blit(self._image_library["004000-speaker-32.png"],(0, 612))
@@ -189,7 +202,7 @@ class App(object):
         p = os.popen("ls \"" + dir_ + "\"", "r")  # \" w przypadku spacji poki co ta linijka wyglada strasznie @WJ
         line = p.readline()  # poza tym menagery contextu do obslugi plikow!!!!
         while line:
-            files.append(line.replace('\n',''))
+            files.append(line.rstrip('\n'))
             line = p.readline()
         return files
 
@@ -207,13 +220,12 @@ class App(object):
         for item in lista:
             uni_path = path.replace('/', os.sep).replace('\\', os.sep)  #universal path, also works: os.path.join('','')
             self._image_library[item] = pygame.image.load(uni_path + item).convert_alpha()
-            # print("done loading " + item)
 
         #define short names 
         self.hero_image = self._image_library["ball.png"]
         self.wall = self._image_library["texture9.png"]
         self.terrain = self._image_library["texture18.png"]  # 12 lub 18
-        self.enemy = self._image_library["enemy1.png"]
+        self.enemy1 = self._image_library["enemy1.png"]
 
     def load_music(self):
         """load music from /music"""
@@ -221,7 +233,7 @@ class App(object):
         #https://freemusicarchive.org/music/Sycamore_Drive/Sycamore_Drive/
         self.song_num = 0
         self.songs = self.files("music")
-        self.volume = 0.05
+        self.volume = 0.00
         SONG_END = pygame.USEREVENT + 1
         pygame.mixer.music.set_endevent(SONG_END)
         pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -247,43 +259,38 @@ class App(object):
         pygame.draw.line(surface, color1, start_2, end_2, width)
 
         color2 = (0, 64, 0)  #green
-        color_matrix = [[color2 for x in xrange(5)] for x in xrange(6)]  #cols_count , rows_count
-        color_matrix[0][0] = (64, 0, 0)
-        
         # draw a rectangle
         for p in xrange(5):
             for q in xrange(6):
-                pygame.draw.rect(surface, color_matrix[q][p], pygame.Rect(610+p*40+2, 20+q*40+2, 40, 2))  # left top width height
-                pygame.draw.rect(surface, color_matrix[q][p], pygame.Rect(610+p*40+2, 20+q*40+2, 2, 40))  #pion
-                pygame.draw.rect(surface, color_matrix[q][p], pygame.Rect(610+p*40+40, 20+q*40+2, 2, 40))  #pion
-                pygame.draw.rect(surface, color_matrix[q][p], pygame.Rect(610+p*40+2, 20+q*40+40, 40, 2))
+                pygame.draw.rect(surface, color2, pygame.Rect(610+p*40+2, 20+q*40+2, 40, 2))  #left top width height
+                pygame.draw.rect(surface, color2, pygame.Rect(610+p*40+2, 20+q*40+2, 2, 40))  #pion
+                pygame.draw.rect(surface, color2, pygame.Rect(610+p*40+40, 20+q*40+2, 2, 40))  #pion
+                pygame.draw.rect(surface, color2, pygame.Rect(610+p*40+2, 20+q*40+40, 40, 2))
 
-    def turn(self): 
-        if self._moves_left == 0:
-        # if self._turn%2 == 0:
-            # self.player_turn()
-        # else:
+    def turn(self):
+        if self._myturn:
+            self._action = deque([])  # kolejka dwukierunkowa
+        else:
+            self.player_action()
             self.enemy_turn()
-            self._moves_left = self._moves_in_turn
 
-    def player_turn(self):
-        pass
+    def player_action(self):
+        while len(self._action) > 0:
+           act = self._action.popleft()  # zwroc akcje
+           print(act)  # na razie nie wiem co z tym zrobic, bo nie mamy ataku
 
     def enemy_turn(self):
-        print "enemy_turn"
-        #przeciwnycy w zasiegu wzroku
+        #przeciwnicy w zasiegu wzroku
         _enemy_list = []
         for i in xrange(self._horizon*2+1):
-            for j in xrange(self._horizon * 2 + 1):
-                if not self._map[(self._posx+i-self._horizon), (self._posy+j-self._horizon)][2] is None:  #nie pusta postac
+            for j in xrange(self._horizon*2+1):
+                if not self._map[(self._posx+i-self._horizon), (self._posy+j-self._horizon)][2] is None:  # nie puste pole
                     _enemy_list.append(self._map[(self._posx+i-self._horizon), (self._posy+j-self._horizon)][2])
 
-        for en in _enemy_list:
-            en.move() ## not implemented
-        # self._turn +=1   
+        # for en in _enemy_list:
+            # en.move()  # not implemented
 
-    def collision(self, enemy):  #hipotetyczny przeciwnik
-        return (self._posx, self._posy) == (enemy._posx, enemy._posy)
+	    self._myturn = True
 
     def write(self, msg, size, xx, yy):
         font = pygame.font.SysFont('mono', size, bold=True)
