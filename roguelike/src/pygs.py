@@ -268,7 +268,7 @@ class App(object):
             for j in xrange(-self._horizon, self._horizon):
                 # nie puste pole
                 if self._map[(self._posx+i), (self._posy+j)][2] is not None:
-                    _senemy_list.append(self._map[(self._posx+i),
+                    _enemy_list.append(self._map[(self._posx+i),
                                                  (self._posy+j)][2])
 
         # for en in _enemy_list:
