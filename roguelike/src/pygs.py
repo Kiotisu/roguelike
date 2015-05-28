@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 main app
 """
@@ -42,6 +43,7 @@ class App(object):
         self._myturn = True
 
         # gosc czasem rodzi sie w pustce
+        # XDDDDDDDDDDDDDD @WJ
         while self._map[self._posx, self._posy][0] == '_':
             self._posx += 1
 
@@ -111,28 +113,28 @@ class App(object):
         if event.type == pygame.QUIT:
             self._running = False
         if event.type == pygame.KEYDOWN:
-            if self._myturn == True:
+            if self._myturn: # == TRUE zbędne
                 if event.key == LOC.K_UP or event.key == LOC.K_w:
-                    if self._posy > 0 \
-                        and self._map[self._posx, self._posy-1][0] != '_':
+                    if self._posy > 0\
+                            and self._map[self._posx, self._posy-1][0] != '_':
                         self._posy -= 1
                         self._action.append('w')
                         self._myturn = False
                 if event.key == LOC.K_DOWN or event.key == LOC.K_s:
-                    if self._posy < self._map.size[1]-1 \
-                        and self._map[self._posx, self._posy+1][0] != '_':
+                    if self._posy < self._map.size[1]-1\
+                            and self._map[self._posx, self._posy+1][0] != '_':
                         self._posy += 1
                         self._action.append('s')
                         self._myturn = False
                 if event.key == LOC.K_LEFT or event.key == LOC.K_a:
-                    if self._posx > 0 \
-                        and self._map[self._posx-1, self._posy][0] != '_':
+                    if self._posx > 0\
+                            and self._map[self._posx-1, self._posy][0] != '_':
                         self._posx -= 1
                         self._action.append('a')
                         self._myturn = False
                 if event.key == LOC.K_RIGHT or event.key == LOC.K_d:
-                    if self._posx < self._map.size[0]-1 \
-                        and self._map[self._posx+1, self._posy][0] != '_':
+                    if self._posx < self._map.size[0]-1\
+                            and self._map[self._posx+1, self._posy][0] != '_':
                         self._posx += 1
                         self._action.append('d')
                         self._myturn = False
@@ -266,7 +268,7 @@ class App(object):
             for j in xrange(-self._horizon, self._horizon):
                 # nie puste pole
                 if self._map[(self._posx+i), (self._posy+j)][2] is not None:
-                    _enemy_list.append(self._map[(self._posx+i),
+                    _senemy_list.append(self._map[(self._posx+i),
                                                  (self._posy+j)][2])
 
         # for en in _enemy_list:

@@ -5,7 +5,7 @@ from random import random, choice
 class Map(object):
     def __init__(self, rmnum, rsize):
         #generacja mapy ŻYDOWSKĄ METODĄ
-        #nie no, żartuje. Metodą Szumuna-Knutha [;
+        #nie no, żartuje. Metodą Szymuna-Knutha [;
         parts_used = [(rmnum/2, rmnum/2)]
         rooms = [[(rmnum/2, rmnum/2)]]
         posible = []
