@@ -6,14 +6,14 @@ main app
 import pygame
 import pygame.locals as LOC
 import os
+import characters
 from maps import Map
-from characters import Hero
-from characters import Enemy
 from collections import deque
 from aux1 import Aux
 from music import Music
 
-LOC = pygame.locals
+Hero = characters.Hero
+Enemy = characters.Enemy
 
 
 class App(object):
@@ -40,6 +40,7 @@ class App(object):
 
         self._horizon = 3
         # zasieg wzroku w kazda strone  if == 3 => [][][] postac [][][]
+        #trochę to głupie, horyzont powinien być okrągły. I większy @SMN
         self._myturn = True
 
         # gosc czasem rodzi sie w pustce
@@ -103,7 +104,6 @@ class App(object):
         self.aux.write(self._surface, str(self._hero._defense), 14, 675, 240+65)
         self.aux.write(self._surface, str(self._hero._armor), 14, 675, 6*40+80)
 
-
     def event(self, event):
         """ to do, soon"""
         #alternative?
@@ -162,10 +162,9 @@ class App(object):
                     (square_x, square_y) = ((po_x-610)/40, (po_y-20)/40)
                     self._marked = (square_x, square_y)
 
-
     def render(self):
         """ in prog """
-        _boczne_pola = (608/32-1)/2  # powinno byc 9
+        _boczne_pola = (19-1)/2  # powinno byc 9
         if self._posx < _boczne_pola:
             x_o = 0
         elif self._posx > self._map.size[0]-_boczne_pola-1:
@@ -178,8 +177,8 @@ class App(object):
             y_o = self._map.size[1] - (2*_boczne_pola+1)
         else:
             y_o = self._posy-_boczne_pola
-        for y in xrange(608/32):
-            for x in xrange(608/32):
+        for y in xrange(19):
+            for x in xrange(19):
                 if self._map[(x_o+x), (y_o+y)][0] != '_':  # podloga
                     pygame.draw.rect(self._surface,
                                      ((self._map[(x_o+x), (y_o+y)][0]*64)%256,
@@ -236,8 +235,8 @@ class App(object):
         for item in lista:
             uni_path = path.replace('/', os.sep).replace('\\', os.sep)
             #universal path, also works: os.path.join('','')
-            self._image_library[item] = pygame.image.load(uni_path + item) \
-.convert_alpha()
+            self._image_library[item] = pygame.image.load(uni_path + item)\
+                .convert_alpha()
 
         #define short names
         # self.hero_image = self._image_library["ball.png"]

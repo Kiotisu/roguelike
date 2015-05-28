@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from random import random, choice
+from random import choice
 
 
 class Map(object):
@@ -55,12 +55,12 @@ class Map(object):
     
     def __setitem__(self, pos, item):
         #Map[x,y]
-        x,y = pos
+        x, y = pos
         self.board[x][y] = item
 
     def __getitem__(self, pos):
         #Map[x,y]
-        x,y = pos
+        x, y = pos
         return self.board[x][y]
 
 

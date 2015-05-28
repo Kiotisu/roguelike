@@ -38,12 +38,18 @@ class Character(object):
             opponent.hurt(self._damage)
 
     def hurt(self, damage):
-        """Wyliczanie zadanych obrażeń"""
+        """
+        Wyliczanie zadanych obrażeń:
+        -broń zadaje "domyślnie" obrażenia z zakresu base do base+extra
+        -bierzemy poprawkę na grubość pancerza
+        -oraz jego jakość
+        -finalnie mnożymy jeszcze zredukowane obrażenia przez współczynnik zranienia
+        """
         armor = self._armor #just for beauty :)
-        deliverd_damage = damage.base + (random() * damage.extra)       #broń zadaje "domyślnie" obrażenia z zakresu base do base+extra
-        reduction_base = min(dam * damage.pierce, armor.durability)     #bierzemy poprawkę na grubość pancerza
-        damage_reduction = reduction_base/damage.pierce * armor.gauge   #oraz jego jakość
-        self._hp -= (deliverd_damage - damage_reduction) * damage.hurt  #finalnie mnożymy jeszcze zredukowane obrażenia przez współczynnik zranienia
+        deliverd_damage = damage.base + (random() * damage.extra)
+        reduction_base = min(dam * damage.pierce, armor.durability)
+        damage_reduction = reduction_base/damage.pierce * armor.gauge
+        self._hp -= (deliverd_damage - damage_reduction) * damage.hurt
 
     def get_defense(self):
         return self._defense
