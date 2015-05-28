@@ -35,8 +35,9 @@ class App(object):
         self._surface = None
         self._size = self.weight, self.height = 810, 650
         self._map = Map(50, (10, 10))  #rmnum, rsize
-        self._posx = 250
-        self._posy = 250
+        _map_size = self._map.get_size()
+        self._posx = _map_size[0]/2
+        self._posy = _map_size[1]/2
 
         self._horizon = 3
         # zasieg wzroku w kazda strone  if == 3 => [][][] postac [][][]
@@ -49,7 +50,7 @@ class App(object):
             self._posx += 1
 
         self._hero = None
-        self._enemy1 = None
+        self._active_enemy = []
         self._display_surf = None
 
         self._image_library = None
@@ -246,9 +247,12 @@ class App(object):
 
 
     def turn(self):
-        """ who moves """
+        """
+        who moves 
+        -and what the hell is with that if? I dont understand it @SMN
+        """
         if self._myturn:
-            self._action = deque([])  # kolejka dwukierunkowa
+            self._action = deque([])  # kolejka dwukierunkowa - po co? Dlaczego? akcja jest jedna na turę w ogóle co tu się ma dziać? @SMN
         else:
             self.player_action()
             self.enemy_turn()
@@ -256,21 +260,21 @@ class App(object):
     def player_action(self):
         """ execute what player did in his turn """
         while len(self._action) > 0:
-            act = self._action.popleft()  # zwroc akcje
-            # print act  #na razie nie wiem co z tym zrobic, bo nie mamy ataku
+            act = self._action.popleft()  # zwroc akcje - a foreach'e to robić nie można? poza tym robimy po jednej akcji na turę, więc do zmiany @SMN
+            # print act  #na razie nie wiem co z tym zrobic, bo nie mamy ataku - atak jest przecież od dawna zaimplementowany, praktycznie od początku @SMN
 
     def enemy_turn(self):
         """ move enemies """
         #przeciwnicy w zasiegu wzroku
         _enemy_list = []
-        for i in xrange(-self._horizon, self._horizon):  #from -3 to 3
+        for i in xrange(-self._horizon, self._horizon):  #from -3 to 3 no nie, nie sprawdzałeś czy nie jestesś za blisko krawędzi mapy @SMN
             for j in xrange(-self._horizon, self._horizon):
                 # nie puste pole
                 if self._map[(self._posx+i), (self._posy+j)][2] is not None:
                     _enemy_list.append(self._map[(self._posx+i),
                                                  (self._posy+j)][2])
 
-        # for en in _enemy_list:
+        # for en in _enemy_list: - że co? @SMN
             # en.move()  # not implemented
 
         self._myturn = True
