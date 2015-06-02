@@ -6,6 +6,7 @@ main app
 import pygame
 import pygame.locals as LOC
 import os
+import math
 import characters
 from maps import Map
 from collections import deque
@@ -96,11 +97,6 @@ class App(object):
         self.aux.write(self._surface, "Defense", 14, 615, 240+65)
         self.aux.write(self._surface, "Armor", 14, 615, 240+80)
 
-        # To bedzie trzeba odswierzać
-        self.aux.write(self._surface, str(self._hero._hp), 14, 675, 240+35)
-        self.aux.write(self._surface, str(self._hero._attack), 14, 675, 240+50)
-        self.aux.write(self._surface, str(self._hero._defense), 14, 675, 240+65)
-        self.aux.write(self._surface, str(self._hero._armor), 14, 675, 240+80)
 
     def event(self, event):
         """ to do, soon"""
@@ -204,8 +200,9 @@ class App(object):
                                             # (x * 32, y * 32))
 
                 #vision
-                if not (abs(x_o+x - self._posx) <= self._horizon
-                        and abs(y_o+y - self._posy) <= self._horizon):
+                if not self.check_horizon(x_o+x, y_o+y):
+                    # (abs(x_o+x - self._posx) <= self._horizon
+                    # and abs(y_o+y - self._posy) <= self._horizon):
                     self._display_surf.blit(self._image_library["black.png"],
                                             (x * 32, y * 32))
 
@@ -224,6 +221,19 @@ class App(object):
                                  (20+strap*wid, 650-strap*2, wid-1, strap*2))
         pygame.display.update()
 
+        # napisy
+        self.aux.write(self._surface, str(self._hero._hp), 14, 675, 240+35)
+        self.aux.write(self._surface, str(self._hero._attack), 14, 675, 240+50)
+        self.aux.write(self._surface, str(self._hero._defense), 14, 675, 240+65)
+        self.aux.write(self._surface, str(self._hero._armor), 14, 675, 240+80)
+
+
+    def check_horizon(self, polex, poley):  # ceil(sqrt(Dx^2+Dy^2))
+        d = math.ceil(math.sqrt((self._posx-polex)**2 + (self._posy-poley)**2))
+        if d <= self._horizon:
+            return True
+        else:
+            return False
 
     def load_images(self):
         """ load images from /items """
@@ -270,12 +280,12 @@ class App(object):
             else:    
                 self.hero.attack(self._map[self._posx, self._posy+1][2])
         if self._action == 'a':
-            if self._map[self._posx, self._posy-1][2] is None:
+            if self._map[self._posx-1, self._posy][2] is None:
                 self._posx -= 1
             else:    
                 self.hero.attack(self._map[self._posx-1, self._posy][2])
         if self._action == 'd':
-            if self._map[self._posx, self._posy-1][2] is None:
+            if self._map[self._posx+1, self._posy][2] is None:
                 self._posx += 1
             else:    
                 self.hero.attack(self._map[self._posx+1, self._posy][2])
