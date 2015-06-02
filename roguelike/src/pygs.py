@@ -39,15 +39,11 @@ class App(object):
         self._posx = _map_size[0]/2
         self._posy = _map_size[1]/2
 
-        self._horizon = 3
+        self._horizon = 4
         # zasieg wzroku w kazda strone  if == 3 => [][][] postac [][][]
         #trochę to głupie, horyzont powinien być okrągły. I większy @SMN
-        self._myturn = True
 
-        # gosc czasem rodzi sie w pustce
-        # XDDDDDDDDDDDDDD @WJ
-        while self._map[self._posx, self._posy][0] == '_':
-            self._posx += 1
+        self._myturn = True
 
         self._hero = None
         self._active_enemy = []
@@ -90,20 +86,21 @@ class App(object):
         # attack, defense, damage, armor, hp, x, y
 
         self.aux.do_nice_outlines(self._surface)
-        pygame.key.set_repeat(5, 100)  #(delay, interval) in milisec
+        pygame.key.set_repeat(5, 50)  #(delay, interval) in milisec
 
         #napisy
         self.aux.write(self._surface, "EQ", 22, 700, 0)
-        self.aux.write(self._surface, "Stats:", 14, 615, 6*40+20)
-        self.aux.write(self._surface, "HP", 14, 615, 6*40+35)  # +15 pix pionowo
-        self.aux.write(self._surface, "Attack", 14, 615, 6*40+50)
-        self.aux.write(self._surface, "Defense", 14, 615, 6*40+65)
-        self.aux.write(self._surface, "Armor", 14, 615, 6*40+80)
+        self.aux.write(self._surface, "Stats:", 14, 615, 240+20)
+        self.aux.write(self._surface, "HP", 14, 615, 240+35)  # +15 pix pionowo
+        self.aux.write(self._surface, "Attack", 14, 615, 240+50)
+        self.aux.write(self._surface, "Defense", 14, 615, 240+65)
+        self.aux.write(self._surface, "Armor", 14, 615, 240+80)
 
-        self.aux.write(self._surface, str(self._hero._hp), 14, 675, 6*40+35)
-        self.aux.write(self._surface, str(self._hero._attack), 14, 675, 6*40+50)
+        # To bedzie trzeba odswierzać
+        self.aux.write(self._surface, str(self._hero._hp), 14, 675, 240+35)
+        self.aux.write(self._surface, str(self._hero._attack), 14, 675, 240+50)
         self.aux.write(self._surface, str(self._hero._defense), 14, 675, 240+65)
-        self.aux.write(self._surface, str(self._hero._armor), 14, 675, 6*40+80)
+        self.aux.write(self._surface, str(self._hero._armor), 14, 675, 240+80)
 
     def event(self, event):
         """ to do, soon"""
@@ -114,30 +111,26 @@ class App(object):
         if event.type == pygame.QUIT:
             self._running = False
         if event.type == pygame.KEYDOWN:
-            if self._myturn: # == TRUE zbędne
+            if self._myturn:
                 if event.key == LOC.K_UP or event.key == LOC.K_w:
                     if self._posy > 0\
                             and self._map[self._posx, self._posy-1][0] != '_':
-                        self._posy -= 1
-                        self._action.append('w')
+                        self._action ='w'
                         self._myturn = False
                 if event.key == LOC.K_DOWN or event.key == LOC.K_s:
                     if self._posy < self._map.size[1]-1\
                             and self._map[self._posx, self._posy+1][0] != '_':
-                        self._posy += 1
-                        self._action.append('s')
+                        self._action = 's'
                         self._myturn = False
                 if event.key == LOC.K_LEFT or event.key == LOC.K_a:
                     if self._posx > 0\
                             and self._map[self._posx-1, self._posy][0] != '_':
-                        self._posx -= 1
-                        self._action.append('a')
+                        self._action = 'a'
                         self._myturn = False
                 if event.key == LOC.K_RIGHT or event.key == LOC.K_d:
                     if self._posx < self._map.size[0]-1\
                             and self._map[self._posx+1, self._posy][0] != '_':
-                        self._posx += 1
-                        self._action.append('d')
+                        self._action = 'd'
                         self._myturn = False
 
             if event.key == LOC.K_ESCAPE:  #quit
@@ -161,7 +154,12 @@ class App(object):
                 #mouse pointer in the equipment zone
                 if po_x >= 610 and po_y >= 20 and po_y <= 20+6*40:
                     (square_x, square_y) = ((po_x-610)/40, (po_y-20)/40)
-                    self._marked = (square_x, square_y)
+                    if not self._marked == (square_x, square_y): 
+                        # if not already marked
+                        self._marked = (square_x, square_y)
+                    else:
+                        #swap item with wearing
+                        pass
 
     def render(self):
         """ in prog """
@@ -198,7 +196,7 @@ class App(object):
                                      (x * 32, y * 32, 32, 32))
                 #hero
                 if (x_o+x, y_o+y) == (self._posx, self._posy):
-                    self._display_surf.blit(self._image_library["ball.png"],
+                    self._display_surf.blit(self._image_library["photo.jpg"],
                                             (x * 32, y * 32))
                 #enemy
                 # if self._map[(x_o+x),(y_o+y)][2] != None:
@@ -252,30 +250,54 @@ class App(object):
         -and what the hell is with that if? I dont understand it @SMN
         """
         if self._myturn:
-            self._action = deque([])  # kolejka dwukierunkowa - po co? Dlaczego? akcja jest jedna na turę w ogóle co tu się ma dziać? @SMN
+            #przechwyc event
+            pass
         else:
+            #wykonaj przechwycona akcje
             self.player_action()
             self.enemy_turn()
 
     def player_action(self):
         """ execute what player did in his turn """
-        while len(self._action) > 0:
-            act = self._action.popleft()  # zwroc akcje - a foreach'e to robić nie można? poza tym robimy po jednej akcji na turę, więc do zmiany @SMN
-            # print act  #na razie nie wiem co z tym zrobic, bo nie mamy ataku - atak jest przecież od dawna zaimplementowany, praktycznie od początku @SMN
+        if self._action == 'w':
+            if self._map[self._posx, self._posy-1][2] is None: #brak wroga
+                self._posy -= 1
+            else:    
+                self.hero.attack(self._map[self._posx, self._posy-1][2]) #atak
+        if self._action == 's':
+            if self._map[self._posx, self._posy+1][2] is None:
+                self._posy += 1
+            else:    
+                self.hero.attack(self._map[self._posx, self._posy+1][2])
+        if self._action == 'a':
+            if self._map[self._posx, self._posy-1][2] is None:
+                self._posx -= 1
+            else:    
+                self.hero.attack(self._map[self._posx-1, self._posy][2])
+        if self._action == 'd':
+            if self._map[self._posx, self._posy-1][2] is None:
+                self._posx += 1
+            else:    
+                self.hero.attack(self._map[self._posx+1, self._posy][2])
+
 
     def enemy_turn(self):
         """ move enemies """
         #przeciwnicy w zasiegu wzroku
         _enemy_list = []
-        for i in xrange(-self._horizon, self._horizon):  #from -3 to 3 no nie, nie sprawdzałeś czy nie jestesś za blisko krawędzi mapy @SMN
+        for i in xrange(-self._horizon, self._horizon):  #from -3 to 3 
+        #no nie, nie sprawdzałeś czy nie jestesś za blisko krawędzi mapy @SMN
+        #dodalem sprawdzanie
             for j in xrange(-self._horizon, self._horizon):
                 # nie puste pole
-                if self._map[(self._posx+i), (self._posy+j)][2] is not None:
-                    _enemy_list.append(self._map[(self._posx+i),
-                                                 (self._posy+j)][2])
+                if self._posx+i >= 0 and self._posy+j >= 0\
+                and self._posx+i < self._map.size[0]\
+                and self._posy+j < self._map.size[1]:
+                    if self._map[(self._posx+i), (self._posy+j)][2] is not None:
+                        _enemy_list.append(self._map[(self._posx+i),
+                                                     (self._posy+j)][2])
 
-        # for en in _enemy_list: - że co? @SMN
-            # en.move()  # not implemented
+        #ruszanie przeciwnikow ??
 
         self._myturn = True
 
