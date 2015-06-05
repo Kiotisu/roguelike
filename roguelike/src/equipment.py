@@ -6,16 +6,21 @@ class Item(object):
     
     def __init__(self, use_requirements):
         self._requirements = use_requirements #(strength_require, dexterity_require)
-    
+
+
 class Weapon(Item):
     
     def __init__(self, damage_type):
+        # trzeba wywołać super?
         self._damage = damage_type #namedtuple z characters
-    
+
+
 class Armor(Item):
     
     def __init__(self, armor_type):
-         self._armor = armor_type #jak damage
+        # trzeba wywołać super?
+        self._armor = armor_type #jak damage
+
 
 class Equipment(object):
 
@@ -38,7 +43,7 @@ class Equipment(object):
 
         #swap = self._wearing[str()]  # jak sprawdzic typ? -type(obiekt)@WJ
         #self._wearing[str()] = self._backpack[col][row]
-        self._backpack[col][row] = swap
+        self._backpack[col][row] = None # = swap
 
         self.calc_attack()  # wystarczy policzyc przy dodawaniu
         self.calc_defense()

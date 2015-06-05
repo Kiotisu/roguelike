@@ -48,7 +48,7 @@ class Character(object):
         """
         armor = self._armor #just for beauty :)
         deliverd_damage = damage.base + (random() * damage.extra)
-        reduction_base = min(dam * damage.pierce, armor.durability)
+        reduction_base = min(damage * damage.pierce, armor.durability)
         damage_reduction = reduction_base/damage.pierce * armor.gauge
         self._hp -= (deliverd_damage - damage_reduction) * damage.hurt
 

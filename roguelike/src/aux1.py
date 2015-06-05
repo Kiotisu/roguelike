@@ -5,6 +5,7 @@ auxiliary class
 import os
 import pygame
 
+
 class Aux(object):
     """ auxiliary class """
     def __init__(self):
@@ -15,8 +16,7 @@ class Aux(object):
         """ lists files in a directory """
         files = []
         pop = os.popen("ls \"" + dir_ + "\"", "r")  # \" w przypadku spacji
-        #poki co ta linijka wyglada strasznie @WJ
-        line = pop.readline()  #poza tym menagery contextu do obslugi plikow!!!!
+        line = pop.readline()  #managery contextu do obslugi plikow!!!!
         while line:
             files.append(line.rstrip('\n'))
             line = pop.readline()

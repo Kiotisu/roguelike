@@ -7,7 +7,7 @@ class Map(object):
     def __init__(self, rmnum, rsize):
         #generacja mapy
         parts_used = [(rmnum/2, rmnum/2)] #wszystkie użyte części
-        rooms = [ Room((rmnum/2, rmnum/2)) ] #jeszcze nie zmieniam na klasę Room, bo trzeba ją dokończyć. W tej chwili da to więcej kłopotów niż korzyści
+        rooms = [Room((rmnum/2, rmnum/2))] #jeszcze nie zmieniam na klasę Room, bo trzeba ją dokończyć. W tej chwili da to więcej kłopotów niż korzyści
         posible = []
         next_room = 1
         
@@ -22,7 +22,7 @@ class Map(object):
             posible.remove(new)
             if new not in parts_used:
                 close_parts = [(new[0]-1, new[1]), (new[0], new[1]-1),
-                              (new[0]+1, new[1]), (new[0], new[1]+1)]
+                               (new[0]+1, new[1]), (new[0], new[1]+1)]
                 if random() > 0.60:#choice([True, False]):#join or new (teraz nowe, nierówne prawdopodobieństwo ;])
                     for room in rooms:
                         if any(i in room.get_parts() for i in close_parts):
