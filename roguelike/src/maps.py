@@ -7,7 +7,7 @@ class Map(object):
     def __init__(self, rmnum, rsize):
         #generacja mapy
         parts_used = [(rmnum/2, rmnum/2)] #wszystkie użyte części
-        rooms = [Room((rmnum/2, rmnum/2))] #jeszcze nie zmieniam na klasę Room, bo trzeba ją dokończyć. W tej chwili da to więcej kłopotów niż korzyści
+        rooms = [Room((rmnum/2, rmnum/2))]
         posible = []
         next_room = 1
         

@@ -7,13 +7,10 @@ import pygame
 import pygame.locals as LOC
 import os
 import math
-import characters
+from characters import *
 from maps import Map
 from aux1 import Aux
 from music import Music
-
-Hero = characters.Hero
-Enemy = characters.Enemy
 
 
 class App(object):
@@ -72,11 +69,10 @@ class App(object):
 
         #Create Hero
         self._hero = Hero(0, 0, 1, 1,
-                          characters.Damage(1.0, 1.0, 15, 10),
-                          characters.Armor(0.0, 0), 100,
-                          self._posx, self._posy)
+                          Damage(1.0, 1.0, 15, 10),
+                          Armor(0.0, 0),
+                          100, self._posx, self._posy)
         self._map[self._posx, self._posx][2] = self._hero
-        #Create Enemy??
 
         self.aux.do_nice_outlines(self._surface)
         pygame.key.set_repeat(5, 50)  #(delay, interval) in milisec

@@ -34,6 +34,9 @@ class Character(object):
         self._position = (x, y)
 
     def attack(self, opponent):
+        """
+        Atak - "Rzut" przeciwko stosunkowi ataku do obrony przeciwnika
+        """
         if (self._attack/opponent.get_defense())*0.5 > random():
             opponent.hurt(self._damage)
         return opponent.is_dead()
@@ -48,14 +51,16 @@ class Character(object):
         """
         armor = self._armor #just for beauty :)
         deliverd_damage = damage.base + (random() * damage.extra)
-        reduction_base = min(damage * damage.pierce, armor.durability)
+        reduction_base = min(deliverd_damage * damage.pierce, armor.durability)
         damage_reduction = reduction_base/damage.pierce * armor.gauge
         self._hp -= (deliverd_damage - damage_reduction) * damage.hurt
 
     def get_defense(self):
+        """Zwraca obronę"""
         return self._defense
 
-    def is_dead(self):#nie wiem XD
+    def is_dead(self):
+        """Sprawdza czy jest się martwym i ewentualnie daje doświadczenie"""
         if self._hp <= 0:
             #give_exp()
             return True
@@ -76,3 +81,6 @@ class Enemy(Character):
     """Klasa przeciwnika"""
     def __init__(self, attack, defense, damage, armor, hp, x, y):
         super(Enemy, self).__init__(attack, defense, damage, armor, hp, x, y)
+        
+    def give_exp(self):
+        pass
