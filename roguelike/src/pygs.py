@@ -9,7 +9,6 @@ import os
 import math
 import characters
 from maps import Map
-from collections import deque
 from aux1 import Aux
 from music import Music
 
@@ -195,9 +194,9 @@ class App(object):
                     self._display_surf.blit(self._image_library["photo.jpg"],
                                             (x * 32, y * 32))
                 #enemy
-                # if self._map[(x_o+x),(y_o+y)][2] != None:
-                    # self._display_surf.blit(self._image_library["enemy1.png"],
-                                            # (x * 32, y * 32))
+                if self._map[(x_o+x),(y_o+y)][2] != None:
+                    self._display_surf.blit(self._image_library["enemy1.png"],
+                                            (x * 32, y * 32))
 
                 #vision
                 if not self.check_horizon(x_o+x, y_o+y):
@@ -273,22 +272,22 @@ class App(object):
             if self._map[self._posx, self._posy-1][2] is None: #brak wroga
                 self._posy -= 1
             else:    
-                self.hero.attack(self._map[self._posx, self._posy-1][2]) #atak
+                self._hero.attack(self._map[self._posx, self._posy-1][2]) #atak
         if self._action == 's':
             if self._map[self._posx, self._posy+1][2] is None:
                 self._posy += 1
             else:    
-                self.hero.attack(self._map[self._posx, self._posy+1][2])
+                self._hero.attack(self._map[self._posx, self._posy+1][2])
         if self._action == 'a':
             if self._map[self._posx-1, self._posy][2] is None:
                 self._posx -= 1
             else:    
-                self.hero.attack(self._map[self._posx-1, self._posy][2])
+                self._hero.attack(self._map[self._posx-1, self._posy][2])
         if self._action == 'd':
             if self._map[self._posx+1, self._posy][2] is None:
                 self._posx += 1
             else:    
-                self.hero.attack(self._map[self._posx+1, self._posy][2])
+                self._hero.attack(self._map[self._posx+1, self._posy][2])
 
 
     def enemy_turn(self):

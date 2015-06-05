@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from random import random, choice
+import characters as ch
 
 
 class Map(object):
@@ -58,6 +59,8 @@ class Map(object):
                 for x in xrange(rsize[0]):
                     for y in xrange(rsize[1]):
                         self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][0] = index
+                        if random() > 0.95:
+                             self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][2] = ch.Enemy(10, 10, ch.Damage(1.0, 1.0, 10, 5), ch.Armor(0.5, 10), 15, (part[0]-minx)*rsize[0]+x, (part[1]-miny)*rsize[1]+y) 
         self.size = (maxx+1)*rsize[0]-rsize[0]*minx, (maxy+1)*rsize[1]-rsize[1]*miny
     
     def __setitem__(self, pos, item):

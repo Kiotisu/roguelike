@@ -34,7 +34,7 @@ class Character(object):
         self._position = (x, y)
 
     def attack(self, opponent):
-        if (self._attack/opponent.get_defense)*0.5 > random.random(0, 1):
+        if (self._attack/opponent.get_defense())*0.5 > random():
             opponent.hurt(self._damage)
 
     def hurt(self, damage):
