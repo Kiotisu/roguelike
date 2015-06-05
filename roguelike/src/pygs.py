@@ -80,10 +80,9 @@ class App(object):
         self.mus.play_music()
 
         #Create Hero
-        self._hero = Hero(0, 0, 1, 1, 1, 0, 100, self._posx, self._posx)
+        self._hero = Hero(0, 0, 1, 1, characters.Damage(1.0, 1.0, 15, 10), characters.Armor(0.0, 0), 100, self._posx, self._posy)
+        self._map[self._posx, self._posx][2] = self._hero
         #Create Enemy
-        self._enemy1 = Enemy(1, 1, 1, 0, 100, 260, 260)
-        # attack, defense, damage, armor, hp, x, y
 
         self.aux.do_nice_outlines(self._surface)
         pygame.key.set_repeat(5, 50)  #(delay, interval) in milisec
@@ -109,22 +108,26 @@ class App(object):
             if self._myturn:
                 if event.key == LOC.K_UP or event.key == LOC.K_w:
                     if self._posy > 0\
-                            and self._map[self._posx, self._posy-1][0] != '_':
+                            and self._map[self._posx, self._posy-1][0] != '_'\
+                            and self._map[self._posx, self._posy-1][0] != 'w':
                         self._action ='w'
                         self._myturn = False
                 if event.key == LOC.K_DOWN or event.key == LOC.K_s:
                     if self._posy < self._map.size[1]-1\
-                            and self._map[self._posx, self._posy+1][0] != '_':
+                            and self._map[self._posx, self._posy+1][0] != '_'\
+                            and self._map[self._posx, self._posy+1][0] != 'w':
                         self._action = 's'
                         self._myturn = False
                 if event.key == LOC.K_LEFT or event.key == LOC.K_a:
                     if self._posx > 0\
-                            and self._map[self._posx-1, self._posy][0] != '_':
+                            and self._map[self._posx-1, self._posy][0] != '_'\
+                            and self._map[self._posx-1, self._posy][0] != 'w':
                         self._action = 'a'
                         self._myturn = False
                 if event.key == LOC.K_RIGHT or event.key == LOC.K_d:
                     if self._posx < self._map.size[0]-1\
-                            and self._map[self._posx+1, self._posy][0] != '_':
+                            and self._map[self._posx+1, self._posy][0] != '_'\
+                            and self._map[self._posx+1, self._posy][0] != 'w':
                         self._action = 'd'
                         self._myturn = False
 
@@ -173,18 +176,14 @@ class App(object):
             y_o = self._posy-_boczne_pola
         for y in xrange(19):
             for x in xrange(19):
-                if self._map[(x_o+x), (y_o+y)][0] != '_':  # podloga
-                    pygame.draw.rect(self._surface,
-                                     ((self._map[(x_o+x), (y_o+y)][0]*64)%256,
-                                      100,
-                                      (self._map[(x_o+x), (y_o+y)][0]*32)%256),
-                                     (x * 32, y * 32, 32, 32))
-                    self._display_surf.blit(self._image_library["texture18.png"],
+                if self._map[(x_o+x), (y_o+y)][0] == 'w': #ściana
+                    self._display_surf.blit(self._image_library["texture17.png"],
                                             (x * 32, y * 32))
-                #elif (x_o+x) % 5 == 0 or (y_o+y) % 5 == 0:
-                #    pygame.draw.rect(self._surface,
-                #                     (0, 255, 0),
-                #                     (x * 32, y * 32, 32, 32))
+                elif self._map[(x_o+x), (y_o+y)][0] != '_':  # podloga
+                    pygame.draw.rect(self._surface, ((self._map[(x_o+x),(y_o+y)][0]*64)%256, 100, (self._map[(x_o+x),(y_o+y)][0]*32)%256), 
+                    (x * 32, y * 32, 32, 32))
+                    #self._display_surf.blit(self._image_library["texture18.png"],
+                    #                        (x * 32, y * 32))
                 else:  # pustka - nie sciana
                     # self._display_surf.blit(self.wall, (x * 32, y * 32))
                     pygame.draw.rect(self._surface, (0, 0, 0),

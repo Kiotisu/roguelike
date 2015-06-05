@@ -36,6 +36,7 @@ class Character(object):
     def attack(self, opponent):
         if (self._attack/opponent.get_defense())*0.5 > random():
             opponent.hurt(self._damage)
+        return opponent.is_dead()
 
     def hurt(self, damage):
         """
@@ -55,7 +56,11 @@ class Character(object):
         return self._defense
 
     def is_dead(self):#nie wiem XD
-        return True if self._hp > 0 else False
+        if self._hp <= 0:
+            #give_exp()
+            return True
+        else:
+            return False
 
 
 class Hero(Character):
