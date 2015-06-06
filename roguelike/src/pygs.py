@@ -9,6 +9,7 @@ import os
 import math
 from random import randint
 from characters import *
+from equipment import Item, Weapon, Suit
 from maps import Map
 from aux import Aux
 from music import Music
@@ -84,7 +85,11 @@ class App(object):
         self.aux.write(self._surface, "Armor", 14, 615, 240+80)
 
     def event(self, event):
-        """ to do, soon"""
+        """Obsługa eventów:
+            -wciśniętych klawiszy
+            -muzyki
+            -wyjścia z gry
+        """
         #alternative?
         # pressedkeys = pygame.key.get_pressed()
         # if pressedkeys[pygame.K_x]:
@@ -179,6 +184,23 @@ class App(object):
                     # self._display_surf.blit(self.wall, (x * 32, y * 32))
                     pygame.draw.rect(self._surface, (0, 0, 0),
                                      (x * 32, y * 32, 32, 32))
+                
+                #item
+                if self._map[(x_o+x), (y_o+y)][1] is not None:
+                    for item in self._map[(x_o+x), (y_o+y)][1]:
+                        if type(item) is Weapon:
+                             self._display_surf.blit(
+                                            self._image_library["weapon3.png"],
+                                            (x * 32, y * 32))
+                        elif type(item) is Suit:
+                            self._display_surf.blit(
+                                            self._image_library["ar2.png"],
+                                            (x * 32, y * 32))
+                        else:
+                            self._display_surf.blit(
+                                            self._image_library["weapon6.png"],
+                                            (x * 32, y * 32))
+                
                 #hero
                 if (x_o+x, y_o+y) == self._hero.get_position():
                     self._display_surf.blit(self._image_library["photo.jpg"],
@@ -187,7 +209,6 @@ class App(object):
                 if self._map[(x_o+x), (y_o+y)][2] is not None:
                     self._display_surf.blit(self._image_library["enemy1.png"],
                                             (x * 32, y * 32))
-
                 #vision
                 if not self.check_horizon(x_o+x, y_o+y):
                     # (abs(x_o+x - self._posx) <= self._horizon

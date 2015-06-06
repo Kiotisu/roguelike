@@ -82,6 +82,7 @@ class Character(object):
         """zmienia tylko współrzędną y położenia postaci na mapie"""
         self._position = (self._position[0], self._position[1] + change)
 
+exp_cap = 10000
 
 class Hero(Character):
     """Klasa reprezentująca naszego bohatera"""
@@ -104,7 +105,7 @@ class Hero(Character):
         i ewentualnie wykonuje lvl_up
         """
         self._experience += how_much
-        if self._experience > 10000:
+        if self._experience > exp_cap:
             self.lvl_up()
             
     def lvl_up(self):
@@ -112,7 +113,8 @@ class Hero(Character):
         Podnosi statystyki za doświadczenie
         w oparciu o broń i pancerz
         """
-        self._experience -= 10000
+        print "I'm learning!"
+        self._experience -= exp_cap
         self._strength += 3 * damage.hurt
         self._dexterity += 3 * damage.pierce
         self._attack += 5 * (damage.hurt+damage.pierce)/2

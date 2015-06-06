@@ -42,29 +42,29 @@ class Aux(object):
 
     def do_nice_outlines(self, surface):
         """ some outlines """
-        color1 = (128, 0, 0)  # red
+        red = (128, 0, 0)
         # pozioma
         start_1 = (0, 610-1)
         end_1 = (610-1, 610-1)
         width = 5
-        pygame.draw.line(surface, color1, start_1, end_1, width)
+        pygame.draw.line(surface, red, start_1, end_1, width)
         # pionowa
         start_2 = (610-1, 0)
         end_2 = (610-1, 610-1)
-        pygame.draw.line(surface, color1, start_2, end_2, width)
+        pygame.draw.line(surface, red, start_2, end_2, width)
 
-        color2 = (0, 64, 0)  #green
+        green = (0, 64, 0)
         # draw a rectangle
         for col in xrange(5):
             for row in xrange(6):
-                pygame.draw.rect(surface, color2,
+                pygame.draw.rect(surface, green,
                                  pygame.Rect(610+col*40+2, 20+row*40+2, 40, 2))
                                  #left top width height
-                pygame.draw.rect(surface, color2,
+                pygame.draw.rect(surface, green,
                                  pygame.Rect(610+col*40+2, 20+row*40+2, 2, 40))
-                pygame.draw.rect(surface, color2,
+                pygame.draw.rect(surface, green,
                                  pygame.Rect(610+col*40+40, 20+row*40+2, 2, 40))
-                pygame.draw.rect(surface, color2,
+                pygame.draw.rect(surface, green,
                                  pygame.Rect(610+col*40+2, 20+row*40+40, 40, 2))
 
     def write(self, surface, msg, size, where_x, where_y):
