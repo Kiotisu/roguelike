@@ -53,12 +53,14 @@ class Equipment(object):
 #W tej chwili wyrzucam, jeszcze zamienie na coś sensowniejszego @SMN
 
     def add_to_backpack(self, what, row, col): 	#add to specific position
+        """dodaje przedmiot do plecaka na określoną pozycję"""
         if self._backpack[col][row] is None:
             self._backpack[col][row] = what
         else:
             print "something already there"
 
     def add_to_backpack(self, what):
+        """dodaje przedmiot do plecaka na pierwszą wolną pozycję"""
         flag = False
         for row in xrange(5):
             for slot in xrange(5):

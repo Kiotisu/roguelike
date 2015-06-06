@@ -57,10 +57,10 @@ class App(object):
         self.load_images()
         self.music.load_music()
         self.music.play_music()
-        
+
         pos_x, pos_y = self.get_start_position()
 
-        self._hero = Hero(0, 0, 1, 1,
+        self._hero = Hero(0, 0, 10, 10,
                           Damage(1.0, 1.0, 15, 10),
                           Armor(0.0, 0),
                           100, pos_x, pos_y)
@@ -140,19 +140,19 @@ class App(object):
 
     def render(self):
         """ in prog """
-        sidebox = 9  # jest 9 ŁOOOO
-        if self._hero.get_x() < sidebox:
+        side_box = 9  # jest 9 ŁOOOO
+        if self._hero.get_x() < side_box:
             x_o = 0
-        elif self._hero.get_x() > self._map.size[0]-sidebox-1:
-            x_o = self._map.size[0] - (2*sidebox+1)  #2*_boczne_pola+1 = 19
+        elif self._hero.get_x() > self._map.size[0]-side_box-1:
+            x_o = self._map.size[0] - (2*side_box+1)  #2*_boczne_pola+1 = 19
         else:
-            x_o = self._hero.get_x() - sidebox
-        if self._hero.get_y() < sidebox:
+            x_o = self._hero.get_x() - side_box
+        if self._hero.get_y() < side_box:
             y_o = 0
-        elif self._hero.get_y() > self._map.size[1]-sidebox-1:
-            y_o = self._map.size[1] - (2*sidebox+1)
+        elif self._hero.get_y() > self._map.size[1]-side_box-1:
+            y_o = self._map.size[1] - (2*side_box+1)
         else:
-            y_o = self._hero.get_y() - sidebox
+            y_o = self._hero.get_y() - side_box
         for y in xrange(19):
             for x in xrange(19):
                 if self._map[(x_o+x), (y_o+y)][0] == 'w': #ściana
@@ -234,27 +234,36 @@ class App(object):
             self.enemy_turn()
 
     def player_action(self):
-        """ execute what player did in his turn """
+        """Sprawdza ostatnią akcję gracza i w zależności od tego czy nachodzimy na wroga atakuje
+        lub po prostu się przemieszcza"""
         if self._action == 'w':
             if self._map[self._hero.get_x(), self._hero.get_y()-1][2] is None: #brak wroga
                 self._hero.change_y(-1)
             else:    
-                self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()-1][2]) #atak
+                result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()-1][2]) #atak
+                if result:
+                    self._map[self._hero.get_x()-1, self._hero.get_y()][2] = None
         if self._action == 's':
             if self._map[self._hero.get_x(), self._hero.get_y()+1][2] is None:
                 self._hero.change_y(1)
             else:    
-                self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()+1][2])
+                result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()+1][2])
+                if result:
+                    self._map[self._hero.get_x()-1, self._hero.get_y()][2] = None
         if self._action == 'a':
             if self._map[self._hero.get_x()-1, self._hero.get_y()][2] is None:
                 self._hero.change_x(-1)
             else:    
-                self._hero.attack(self._map[self._hero.get_x()-1, self._hero.get_y()][2])
+                result = self._hero.attack(self._map[self._hero.get_x()-1, self._hero.get_y()][2])
+                if result:
+                    self._map[self._hero.get_x()-1, self._hero.get_y()][2] = None
         if self._action == 'd':
             if self._map[self._hero.get_x()+1, self._hero.get_y()][2] is None:
                 self._hero.change_x(1)
             else:    
-                self._hero.attack(self._map[self._hero.get_x()+1, self._hero.get_y()][2])
+                result = self._hero.attack(self._map[self._hero.get_x()+1, self._hero.get_y()][2])
+                if result:
+                    self._map[self._hero.get_x()+1, self._hero.get_y()][2] = None
 
     def enemy_turn(self):
         """ move enemies """
