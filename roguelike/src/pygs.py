@@ -274,7 +274,7 @@ class App(object):
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()-1][2]) #atak
                 if result:
                     loot = self._map[self._hero.get_x(), self._hero.get_y()-1][2].leave_items()
-                    if loot != None:
+                    if loot is not None:
                         if self._map[self._hero.get_x(), self._hero.get_y()-1][1] == None:
                             self._map[self._hero.get_x(), self._hero.get_y()-1][1] = [loot]
                         else:
@@ -287,7 +287,7 @@ class App(object):
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()+1][2])
                 if result:
                     loot = self._map[self._hero.get_x(), self._hero.get_y()+1][2].leave_items()
-                    if loot != None:
+                    if loot is not None:
                         if self._map[self._hero.get_x(), self._hero.get_y()+1][1] == None:
                             self._map[self._hero.get_x(), self._hero.get_y()+1][1] = [loot]
                         else:
@@ -300,7 +300,7 @@ class App(object):
                 result = self._hero.attack(self._map[self._hero.get_x()-1, self._hero.get_y()][2])
                 if result:
                     loot = self._map[self._hero.get_x()-1, self._hero.get_y()][2].leave_items()
-                    if loot != None:
+                    if loot is not None:
                         if self._map[self._hero.get_x()-1, self._hero.get_y()][1] == None:
                             self._map[self._hero.get_x()-1, self._hero.get_y()][1] = [loot]
                         else:
@@ -313,7 +313,7 @@ class App(object):
                 result = self._hero.attack(self._map[self._hero.get_x()+1, self._hero.get_y()][2])
                 if result:
                     loot = self._map[self._hero.get_x()+1, self._hero.get_y()][2].leave_items()
-                    if loot != None:
+                    if loot is not None:
                         if self._map[self._hero.get_x()+1, self._hero.get_y()][1] == None:
                             self._map[self._hero.get_x()+1, self._hero.get_y()][1] = [loot]
                         else:
@@ -332,7 +332,8 @@ class App(object):
                         or not (self._hero.get_x() + i < self._map.size[0])
                         or not (self._hero.get_y() + j < self._map.size[1])
                         or not (self._map[(self._hero.get_x() + i),
-                                          (self._hero.get_y() + j)][2] is not None)):
+                                          (self._hero.get_y() + j)][2]\
+                                                                is not None)):
                     enemy_list.append(self._map[(self._hero.get_x()+i),
                                                 (self._hero.get_y()+j)][2])
 

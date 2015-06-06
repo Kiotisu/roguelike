@@ -3,7 +3,7 @@
 definicja klas postaci
 """
 from random import random, choice
-from equipment import Equipment, item_list
+from equipment import Equipment, get_random_item
 from aux import Damage, Armor
 
 
@@ -135,13 +135,7 @@ class Enemy(Character):
         Zwraca przedmiot wyrzucony przez zabitego przeciwnika
         Jeżeli przeciwniki nic nie zostawia, zwraca None
         """
-        return None
-    """
         if 0.8 < random():
-            #to zwraca 'instancemethod' object has no attribute '__getitem__', ktoś mi powie dlaczego?
-            #item_list jest zdefiniowane w equipment
-            choi = choice[item_list]
-            return choi
+            return get_random_item()
         else:
             return None
-    """

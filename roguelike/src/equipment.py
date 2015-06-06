@@ -2,6 +2,7 @@
 """equipment"""
 
 from aux import Damage, Armor
+from random import choice
 
 
 class Item(object):
@@ -23,7 +24,7 @@ class Weapon(Item):
 
 
 class Suit(Item):
-    
+    """Reprezentuje stroje i pancerze"""
     def __init__(self, name, use_requirements, armor_type):
         super(Suit, self).__init__(name, use_requirements)
         self._armor = armor_type #jak damage
@@ -33,8 +34,12 @@ class Suit(Item):
         return self._armor
 
 #lista przedmiotów w grze, zostawiane przez przeciwników
-item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5)),\
-             Suit('Kolczuga', (7, 7), Armor(0.5, 10))]
+item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5)),
+             Suit('Kolczuga', (7, 7), Armor(0.5, 10)),
+             Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10))]
+
+def get_random_item():
+    return choice(item_list)
 
 class Equipment(object):
 
