@@ -270,12 +270,13 @@ class App(object):
         if self._action == 'w':
             if self._map[self._hero.get_x(), self._hero.get_y()-1][2] is None: #brak wroga
                 self._hero.change_y(-1)
-            else:    
+            else:
+                print "gracz atakuje"
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()-1][2]) #atak
                 if result:
                     loot = self._map[self._hero.get_x(), self._hero.get_y()-1][2].leave_items()
                     if loot is not None:
-                        if self._map[self._hero.get_x(), self._hero.get_y()-1][1] == None:
+                        if self._map[self._hero.get_x(), self._hero.get_y()-1][1] is None:
                             self._map[self._hero.get_x(), self._hero.get_y()-1][1] = [loot]
                         else:
                             self._map[self._hero.get_x(), self._hero.get_y()-1][1].append(loot)
@@ -283,12 +284,13 @@ class App(object):
         if self._action == 's':
             if self._map[self._hero.get_x(), self._hero.get_y()+1][2] is None:
                 self._hero.change_y(1)
-            else:    
+            else:
+                print "gracz atakuje"
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()+1][2])
                 if result:
                     loot = self._map[self._hero.get_x(), self._hero.get_y()+1][2].leave_items()
                     if loot is not None:
-                        if self._map[self._hero.get_x(), self._hero.get_y()+1][1] == None:
+                        if self._map[self._hero.get_x(), self._hero.get_y()+1][1] is None:
                             self._map[self._hero.get_x(), self._hero.get_y()+1][1] = [loot]
                         else:
                             self._map[self._hero.get_x(), self._hero.get_y()+1][1].append(loot)
@@ -296,12 +298,13 @@ class App(object):
         if self._action == 'a':
             if self._map[self._hero.get_x()-1, self._hero.get_y()][2] is None:
                 self._hero.change_x(-1)
-            else:    
+            else:
+                print "gracz atakuje"
                 result = self._hero.attack(self._map[self._hero.get_x()-1, self._hero.get_y()][2])
                 if result:
                     loot = self._map[self._hero.get_x()-1, self._hero.get_y()][2].leave_items()
                     if loot is not None:
-                        if self._map[self._hero.get_x()-1, self._hero.get_y()][1] == None:
+                        if self._map[self._hero.get_x()-1, self._hero.get_y()][1] is None:
                             self._map[self._hero.get_x()-1, self._hero.get_y()][1] = [loot]
                         else:
                             self._map[self._hero.get_x()-1, self._hero.get_y()][1].append(loot)
@@ -309,16 +312,18 @@ class App(object):
         if self._action == 'd':
             if self._map[self._hero.get_x()+1, self._hero.get_y()][2] is None:
                 self._hero.change_x(1)
-            else:    
+            else:
+                print "gracz atakuje"
                 result = self._hero.attack(self._map[self._hero.get_x()+1, self._hero.get_y()][2])
                 if result:
                     loot = self._map[self._hero.get_x()+1, self._hero.get_y()][2].leave_items()
                     if loot is not None:
-                        if self._map[self._hero.get_x()+1, self._hero.get_y()][1] == None:
+                        if self._map[self._hero.get_x()+1, self._hero.get_y()][1] is None:
                             self._map[self._hero.get_x()+1, self._hero.get_y()][1] = [loot]
                         else:
                             self._map[self._hero.get_x()+1, self._hero.get_y()][1].append(loot)
                     self._map[self._hero.get_x()+1, self._hero.get_y()][2] = None
+
     def enemy_turn(self):
         """symulacja tury przeciwników, w praktyce poruszają się tylko ci w zasięgu naszego wzroku"""
 
@@ -351,7 +356,7 @@ class App(object):
             # ruszamy się po manhatanie, próbujemy po dłuższej odległości
 
             if abs(x_distance) > abs(y_distance):
-                if x_distance > 1\
+                if (x_distance > 1 or (x_distance == 1 and abs(y_distance) == 1))\
                         and self._map[x_enemy+1, y_enemy][2] is None\
                         and self._map[x_enemy+1, y_enemy][0] != 'w'\
                         and self._map[x_enemy+1, y_enemy][0] != '_':
@@ -359,7 +364,7 @@ class App(object):
                     self._map[x_enemy, y_enemy][2] = None
                     self._map[x_enemy+1, y_enemy][2] = enemy
 
-                elif x_distance < -1\
+                elif (x_distance < -1 or (x_distance == -1 and abs(y_distance) == 1))\
                         and self._map[x_enemy-1, y_enemy][2] is None\
                         and self._map[x_enemy-1, y_enemy][0] != 'w'\
                         and self._map[x_enemy-1, y_enemy][0] != '_':
@@ -368,7 +373,7 @@ class App(object):
                     self._map[x_enemy-1, y_enemy][2] = enemy
 
             else:
-                if y_distance > 1 \
+                if (y_distance > 1 or (y_distance == 1 and abs(x_distance) == 1))\
                         and self._map[x_enemy, y_enemy+1][2] is None\
                         and self._map[x_enemy, y_enemy+1][0] != 'w'\
                         and self._map[x_enemy, y_enemy+1][0] != '_':
@@ -376,13 +381,21 @@ class App(object):
                     self._map[x_enemy, y_enemy][2] = None
                     self._map[x_enemy, y_enemy+1][2] = enemy
 
-                elif y_distance < -1 \
+                elif (y_distance < -1 or (y_distance == -1 and abs(x_distance) == 1))\
                         and self._map[x_enemy, y_enemy-1][2] is None\
                         and self._map[x_enemy, y_enemy-1][0] != 'w'\
                         and self._map[x_enemy, y_enemy-1][0] != '_':
                     enemy.change_position((x_enemy, y_enemy-1))
                     self._map[x_enemy, y_enemy][2] = None
                     self._map[x_enemy, y_enemy-1][2] = enemy
+
+            # sprawdzamy czy można zaatakować i ewentualnie atakujemy:
+            x_distance = self._hero.get_x() - enemy.get_x()
+            y_distance = self._hero.get_y() - enemy.get_y()
+
+            if abs(x_distance) == 1 and y_distance == 0 or x_distance == 0 and abs(y_distance) == 1:
+                print "potworek atakuje gracza"
+                enemy.attack(self._hero)
 
         self._player_turn = True
 
