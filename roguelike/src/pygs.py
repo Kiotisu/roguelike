@@ -161,13 +161,19 @@ class App(object):
             y_o = self._map.size[1] - (2*side_box+1)
         else:
             y_o = self._hero.get_y() - side_box
+            
+        floor_list = [self._image_library["texture18.png"],
+                      self._image_library["texture16.png"],
+                      self._image_library["texture15.png"]]
+            
         for y in xrange(19):
             for x in xrange(19):
                 if self._map[(x_o+x), (y_o+y)][0] == 'w': #ściana
                     self._display_surf.blit(self._image_library["texture17.png"],
                                             (x * 32, y * 32))
                 elif self._map[(x_o+x), (y_o+y)][0] != '_':  # podloga
-                    self._display_surf.blit(self._image_library["texture18.png"],
+                    i = self._map[(x_o+x), (y_o+y)][0]
+                    self._display_surf.blit(floor_list[i%3],
                                             (x * 32, y * 32))
                 else:  # pustka - nie sciana
                     # self._display_surf.blit(self.wall, (x * 32, y * 32))
