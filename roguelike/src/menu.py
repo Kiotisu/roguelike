@@ -5,7 +5,8 @@ import tkMessageBox as Box
 from pygs import App
 """
 Nie wiem, słabo to wygląda i nie ogarniam :v
-@WJ"""
+@WJ
+"""
 
 
 

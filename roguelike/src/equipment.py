@@ -1,26 +1,32 @@
 # -*- coding: utf-8 -*-
 """equipment"""
 
+from aux import Damage, Armor
+
 
 class Item(object):
     
-    def __init__(self, use_requirements):
+    def __init__(self, name, use_requirements):
+        self._name = name
         self._requirements = use_requirements #(strength_require, dexterity_require)
 
 
 class Weapon(Item):
     
-    def __init__(self, damage_type):
-        # trzeba wywołać super?
+    def __init__(self, name, use_requirements, damage_type):
+        super(Weapon, self).__init__(name, use_requirements)
         self._damage = damage_type #namedtuple z characters
 
 
-class Armor(Item):
+class Suit(Item):
     
-    def __init__(self, armor_type):
-        # trzeba wywołać super?
+    def __init__(self, name, use_requirements, armor_type):
+        super(Suit, self).__init__(name, use_requirements)
         self._armor = armor_type #jak damage
 
+#lista przedmiotów w grze, zostawiane przez przeciwników
+item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5)),\
+             Suit('Kolczuga', (7, 7), Armor(0.5, 10))]
 
 class Equipment(object):
 

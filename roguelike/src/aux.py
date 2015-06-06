@@ -1,10 +1,28 @@
+# -*- coding: utf-8 -*-
 """
-auxiliary class
+Klasa pomocnicza
 """
 
 import os
 import pygame
+from collections import namedtuple
 
+
+Damage = namedtuple('Damage', 'pierce hurt base extra')
+"""
+Struktura Obrażeń(Damage):
+przebicie(pierce) = liczba ~ 1.0 +-1.0
+zranienie(hurt) = liczba ~ 1.0 +-1.0
+baza(base) = liczba całkowita
+dodatkowe(extra) = liczba całkowita
+"""
+
+Armor = namedtuple('Armor', 'gauge durability')
+"""
+Struktura Pancerza(Armor):
+kaliber(gauge) = liczba z zakresu <0.0 , 1.0>
+wytrzymałość(durability) = liczba całkowita
+"""
 
 class Aux(object):
     """ auxiliary class """

@@ -1,24 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 definicja klas postaci
-
-Struktura Obrażeń(Damage):
-przebicie(pierce) = liczba ~ 1.0 +-1.0
-zranienie(hurt) = liczba ~ 1.0 +-1.0
-baza(base) = liczba całkowita
-dodatkowe(extra) = liczba całkowita
-
-Struktura Pancerza(Armor):
-kaliber(gauge) = liczba z zakresu <0.0 , 1.0>
-wytrzymałość(durability) = liczba całkowita
-
 """
-from random import random
-from collections import namedtuple
-from equipment import Equipment
-
-Damage = namedtuple('Damage', 'pierce hurt base extra')
-Armor = namedtuple('Armor', 'gauge durability')
+from random import random, choice
+from equipment import Equipment, item_list
+from aux import Damage, Armor
 
 
 class Character(object):
@@ -108,6 +94,7 @@ class Hero(Character):
         self._equipment = Equipment()
         self._strength = strength
         self._dexterity = dexterity
+        self._experience = 0
 
 
 class Enemy(Character):
@@ -117,4 +104,13 @@ class Enemy(Character):
 
     def give_exp(self):
         """ma zwracać exp, który przyznaje po zabiciu?"""
-        pass
+        return
+    
+    def leave_items(self):
+        if 0.8 < random():
+            #to zwraca 'instancemethod' object has no attribute '__getitem__', ktoś mi powie dlaczego?
+            #item_list jest zdefiniowane w equipment
+            choi = choice[item_list]
+            return choi
+        else:
+            return None

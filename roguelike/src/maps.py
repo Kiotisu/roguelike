@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from random import random, choice
-import characters as ch
+from aux import Damage, Armor
+from characters import Enemy
 
 
 class Map(object):
     def __init__(self, rmnum, rsize):
-        #generacja mapy
+        """Generacja mapy"""
         parts_used = [(rmnum/2, rmnum/2)] #wszystkie użyte części
         rooms = [Room((rmnum/2, rmnum/2))]
         possible = []
@@ -23,7 +24,7 @@ class Map(object):
             if new not in parts_used:
                 close_parts = [(new[0]-1, new[1]), (new[0], new[1]-1),
                                (new[0]+1, new[1]), (new[0], new[1]+1)]
-                if random() > 0.60:#choice([True, False]):#join or new (teraz nowe, nierówne prawdopodobieństwo ;])
+                if random() > 0.60:#join or new
                     for room in rooms:
                         if any(i in room.get_parts() for i in close_parts):
                             room.append(new)
@@ -50,9 +51,6 @@ class Map(object):
                 maxx = part[0]
             if part[1] > maxy:
                 maxy = part[1]
-                
-        print 'wymiary x ', minx, maxx
-        print 'wymiary y ', miny, maxy
         
         #każde pole jest listą trzyelementową: [typ_pola, przedmioty, postać]
         self.board = [[['_', None, None] for _y in xrange(rsize[1]*miny, rsize[1]*(maxy+1)+1)] for _x in xrange(rsize[0]*minx, rsize[0]*(maxx+1)+1)]
@@ -71,7 +69,7 @@ class Map(object):
                             self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][0] = index
                             if random() > 0.99:
                                 self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][2] \
-                                    = ch.Enemy(10, 10, ch.Damage(1.0, 1.0, 10, 5), ch.Armor(0.5, 10), 15, (part[0]-minx)*rsize[0]+x, (part[1]-miny)*rsize[1]+y)
+                                    = Enemy(10, 10, Damage(1.0, 1.0, 10, 5), Armor(0.5, 10), 15, (part[0]-minx)*rsize[0]+x, (part[1]-miny)*rsize[1]+y)
         
         self.size = (maxx+1)*rsize[0]-rsize[0]*minx, (maxy+1)*rsize[1]-rsize[1]*miny
         

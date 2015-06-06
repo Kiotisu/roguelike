@@ -167,11 +167,8 @@ class App(object):
                     self._display_surf.blit(self._image_library["texture17.png"],
                                             (x * 32, y * 32))
                 elif self._map[(x_o+x), (y_o+y)][0] != '_':  # podloga
-                    pygame.draw.rect(self._surface, ((self._map[(x_o+x),(y_o+y)][0]*64) % 256, 100,
-                                                     (self._map[(x_o+x), (y_o+y)][0]*32) % 256),
-                                     (x * 32, y * 32, 32, 32))
-                    #self._display_surf.blit(self._image_library["texture18.png"],
-                    #                        (x * 32, y * 32))
+                    self._display_surf.blit(self._image_library["texture18.png"],
+                                            (x * 32, y * 32))
                 else:  # pustka - nie sciana
                     # self._display_surf.blit(self.wall, (x * 32, y * 32))
                     pygame.draw.rect(self._surface, (0, 0, 0),
@@ -236,11 +233,7 @@ class App(object):
         who moves 
         -and what the hell is with that if? I dont understand it @SMN
         """
-        if self._player_turn:
-            #przechwyc event
-            pass
-        else:
-            #wykonaj przechwycona akcje
+        if not self._player_turn:#wykonaj przechwycona akcje
             self.player_action()
             self.enemy_turn()
 
@@ -253,20 +246,38 @@ class App(object):
             else:    
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()-1][2]) #atak
                 if result:
-                    self._map[self._hero.get_x()-1, self._hero.get_y()][2] = None
+                    loot = self._map[self._hero.get_x(), self._hero.get_y()-1][2].leave_items()
+                    if loot != None:
+                        if self._map[self._hero.get_x(), self._hero.get_y()-1][1] == None:
+                            self._map[self._hero.get_x(), self._hero.get_y()-1][1] = [loot]
+                        else:
+                            self._map[self._hero.get_x(), self._hero.get_y()-1][1].append(loot)
+                    self._map[self._hero.get_x(), self._hero.get_y()-1][2] = None
         if self._action == 's':
             if self._map[self._hero.get_x(), self._hero.get_y()+1][2] is None:
                 self._hero.change_y(1)
             else:    
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()+1][2])
                 if result:
-                    self._map[self._hero.get_x()-1, self._hero.get_y()][2] = None
+                    loot = self._map[self._hero.get_x(), self._hero.get_y()+1][2].leave_items()
+                    if loot != None:
+                        if self._map[self._hero.get_x(), self._hero.get_y()+1][1] == None:
+                            self._map[self._hero.get_x(), self._hero.get_y()+1][1] = [loot]
+                        else:
+                            self._map[self._hero.get_x(), self._hero.get_y()+1][1].append(loot)
+                    self._map[self._hero.get_x(), self._hero.get_y()+1][2] = None
         if self._action == 'a':
             if self._map[self._hero.get_x()-1, self._hero.get_y()][2] is None:
                 self._hero.change_x(-1)
             else:    
                 result = self._hero.attack(self._map[self._hero.get_x()-1, self._hero.get_y()][2])
                 if result:
+                    loot = self._map[self._hero.get_x()-1, self._hero.get_y()][2].leave_items()
+                    if loot != None:
+                        if self._map[self._hero.get_x()-1, self._hero.get_y()][1] == None:
+                            self._map[self._hero.get_x()-1, self._hero.get_y()][1] = [loot]
+                        else:
+                            self._map[self._hero.get_x()-1, self._hero.get_y()][1].append(loot)
                     self._map[self._hero.get_x()-1, self._hero.get_y()][2] = None
         if self._action == 'd':
             if self._map[self._hero.get_x()+1, self._hero.get_y()][2] is None:
@@ -274,8 +285,13 @@ class App(object):
             else:    
                 result = self._hero.attack(self._map[self._hero.get_x()+1, self._hero.get_y()][2])
                 if result:
+                    loot = self._map[self._hero.get_x()+1, self._hero.get_y()][2].leave_items()
+                    if loot != None:
+                        if self._map[self._hero.get_x()+1, self._hero.get_y()][1] == None:
+                            self._map[self._hero.get_x()+1, self._hero.get_y()][1] = [loot]
+                        else:
+                            self._map[self._hero.get_x()+1, self._hero.get_y()][1].append(loot)
                     self._map[self._hero.get_x()+1, self._hero.get_y()][2] = None
-
     def enemy_turn(self):
         """symulacja tury przeciwników, w praktyce poruszają się tylko ci w zasięgu naszego wzroku"""
 
