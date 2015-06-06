@@ -53,25 +53,34 @@ class Map(object):
                 maxy = part[1]
         
         #każde pole jest listą trzyelementową: [typ_pola, przedmioty, postać]
-        self.board = [[['_', None, None] for _y in xrange(rsize[1]*miny, rsize[1]*(maxy+1)+1)] for _x in xrange(rsize[0]*minx, rsize[0]*(maxx+1)+1)]
+        self.board = [[['_', None, None] \
+                    for _y in xrange(rsize[1]*miny, rsize[1]*(maxy+1)+1)] \
+                    for _x in xrange(rsize[0]*minx, rsize[0]*(maxx+1)+1)]
         for index in xrange(len(rooms)):
             for part in rooms[index].get_parts():
                 for x in xrange(rsize[0]):
                     for y in xrange(rsize[1]):
+                        temp_x = (part[0]-minx)*rsize[0]+x
+                        temp_y = (part[1]-miny)*rsize[1]+y
                         #sprawdzamy czy na krawędzi = sciana
-                        if (x == 0 and ((part[0]-1, part[1]) not in rooms[index].get_parts()))\
-                                or (x == rsize[0]-1 and ((part[0]+1, part[1]) not in rooms[index].get_parts()))\
-                                or (y == 0 and ((part[0], part[1]-1) not in rooms[index].get_parts()))\
-                                or (y == rsize[1]-1 and ((part[0], part[1]+1) not in rooms[index].get_parts())):
-                            self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][0] = 'w'
+                        if (x == 0 and ((part[0]-1, part[1]) \
+                                    not in rooms[index].get_parts()))\
+                                or (x == rsize[0]-1 and ((part[0]+1, part[1])\
+                                    not in rooms[index].get_parts()))\
+                                or (y == 0 and ((part[0], part[1]-1)\
+                                    not in rooms[index].get_parts()))\
+                                or (y == rsize[1]-1 and ((part[0], part[1]+1)\
+                                    not in rooms[index].get_parts())):
+                            self.board[temp_x][temp_y][0] = 'w'
 
                         else:
-                            self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][0] = index
+                            self.board[temp_x][temp_y][0] = index
                             if random() > 0.99:
-                                self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][2] \
-                                    = Enemy(10, 10, Damage(1.0, 1.0, 10, 5), Armor(0.5, 10), 15, (part[0]-minx)*rsize[0]+x, (part[1]-miny)*rsize[1]+y)
+                                self.board[temp_x][temp_y][2] \
+                                    = Enemy(10, 10, Damage(1.0, 1.0, 10, 5),
+                                            Armor(0.5, 10), 15, temp_x, temp_y)
         
-        self.size = (maxx+1)*rsize[0]-rsize[0]*minx, (maxy+1)*rsize[1]-rsize[1]*miny
+        self.size = (maxx+1-minx)*rsize[0], (maxy+1-miny)*rsize[1]
         
         #drogi
         ways = []
@@ -98,27 +107,38 @@ class Map(object):
                 room.make_way(chosen_part, (chosen_part[0], chosen_part[1]+1))
                 ways.append((chosen_part, (chosen_part[0], chosen_part[1]+1)))
 
-            chosen_part = choice(room.get_parts())
             
-            if (chosen_part[0]-1, chosen_part[1]) not in room.get_parts()\
-                    and (chosen_part[0]-1, chosen_part[1]) in parts_used:
-                room.make_way(chosen_part, (chosen_part[0]-1, chosen_part[1]))
-                ways.append((chosen_part, (chosen_part[0]-1, chosen_part[1])))
+            if len(room.get_parts()) > 1:
                 
-            if (chosen_part[0]+1, chosen_part[1]) not in room.get_parts()\
-                    and (chosen_part[0]+1, chosen_part[1]) in parts_used:
-                room.make_way(chosen_part, (chosen_part[0]+1, chosen_part[1]))
-                ways.append((chosen_part, (chosen_part[0]+1, chosen_part[1])))
+                chosen_part = choice(room.get_parts())
                 
-            if (chosen_part[0], chosen_part[1]-1) not in room.get_parts()\
-                    and (chosen_part[0], chosen_part[1]-1) in parts_used:
-                room.make_way(chosen_part, (chosen_part[0], chosen_part[1]-1))
-                ways.append((chosen_part, (chosen_part[0], chosen_part[1]-1)))
-                
-            if (chosen_part[0], chosen_part[1]+1) not in room.get_parts()\
-                    and (chosen_part[0], chosen_part[1]+1) in parts_used:
-                room.make_way(chosen_part, (chosen_part[0], chosen_part[1]+1))
-                ways.append((chosen_part, (chosen_part[0], chosen_part[1]+1)))
+                if (chosen_part[0]-1, chosen_part[1]) not in room.get_parts()\
+                        and (chosen_part[0]-1, chosen_part[1]) in parts_used:
+                    room.make_way(chosen_part, 
+                                  (chosen_part[0]-1, chosen_part[1]))
+                    ways.append((chosen_part,
+                                 (chosen_part[0]-1, chosen_part[1])))
+                    
+                if (chosen_part[0]+1, chosen_part[1]) not in room.get_parts()\
+                        and (chosen_part[0]+1, chosen_part[1]) in parts_used:
+                    room.make_way(chosen_part,
+                                  (chosen_part[0]+1, chosen_part[1]))
+                    ways.append((chosen_part,
+                                 (chosen_part[0]+1, chosen_part[1])))
+                    
+                if (chosen_part[0], chosen_part[1]-1) not in room.get_parts()\
+                        and (chosen_part[0], chosen_part[1]-1) in parts_used:
+                    room.make_way(chosen_part,
+                                  (chosen_part[0], chosen_part[1]-1))
+                    ways.append((chosen_part,
+                                 (chosen_part[0], chosen_part[1]-1)))
+                    
+                if (chosen_part[0], chosen_part[1]+1) not in room.get_parts()\
+                        and (chosen_part[0], chosen_part[1]+1) in parts_used:
+                    room.make_way(chosen_part,
+                                  (chosen_part[0], chosen_part[1]+1))
+                    ways.append((chosen_part,
+                                 (chosen_part[0], chosen_part[1]+1)))
                 
         for way in ways:
             if way[0][0] == way[1][0] and way[0][1] < way[1][1]:

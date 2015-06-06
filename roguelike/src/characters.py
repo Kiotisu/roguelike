@@ -40,10 +40,6 @@ class Character(object):
         self._hp -= (delivered_damage - damage_reduction) * damage.hurt
 
     def is_dead(self):
-        """Sprawdza czy jest się martwym i ewentualnie daje doświadczenie"""
-        # give_exp() NIE TO NIE TUTAJ!!!!
-        # chyba, że np zwraca -1 jak żyje
-        # jak nie żyje to dodatnią liczbę - exp
         return self._hp <= 0
 
     def get_hp(self):
@@ -95,7 +91,32 @@ class Hero(Character):
         self._strength = strength
         self._dexterity = dexterity
         self._experience = 0
+        
+    def set_eq_stats(self):
+        """Przekazuje statystyki z ekwipunktu do postaci"""
+        self._damage = self._equipment.get_damage()
+        self._armor = self._equipment.get_armor()
 
+    def gain_exp(self, how_much):
+        """
+        Dodaje doświadczenie,
+        sprawdza poziom 
+        i ewentualnie wykonuje lvl_up
+        """
+        self._experience += how_much
+        if self._experience > 10000:
+            self.lvl_up()
+            
+    def lvl_up(self):
+        """
+        Podnosi statystyki za doświadczenie
+        w oparciu o broń i pancerz
+        """
+        self._experience -= 10000
+        self._strength += 3 * damage.hurt
+        self._dexterity += 3 * damage.pierce
+        self._attack += 5 * (damage.hurt+damage.pierce)/2
+        self._defense += 5 * armor.gauge
 
 class Enemy(Character):
     """Klasa reprezentująca wrogów"""
@@ -104,9 +125,16 @@ class Enemy(Character):
 
     def give_exp(self):
         """ma zwracać exp, który przyznaje po zabiciu?"""
-        return
+        return attack*(damage.base+damage.extra) + \
+                defense*armor.gauge*armor.durability
     
     def leave_items(self):
+        """
+        Zwraca przedmiot wyrzucony przez zabitego przeciwnika
+        Jeżeli przeciwniki nic nie zostawia, zwraca None
+        """
+        return None
+    """
         if 0.8 < random():
             #to zwraca 'instancemethod' object has no attribute '__getitem__', ktoś mi powie dlaczego?
             #item_list jest zdefiniowane w equipment
@@ -114,3 +142,4 @@ class Enemy(Character):
             return choi
         else:
             return None
+    """
