@@ -29,7 +29,7 @@ class Map(object):
                             room.append(new)
                             break
                 else:
-                    rooms.append( Room(new) )
+                    rooms.append(Room(new))
                     next_room += 1
                 posible.remove(choice(posible))
                 parts_used.append(new)

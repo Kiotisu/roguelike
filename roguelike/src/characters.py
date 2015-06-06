@@ -67,6 +67,24 @@ class Character(object):
         else:
             return False
 
+    def get_x(self):
+        return self._position[0]
+
+    def get_y(self):
+        return self._position[1]
+
+    def get_position(self):
+        return self._position
+
+    def change_position(self, position):
+        self._position = position
+
+    def change_x(self, change):
+        self._position = (self._position[0] + change, self._position[1])
+
+    def change_y(self, change):
+        self._position = (self._position[0], self._position[1] + change)
+
 
 class Hero(Character):
     """Klasa postaci"""
@@ -81,12 +99,6 @@ class Enemy(Character):
     """Klasa przeciwnika"""
     def __init__(self, attack, defense, damage, armor, hp, x, y):
         super(Enemy, self).__init__(attack, defense, damage, armor, hp, x, y)
-
-    def get_position(self):
-        return self._position
-
-    def change_position(self, position):
-        self._position = position
 
     def give_exp(self):
         pass
