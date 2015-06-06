@@ -118,4 +118,3 @@ class Enemy(Character):
     def give_exp(self):
         """ma zwracać exp, który przyznaje po zabiciu?"""
         pass
-    

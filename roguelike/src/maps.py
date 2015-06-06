@@ -146,16 +146,15 @@ class Map(object):
                 self.board[(way[1][0]-minx)*rsize[0] + rsize[1]-1][(way[1][1]-miny)*rsize[1] + (rsize[0]/2)-1][0] = 1
     
     def __setitem__(self, pos, item):
-        #Map[x,y]
         x, y = pos
         self.board[x][y] = item
 
     def __getitem__(self, pos):
-        #Map[x,y]
         x, y = pos
         return self.board[x][y]
     
     def get_size(self):
+        """zwraca rozmiar mapy (tuple)"""
         return self.size
 
 
@@ -174,5 +173,5 @@ class Room(object):
     def append(self, part):
         self._parts.append(part)
     
-    def make_way(self, from_part, to_part):#trochę przekombinowane ale pracuje nad tym
+    def make_way(self, from_part, to_part): # trochę przekombinowane ale pracuje nad tym
         self._ways.append((from_part, to_part))

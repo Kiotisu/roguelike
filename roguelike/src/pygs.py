@@ -7,6 +7,7 @@ import pygame
 import pygame.locals as LOC
 import os
 import math
+from random import randint
 from characters import *
 from maps import Map
 from aux1 import Aux
@@ -56,14 +57,9 @@ class App(object):
         self.load_images()
         self.music.load_music()
         self.music.play_music()
+        
+        pos_x, pos_y = self.get_start_position()
 
-        _map_size = self._map.get_size()
-
-        #może jakiś inny sposób ustalania współrzędnych?!
-
-        pos_x = _map_size[0]/2
-        pos_y = _map_size[1]/2
-        #Create Hero
         self._hero = Hero(0, 0, 1, 1,
                           Damage(1.0, 1.0, 15, 10),
                           Armor(0.0, 0),
@@ -312,6 +308,17 @@ class App(object):
                     self._map[x_enemy, y_enemy-1][2] = enemy
 
         self._player_turn = True
+
+    def get_start_position(self):
+        map_size = self._map.get_size()
+        x = randint(0, map_size[0]-1)
+        y = randint(0, map_size[1]-1)
+        while self._map[x, y][0] == 'w' \
+                or self._map[x, y][0] == '_' \
+                or self._map[x, y][2] is not None:
+            x = randint(0, map_size[0]-1)
+            y = randint(0, map_size[1]-1)
+        return x, y
 
 
 if __name__ == '__main__':
