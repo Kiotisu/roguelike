@@ -62,14 +62,16 @@ class Map(object):
                     for y in xrange(rsize[1]):
                         #sprawdzamy czy na krawędzi = sciana
                         if (x == 0 and ((part[0]-1, part[1]) not in rooms[index].get_parts()))\
-                            or (x == rsize[0]-1 and ((part[0]+1, part[1]) not in rooms[index].get_parts()))\
-                            or (y == 0 and ((part[0], part[1]-1) not in rooms[index].get_parts()))\
-                            or (y == rsize[1]-1 and ((part[0], part[1]+1) not in rooms[index].get_parts())):
+                                or (x == rsize[0]-1 and ((part[0]+1, part[1]) not in rooms[index].get_parts()))\
+                                or (y == 0 and ((part[0], part[1]-1) not in rooms[index].get_parts()))\
+                                or (y == rsize[1]-1 and ((part[0], part[1]+1) not in rooms[index].get_parts())):
                             self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][0] = 'w'
+
                         else:
                             self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][0] = index
                             if random() > 0.99:
-                                self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][2] = ch.Enemy(10, 10, ch.Damage(1.0, 1.0, 10, 5), ch.Armor(0.5, 10), 15, (part[0]-minx)*rsize[0]+x, (part[1]-miny)*rsize[1]+y) 
+                                self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][2] \
+                                    = ch.Enemy(10, 10, ch.Damage(1.0, 1.0, 10, 5), ch.Armor(0.5, 10), 15, (part[0]-minx)*rsize[0]+x, (part[1]-miny)*rsize[1]+y)
         
         self.size = (maxx+1)*rsize[0]-rsize[0]*minx, (maxy+1)*rsize[1]-rsize[1]*miny
         
@@ -154,7 +156,7 @@ class Map(object):
         return self.board[x][y]
     
     def get_size(self):
-        """zwraca rozmiar mapy (tuple)"""
+        """zwraca rozmiar mapy - parę"""
         return self.size
 
 

@@ -4,7 +4,7 @@ music control
 
 import os
 import pygame
-from aux1 import Aux
+from aux import Aux
 
 class Music(object):
     """ music control """

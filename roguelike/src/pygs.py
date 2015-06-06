@@ -10,10 +10,18 @@ import math
 from random import randint
 from characters import *
 from maps import Map
-from aux1 import Aux
+from aux import Aux
 from music import Music
 
 HORIZON = 4  # stała zasięgu
+
+#to jakbyś ktoś wydzialił
+#obrazki do innego pliku:
+#IMAGES_LIBRARY = Images()
+
+#z muzyką można by tak samo zrobić imo, bo
+#po co to wszystko w classie App
+#tylko zaciemnia widok
 
 
 class App(object):
@@ -209,7 +217,10 @@ class App(object):
         return d <= HORIZON
 
     def load_images(self):
-        """ load images from /items """
+        """
+         Chciałem to wydzielić do innego pliku, ale mi nie wyszło,
+         dobrze jakby ktoś to ogarnął ~WuJo
+         load images from /items """
         path = r"./items/"
         item_list = self.aux.files("items")
         self._image_library = {}
@@ -266,24 +277,34 @@ class App(object):
                     self._map[self._hero.get_x()+1, self._hero.get_y()][2] = None
 
     def enemy_turn(self):
-        """ move enemies """
-        #przeciwnicy w zasiegu wzroku
+        """symulacja tury przeciwników, w praktyce poruszają się tylko ci w zasięgu naszego wzroku"""
+
         enemy_list = []
+
+        # szukamy przeciwników w zasięgu wzroku
         for i in xrange(-HORIZON, HORIZON):
             for j in xrange(-HORIZON, HORIZON):
-                if not (not (self._hero.get_x() + i >= 0) or not (self._hero.get_x() + j >= 0) or not (
-                        self._hero.get_x() + i < self._map.size[0]) or not (self._hero.get_y() + j < self._map.size[1])
-                        or not (self._map[(self._hero.get_x() + i), (self._hero.get_y() + j)][2] is not None)):
+                if not (not (self._hero.get_x() + i >= 0)
+                        or not (self._hero.get_x() + j >= 0)
+                        or not (self._hero.get_x() + i < self._map.size[0])
+                        or not (self._hero.get_y() + j < self._map.size[1])
+                        or not (self._map[(self._hero.get_x() + i),
+                                          (self._hero.get_y() + j)][2] is not None)):
                     enemy_list.append(self._map[(self._hero.get_x()+i),
-                                                 (self._hero.get_y()+j)][2])
+                                                (self._hero.get_y()+j)][2])
+
+        # to tylko tymczasowo do debugu:
         print "w poblizu mamy: ", enemy_list
 
+        # ruszamy enemy
         for enemy in enemy_list:
 
             x_enemy, y_enemy = enemy.get_position()
 
             x_distance = self._hero.get_x() - x_enemy
             y_distance = self._hero.get_y() - y_enemy
+
+            # ruszamy się po manhatanie, próbujemy po dłuższej odległości
 
             if abs(x_distance) > abs(y_distance):
                 if x_distance > 1\
@@ -293,6 +314,7 @@ class App(object):
                     enemy.change_position((x_enemy+1, y_enemy))
                     self._map[x_enemy, y_enemy][2] = None
                     self._map[x_enemy+1, y_enemy][2] = enemy
+
                 elif x_distance < -1\
                         and self._map[x_enemy-1, y_enemy][2] is None\
                         and self._map[x_enemy-1, y_enemy][0] != 'w'\
@@ -300,6 +322,7 @@ class App(object):
                     enemy.change_position((x_enemy-1, y_enemy))
                     self._map[x_enemy, y_enemy][2] = None
                     self._map[x_enemy-1, y_enemy][2] = enemy
+
             else:
                 if y_distance > 1 \
                         and self._map[x_enemy, y_enemy+1][2] is None\
@@ -308,6 +331,7 @@ class App(object):
                     enemy.change_position((x_enemy, y_enemy+1))
                     self._map[x_enemy, y_enemy][2] = None
                     self._map[x_enemy, y_enemy+1][2] = enemy
+
                 elif y_distance < -1 \
                         and self._map[x_enemy, y_enemy-1][2] is None\
                         and self._map[x_enemy, y_enemy-1][0] != 'w'\
@@ -319,6 +343,7 @@ class App(object):
         self._player_turn = True
 
     def get_start_position(self):
+        """Zwraca prawidłową, losową pozycję startową dla naszego bohatera"""
         map_size = self._map.get_size()
         x = randint(0, map_size[0]-1)
         y = randint(0, map_size[1]-1)
