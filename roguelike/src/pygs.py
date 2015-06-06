@@ -269,22 +269,44 @@ class App(object):
     def enemy_turn(self):
         """ move enemies """
         #przeciwnicy w zasiegu wzroku
-        _enemy_list = []
-        for i in xrange(-self._horizon, self._horizon):  #from -3 to 3 
+        enemy_list = []
+        for i in xrange(-self._horizon, self._horizon):  #from -3 to 3
         #no nie, nie sprawdzałeś czy nie jestesś za blisko krawędzi mapy @SMN
         #dodalem sprawdzanie
             for j in xrange(-self._horizon, self._horizon):
                 # nie puste pole
-                if self._posx+i >= 0 \
-                        and self._posy+j >= 0 \
-                        and self._posx+i < self._map.size[0] \
-                        and self._posy+j < self._map.size[1]:
-                    if self._map[(self._posx+i), (self._posy+j)][2] is not None:
-                        _enemy_list.append(self._map[(self._posx+i),
-                                                     (self._posy+j)][2])
+                if not (not (self._posx + i >= 0) or not (self._posy + j >= 0) or not (
+                        self._posx + i < self._map.size[0]) or not (self._posy + j < self._map.size[1])
+                        or not (self._map[(self._posx + i), (self._posy + j)][2] is not None)):
+                    enemy_list.append(self._map[(self._posx+i),
+                                                 (self._posy+j)][2])
+        #print "w poblizu mamy: ", enemy_list
 
-        #ruszanie przeciwnikow ??
-        # będę zaraz kminił WJ
+        for enemy in enemy_list:
+            x_enemy, y_enemy = enemy.get_position()
+            # będziemy poruszać się po współrzędnych,
+            # na których jest większa odległość póki co...
+            x_distance = self._posx - x_enemy
+            y_distance = self._posy - y_enemy
+            if abs(x_distance) > abs(y_distance):
+                if x_distance > 0:
+                    enemy.change_position((x_enemy+1, y_enemy))
+                    self._map[x_enemy, y_enemy][2] = None
+                    self._map[x_enemy+1, y_enemy][2] = enemy
+                elif x_distance < 0:
+                    enemy.change_position((x_enemy-1, y_enemy))
+                    self._map[x_enemy, y_enemy][2] = None
+                    self._map[x_enemy-1, y_enemy][2] = enemy
+            else:
+                if y_distance > 0:
+                    enemy.change_position((x_enemy, y_enemy+1))
+                    self._map[x_enemy, y_enemy][2] = None
+                    self._map[x_enemy, y_enemy+1][2] = enemy
+                elif y_distance < 0:
+                    enemy.change_position((x_enemy, y_enemy-1))
+                    self._map[x_enemy, y_enemy][2] = None
+                    self._map[x_enemy, y_enemy-1][2] = enemy
+
         self._player_turn = True
 
 

@@ -81,6 +81,12 @@ class Enemy(Character):
     """Klasa przeciwnika"""
     def __init__(self, attack, defense, damage, armor, hp, x, y):
         super(Enemy, self).__init__(attack, defense, damage, armor, hp, x, y)
-        
+
+    def get_position(self):
+        return self._position
+
+    def change_position(self, position):
+        self._position = position
+
     def give_exp(self):
         pass
