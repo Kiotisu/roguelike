@@ -40,6 +40,8 @@ class Character(object):
         self._hp -= (delivered_damage - damage_reduction) * damage.hurt
 
     def is_dead(self):
+        """sprawdza czy postaci skończyło się życie
+        i zwraca true jeśli zginęła, false w przeciwnym wypadku"""
         return self._hp <= 0
 
     def get_hp(self):
@@ -84,6 +86,7 @@ class Character(object):
 
 exp_cap = 10000
 
+
 class Hero(Character):
     """Klasa reprezentująca naszego bohatera"""
     def __init__(self, strength, dexterity, attack, defense, damage, armor, hp, x, y):
@@ -115,10 +118,11 @@ class Hero(Character):
         """
         print "I'm learning!"
         self._experience -= exp_cap
-        self._strength += 3 * damage.hurt
-        self._dexterity += 3 * damage.pierce
-        self._attack += 5 * (damage.hurt+damage.pierce)/2
-        self._defense += 5 * armor.gauge
+        self._strength += 3 * self._damage.hurt
+        self._dexterity += 3 * self._damage.pierce
+        self._attack += 5 * (self._damage.hurt+self._damage.pierce)/2
+        self._defense += 5 * self._armor.gauge
+
 
 class Enemy(Character):
     """Klasa reprezentująca wrogów"""
@@ -127,8 +131,8 @@ class Enemy(Character):
 
     def give_exp(self):
         """ma zwracać exp, który przyznaje po zabiciu?"""
-        return attack*(damage.base+damage.extra) + \
-                defense*armor.gauge*armor.durability
+        return self._attack*(self._damage.base+self._damage.extra) + \
+               self._defense*self._armor.gauge*self._armor.durability
     
     def leave_items(self):
         """
@@ -139,3 +143,4 @@ class Enemy(Character):
             return get_random_item()
         else:
             return None
+        
