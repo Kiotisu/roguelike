@@ -8,18 +8,18 @@ class Map(object):
         #generacja mapy
         parts_used = [(rmnum/2, rmnum/2)] #wszystkie użyte części
         rooms = [Room((rmnum/2, rmnum/2))]
-        posible = []
+        possible = []
         next_room = 1
         
         if rmnum != 1: #możliwe stają się przyległe pola
-            posible.append((rmnum/2-1, rmnum/2))
-            posible.append((rmnum/2, rmnum/2-1))
-            posible.append((rmnum/2+1, rmnum/2))
-            posible.append((rmnum/2, rmnum/2+1))
+            possible.append((rmnum/2-1, rmnum/2))
+            possible.append((rmnum/2, rmnum/2-1))
+            possible.append((rmnum/2+1, rmnum/2))
+            possible.append((rmnum/2, rmnum/2+1))
         
         while next_room < rmnum and len(parts_used) < rmnum ** 2:
-            new = choice(posible)
-            posible.remove(new)
+            new = choice(possible)
+            possible.remove(new)
             if new not in parts_used:
                 close_parts = [(new[0]-1, new[1]), (new[0], new[1]-1),
                                (new[0]+1, new[1]), (new[0], new[1]+1)]
@@ -31,11 +31,11 @@ class Map(object):
                 else:
                     rooms.append(Room(new))
                     next_room += 1
-                posible.remove(choice(posible))
+                possible.remove(choice(possible))
                 parts_used.append(new)
                 for part in close_parts:
                     if part not in parts_used:
-                        posible.append(part)
+                        possible.append(part)
         #"obcinamy" puste boki
         maxx = 1
         maxy = 1
@@ -65,7 +65,7 @@ class Map(object):
                             or (x == rsize[0]-1 and ((part[0]+1, part[1]) not in rooms[index].get_parts()))\
                             or (y == 0 and ((part[0], part[1]-1) not in rooms[index].get_parts()))\
                             or (y == rsize[1]-1 and ((part[0], part[1]+1) not in rooms[index].get_parts())):
-                           self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][0] = 'w'
+                            self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][0] = 'w'
                         else:
                             self.board[(part[0]-minx)*rsize[0]+x][(part[1]-miny)*rsize[1]+y][0] = index
                             if random() > 0.99:
@@ -79,45 +79,44 @@ class Map(object):
             chosen_part = choice(room.get_parts())
             
             if (chosen_part[0]-1, chosen_part[1]) not in room.get_parts()\
-                and (chosen_part[0]-1, chosen_part[1]) in parts_used:
+                    and (chosen_part[0]-1, chosen_part[1]) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0]-1, chosen_part[1]))
                 ways.append((chosen_part, (chosen_part[0]-1, chosen_part[1])))
                 
             if (chosen_part[0]+1, chosen_part[1]) not in room.get_parts()\
-                and (chosen_part[0]+1, chosen_part[1]) in parts_used:
+                    and (chosen_part[0]+1, chosen_part[1]) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0]+1, chosen_part[1]))
                 ways.append((chosen_part, (chosen_part[0]+1, chosen_part[1])))
                 
             if (chosen_part[0], chosen_part[1]-1) not in room.get_parts()\
-                and (chosen_part[0], chosen_part[1]-1) in parts_used:
+                    and (chosen_part[0], chosen_part[1]-1) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0], chosen_part[1]-1))
                 ways.append((chosen_part, (chosen_part[0], chosen_part[1]-1)))
                 
             if (chosen_part[0], chosen_part[1]+1) not in room.get_parts()\
-                and (chosen_part[0], chosen_part[1]+1) in parts_used:
+                    and (chosen_part[0], chosen_part[1]+1) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0], chosen_part[1]+1))
                 ways.append((chosen_part, (chosen_part[0], chosen_part[1]+1)))
-                
-            
+
             chosen_part = choice(room.get_parts())
             
             if (chosen_part[0]-1, chosen_part[1]) not in room.get_parts()\
-                and (chosen_part[0]-1, chosen_part[1]) in parts_used:
+                    and (chosen_part[0]-1, chosen_part[1]) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0]-1, chosen_part[1]))
                 ways.append((chosen_part, (chosen_part[0]-1, chosen_part[1])))
                 
             if (chosen_part[0]+1, chosen_part[1]) not in room.get_parts()\
-                and (chosen_part[0]+1, chosen_part[1]) in parts_used:
+                    and (chosen_part[0]+1, chosen_part[1]) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0]+1, chosen_part[1]))
                 ways.append((chosen_part, (chosen_part[0]+1, chosen_part[1])))
                 
             if (chosen_part[0], chosen_part[1]-1) not in room.get_parts()\
-                and (chosen_part[0], chosen_part[1]-1) in parts_used:
+                    and (chosen_part[0], chosen_part[1]-1) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0], chosen_part[1]-1))
                 ways.append((chosen_part, (chosen_part[0], chosen_part[1]-1)))
                 
             if (chosen_part[0], chosen_part[1]+1) not in room.get_parts()\
-                and (chosen_part[0], chosen_part[1]+1) in parts_used:
+                    and (chosen_part[0], chosen_part[1]+1) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0], chosen_part[1]+1))
                 ways.append((chosen_part, (chosen_part[0], chosen_part[1]+1)))
                 
@@ -161,6 +160,7 @@ class Map(object):
 
 
 class Room(object):
+
     def __init__(self, first_part):
         self._parts = [first_part]
         self._ways = []
