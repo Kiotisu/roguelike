@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+menu?
+"""
 from ttk import Frame, Button, Style
 from Tkinter import Tk
 import tkMessageBox as Box
 from pygs import App
-"""
-Nie wiem, słabo to wygląda i nie ogarniam :v
-@WJ
-"""
-
 
 
 class Menu(Frame):

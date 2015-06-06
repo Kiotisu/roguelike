@@ -24,6 +24,7 @@ kaliber(gauge) = liczba z zakresu <0.0 , 1.0>
 wytrzymałość(durability) = liczba całkowita
 """
 
+
 class Aux(object):
     """ auxiliary class """
     def __init__(self):

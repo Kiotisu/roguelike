@@ -143,4 +143,3 @@ class Enemy(Character):
             return get_random_item()
         else:
             return None
-        

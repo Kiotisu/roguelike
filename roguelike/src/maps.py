@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Moduł odpowiedzielany za losowe generowanie mapy
+"""
 from random import random, choice
 from aux import Damage, Armor
 from characters import Enemy
