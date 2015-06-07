@@ -64,10 +64,6 @@ class Character(object):
         """zwraca pancerz postaci"""
         return self._armor
 
-    def get_exp(self):
-        """zwraca pancerz postaci"""
-        return self._experience
-
     def get_x(self):
         """zwraca współrzędną x położenia postaci na mapie"""
         return self._position[0]
@@ -129,6 +125,13 @@ class Hero(Character):
         self._experience -= exp_cap
         self._skill_points += 5
 
+    def add_hp(self):
+        """Dodaje zdrowia w zamian za punkt umiejętności"""
+        if self._skill_points != 0:
+            self._skill_points -= 1
+            self._max_hp += 5
+            self._hp += 5
+
     def add_strength(self):
         """Dodaje siły w zamian za punkt umiejętności"""
         if self._skill_points != 0:
@@ -152,6 +155,18 @@ class Hero(Character):
         if self._skill_points != 0:
             self._skill_points -= 1
             self._defense += 1
+
+    def get_strength(self):
+        """zwraca siłę postaci"""
+        return self._strength
+
+    def get_dexterity(self):
+        """zwraca zręczność postaci"""
+        return self._dexterity
+
+    def get_exp(self):
+        """zwraca pancerz postaci"""
+        return self._experience
 
     def get_equip(self):
         """Zwraca ekwipunek"""

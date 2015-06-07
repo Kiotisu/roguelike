@@ -31,13 +31,14 @@ class App(object):
         self._display_surf = None
         self._image_library = None
         self._action = None
-        self._marked = (None, None)
+        self._marked = None
+        self._lost  = None
 
         pos_x, pos_y = self.get_start_position()
         self._hero = Hero(0, 0, 10, 10,
                           Damage(1.0, 1.0, 15, 10),
                           Armor(0.0, 0),
-                          100, pos_x, pos_y)
+                          200, pos_x, pos_y)
 
     def init(self):
         """ s """
@@ -51,18 +52,8 @@ class App(object):
         MUSIC.load_music()
         MUSIC.play_music()
 
-        # do_nice_outlines(self._surface)
         pygame.key.set_repeat(5, 50)  #(delay, interval) in milisec
-
-        Auxil.write(self._surface, "EQ", 22, 700, 0)
-        Auxil.write(self._surface, "Backpack", 22, 660, 80)
-        Auxil.write(self._surface, "Stats:", 14, 615, 240+20)
-        Auxil.write(self._surface, "HP", 14, 615, 240+35)  # +15 pix pionowo
-        Auxil.write(self._surface, "Attack", 14, 615, 240+50)
-        Auxil.write(self._surface, "Defense", 14, 615, 240+65)
-        Auxil.write(self._surface, "Armor", 14, 615, 240+80)
-        Auxil.write(self._surface, "Exp", 14, 615, 240+95)
-
+        self._lost = False
 
     def execute(self):
         """ s """
@@ -79,8 +70,10 @@ class App(object):
             if not self._player_turn:
                 self.player_action()
                 self.enemy_turn()
-
-            self.render()
+            if not self._lost:
+                self.render()
+            else:
+                Auxil.write(self._surface, "GAME OVER", 34, 200, 240)
 
     def event(self, event):
         """
@@ -140,7 +133,7 @@ class App(object):
                             self._hero.get_equip().add_to_backpack(item)
                         # delete item from the floor
                         self._map[self._hero.get_position()][1] = None
-                        self._hero.get_equip().print_backpack()  # debug
+                        print self._hero.get_equip().get_backpack()  # debug
 
             if event.key == LOC.K_ESCAPE:  #quit
                 self._running = False
@@ -164,16 +157,34 @@ class App(object):
             if event.button == 1:
                 po_x, po_y = pygame.mouse.get_pos()
                 # mouse pointer in the equipment zone
-                if po_x >= 610 and po_y >= 100 and po_y <= 100+6*40:
-                    (square_x, square_y) = ((po_x-610)/40, (po_y-20)/40)
-                    if not self._marked == (square_x, square_y):
+                if po_x >= 610 and po_y >= 100 and po_y <= 100 + 4*40:
+                    bp_place = (po_x-610)/40 + 5*(po_y-100)/40
+                    if not self._marked == bp_place:
                         # if not already marked
-                        self._marked = (square_x, square_y)
+                        self._marked = bp_place
+                        print self._marked
                     else:
                         # swap item with wearing
-                        bp_place = square_y*5+square_x
-                        if bp_place <= self._hero.get_equip().backpack_len():
-                            self._hero.get_equip().wear_item(bp_place, 0)
+                        print bp_place
+                        print self._hero.get_equip().backpack_len()
+                        if bp_place < self._hero.get_equip().backpack_len():
+                            self._hero.get_equip().wear_item(bp_place)
+
+                # mouse on lvl buttons
+                if self._hero._skill_points != 0\
+                    and po_x >= 780 and po_x <= 780 + 16\
+                    and po_y >= 275 and po_y <= 275 + 5*16:
+                    num = (po_y-275)/16
+                    if num == 0:
+                        self._hero.add_hp()
+                    elif num == 1:
+                        self._hero.add_attack()
+                    elif num == 2:
+                        self._hero.add_defense()
+                    elif num == 3:
+                        self._hero.add_strength()
+                    elif num == 4:
+                        self._hero.add_dexterity()
 
     def render(self):
         """ in prog """
@@ -273,55 +284,77 @@ class App(object):
                 pygame.draw.rect(self._surface, dark_straps,
                                  (20+strap*wid, 650-strap*2, wid-1, strap*2))
 
-        pygame.display.update()
-
         # nadpisuje czarnym tłem
-        pygame.draw.rect(self._surface, (0, 0, 0), (675, 275, 135, 75))
+        pygame.draw.rect(self._surface, (0, 0, 0), (610, 0, 200, 650))
 
-        #,240 + z)
+        # prawa strona
+        Auxil.do_nice_outlines(self._surface)
+        Auxil.write(self._surface, "EQ", 22, 700, 0)
+        Auxil.write(self._surface, "Backpack", 22, 660, 80)
+        Auxil.write(self._surface, "Stats:", 14, 615, 240+20)
+        Auxil.write(self._surface, "HP", 14, 615, 240+35)  # +15 pix pionowo
+        Auxil.write(self._surface, "Attack", 14, 615, 240+50)
+        Auxil.write(self._surface, "Defense", 14, 615, 240+65)
+        Auxil.write(self._surface, "Strength", 14, 615, 240+80)
+        Auxil.write(self._surface, "Dexterity", 14, 615, 240+95)
+        Auxil.write(self._surface, "Armor", 14, 615, 240+120)
+        Auxil.write(self._surface, "Exp", 14, 615, 240+135)
+
+        #,240 + 15*i)
         Auxil.write(self._surface, str(floor(self._hero.get_hp())),
-                                                                14, 675, 275)
-        Auxil.write(self._surface, str(self._hero.get_attack()), 14, 675, 290)
-        Auxil.write(self._surface, str(self._hero.get_defense()), 14, 675, 305)
+                                                                14, 680, 275)
+        Auxil.write(self._surface, str(self._hero.get_attack()), 14, 680, 290)
+        Auxil.write(self._surface, str(self._hero.get_defense()), 14, 680, 305)
+        Auxil.write(self._surface, str(self._hero.get_strength()), 14, 680, 320)
+        Auxil.write(self._surface, str(self._hero.get_dexterity()), 14, 680, 335)
         Auxil.write(self._surface, str(self._hero.get_armor().durability),
-                                                                14, 675, 320)
-        Auxil.write(self._surface, str(self._hero.get_exp()), 14, 675, 335)
+                                                                14, 680, 350)
+        Auxil.write(self._surface, str(self._hero.get_exp()), 14, 680, 365)
 
-        pygame.draw.rect(self._surface, (0, 0, 0), (615, 355, 195, 60))
 
+        z = 2
         # EQ
-        if self._hero._equipment._weapon is not None:
+        if self._hero.get_equip()._weapon is not None:
             self._display_surf.blit(
                     self._image_library["weapon3.png"],
-                    (615, 20)
+                    (615+z, 20+z)
                 )
-        if self._hero._equipment._suit is not None:
+        if self._hero.get_equip()._suit is not None:
             self._display_surf.blit(
                     self._image_library["ar2.png"],
-                    (615+40, 20)
+                    (615+z+40, 20+z)
                 )
 
         # backpack
         i = 0
-        lis = self._hero._equipment.get_backpack()
+        lis = self._hero.get_equip().get_backpack()
         for item in lis:
             if type(item) is Weapon:
                 self._display_surf.blit(
                     self._image_library["weapon3.png"],
-                    (615 + (i%5)*40, 100 + (i/5)*40)
+                    (615 + z + (i%5)*40, 100 + z + (i/5)*40)
                 )
             elif type(item) is Suit:
                 self._display_surf.blit(
                     self._image_library["ar2.png"],
-                    (615 + (i%5)*40, 100 + (i/5)*40)
+                    (615 + z + (i%5)*40, 100 + z + (i/5)*40)
                 )
             elif type(item) is Consumable:
                 self._display_surf.blit(
                     self._image_library["apple.png"],
-                    (615 + (i%5)*40, 100 + (i/5)*40)
+                    (615 + z + (i%5)*40, 100 + z + (i/5)*40)
                 )
             i += 1
 
+        # buttons
+        if self._hero._skill_points != 0:
+            for but in xrange(5):
+                self._display_surf.blit(
+                    self._image_library["button.png"],
+                    (780, 275 + but*16)
+                )
+
+        pygame.display.update()
 
     def check_view(self, x, y):
         """sprawdza zasieg wzroku"""

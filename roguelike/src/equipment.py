@@ -10,7 +10,8 @@ class Item(object):
 
     def __init__(self, name, use_requirements):
         self._name = name
-        self._requirements = use_requirements #(strength_require, dexterity_require)
+        self._requirements = use_requirements 
+        #(strength_require, dexterity_require)
 
 class Consumable(Item):
     """Jedzenie"""
@@ -62,28 +63,32 @@ class Equipment(object):
 
     def __init__(self):
         """
-        -słownik był bez sensu skoro mamy tylko dwa pola
-        -plecak jako tablica dwuwymiarowa jest potrzebny?
-        -ja bym go widział jako lista tutaj
-        @SMN
+        bron, zbroja, plecak
         """
         self._weapon = None
         self._suit = None
-        # self._backpack = [[None for x in xrange(5)] for x in xrange(5)] #cols_count, rows_count
-        # ok lista
         self._backpack = []
 
-    def wear_item(self, list_positon, my_stats):
+    def wear_item(self, list_positon):
         """
-        to do, jeszcze pomyślę
-        napisac jeszcze raz bo teraz _backpack jest lista
+        zakladanie przedmiotu
+        -napisac jeszcze raz bo teraz _backpack jest lista
         """
         if list_positon < len(self._backpack):
-            swap = self._weapon
-            self._weapon = self_backpack[list_positon]
-            self_backpack[list_positon] = swap
-
-        # TODO: calculate stats
+            if type(self._backpack[list_positon]) is Weapon:
+                swap = self._weapon
+                self._weapon = self._backpack[list_positon]
+                self._backpack[list_positon] = swap
+            elif type(self._backpack[list_positon]) is Suit:
+                swap = self._suit
+                self._suit = self._backpack[list_positon]
+                self._backpack[list_positon] = swap
+            else:
+                pass
+        print self._backpack
+        [x for x in self._backpack if x is not None]
+        print "after"
+        print self._backpack
 
     def get_damage(self):
         """Podaje zadawane przez bohatera obrażenia"""
@@ -106,12 +111,5 @@ class Equipment(object):
         if len(self._backpack) < 20:
             self._backpack.append(what)
 
-    def print_backpack(self):
-        for item in self._backpack:
-            print item
-
     def get_backpack(self):
-        li = []
-        for i in self._backpack:
-            li.append(i)
-        return li
+        return self._backpack
