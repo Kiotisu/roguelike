@@ -13,6 +13,10 @@ class Item(object):
         self._requirements = use_requirements 
         #(strength_require, dexterity_require)
 
+    def can_be_used(self, by_who):
+        return self._requirements[0] <= by_who.get_strength()\
+                and self._requirements[1] <= by_who.get_dexterity()
+
 class Consumable(Item):
     """Jedzenie"""
 
@@ -61,28 +65,34 @@ def get_random_item():
 
 class Equipment(object):
 
-    def __init__(self):
+    def __init__(self, owner):
         """
         bron, zbroja, plecak
         """
+        self._owner = owner
         self._weapon = None
         self._suit = None
         self._backpack = []
 
-    def wear_item(self, list_positon):
+    def use_item(self, list_positon):
         """
-        zakladanie przedmiotu
-        -napisac jeszcze raz bo teraz _backpack jest lista
+        używanie przedmiotu
+        -pancerze i miecze zakłada a jabłko je
         """
-        if list_positon < len(self._backpack):
+        if list_positon < len(self._backpack)\
+            and self._backpack[list_positon].can_be_used(self._owner):
             if type(self._backpack[list_positon]) is Weapon:
                 swap = self._weapon
                 self._weapon = self._backpack[list_positon]
                 self._backpack[list_positon] = swap
+                self._owner.change_damage(self._weapon.get_damage())
             elif type(self._backpack[list_positon]) is Suit:
                 swap = self._suit
                 self._suit = self._backpack[list_positon]
                 self._backpack[list_positon] = swap
+                self._owner.change_armor(self._suit.get_armor())
+            elif type(self._backpack[list_positon]) is Consumable:
+                self._backpack[list_positon].eat(self._owner)
             else:
                 pass
         print self._backpack
@@ -91,19 +101,6 @@ class Equipment(object):
         print "after"
         print self._backpack
 
-    def get_damage(self):
-        """Podaje zadawane przez bohatera obrażenia"""
-        if self._weapon is None:
-            return Damage(0.5, 1.0, 5, 2)
-        else:
-            return self._weapon.get_damage()
-        
-    def get_armor(self):
-        """Podaje posiadany przez bohatera pancerz"""
-        if self._suit is None:
-            return Armor(0.0, 0)
-        else:
-            return self._suit.get_armor()
 
     def backpack_len(self):
         return len(self._backpack)

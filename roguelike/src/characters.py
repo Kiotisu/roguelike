@@ -60,9 +60,17 @@ class Character(object):
         """zwraca obrone postaci"""
         return self._defense
 
+    def change_damage(self, damage):
+        """zmienia obrażenia postaci"""
+        self._damage = damage
+
     def get_armor(self):
         """zwraca pancerz postaci"""
         return self._armor
+    
+    def change_armor(self, armor):
+        """zmienia pancerz postaci"""
+        self._armor = armor
 
     def get_x(self):
         """zwraca współrzędną x położenia postaci na mapie"""
@@ -93,9 +101,9 @@ exp_cap = 1000
 
 class Hero(Character):
     """Klasa reprezentująca naszego bohatera"""
-    def __init__(self, strength, dexterity, attack, defense, damage, armor, hp, x, y):
-        super(Hero, self).__init__(attack, defense, damage, armor, hp, x, y)
-        self._equipment = Equipment()
+    def __init__(self, strength, dexterity, attack, defense, hp, x, y):
+        super(Hero, self).__init__(attack, defense, Damage(0.5, 1.0, 5, 2), Armor(0.0, 0), hp, x, y)
+        self._equipment = Equipment(self)
         self._strength = strength
         self._dexterity = dexterity
         self._experience = 0
@@ -165,7 +173,7 @@ class Hero(Character):
         return self._dexterity
 
     def get_exp(self):
-        """zwraca pancerz postaci"""
+        """zwraca doświadczenie postaci"""
         return self._experience
 
     def get_equip(self):

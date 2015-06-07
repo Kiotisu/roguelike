@@ -35,10 +35,7 @@ class App(object):
         self._lost  = None
 
         pos_x, pos_y = self.get_start_position()
-        self._hero = Hero(0, 0, 10, 10,
-                          Damage(1.0, 1.0, 15, 10),
-                          Armor(0.0, 0),
-                          200, pos_x, pos_y)
+        self._hero = Hero(10, 5, 10, 10, 200, pos_x, pos_y)
 
     def init(self):
         """ s """
@@ -167,7 +164,7 @@ class App(object):
                         bp_place = square_y*5+square_x
                         if bp_place < self._hero.get_equip().backpack_len():
                             print "swap for real", bp_place, self._hero.get_equip().backpack_len()
-                            self._hero.get_equip().wear_item(bp_place)
+                            self._hero.get_equip().use_item(bp_place)
                             self._marked = None
 
                 # mouse on lvl buttons
@@ -397,6 +394,7 @@ class App(object):
                 result = self._hero.attack(action_pos[2])
 
                 if result:
+                    self._hero.gain_exp(action_pos[2].give_exp())
                     loot = action_pos[2].leave_items()
 
                     if loot is not None:
@@ -420,6 +418,7 @@ class App(object):
                 result = self._hero.attack(action_pos[2])
 
                 if result:
+                    self._hero.gain_exp(action_pos[2].give_exp())
                     loot = action_pos[2].leave_items()
 
                     if loot is not None:
@@ -443,6 +442,7 @@ class App(object):
                 result = self._hero.attack(action_pos[2])
 
                 if result:
+                    self._hero.gain_exp(action_pos[2].give_exp())
                     loot = action_pos[2].leave_items()
                     if loot is not None:
                         if action_pos[1] is None:
@@ -465,6 +465,7 @@ class App(object):
                 result = self._hero.attack(action_pos[2])
 
                 if result:
+                    self._hero.gain_exp(action_pos[2].give_exp())
                     loot = action_pos[2].leave_items()
 
                     if loot is not None:
