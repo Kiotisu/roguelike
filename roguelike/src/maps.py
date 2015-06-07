@@ -5,6 +5,7 @@ Moduł odpowiedzielany za losowe generowanie mapy
 from random import random, choice
 from auxil import Damage, Armor
 from characters import get_random_enemy
+from copy import deepcopy
 
 
 class Map(object):
@@ -107,8 +108,9 @@ class Map(object):
                         else:
                             self.board[temp_x][temp_y][0] = index
                             if random() > 0.97:
+                                
                                 self.board[temp_x][temp_y][2]\
-                                    = get_random_enemy()
+                                    = deepcopy(get_random_enemy())
                                 self.board[temp_x][temp_y][2]\
                                     .change_position((temp_x, temp_y))
 

@@ -5,6 +5,7 @@ definicja klas postaci
 from random import random, choice
 from equipment import Equipment, get_random_item
 from auxil import Damage, Armor
+from copy import deepcopy
 
 
 class Character(object):
@@ -198,7 +199,7 @@ class Enemy(Character):
         Jeżeli przeciwniki nic nie zostawia, zwraca None
         """
         if 0.66 < random():
-            return get_random_item()
+            return deepcopy(get_random_item())
         else:
             return None
 
