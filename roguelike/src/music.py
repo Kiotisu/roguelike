@@ -18,7 +18,7 @@ class Music(object):
         """load music from /music"""
         #https://freemusicarchive.org/music/Sycamore_Drive/Sycamore_Drive/
         self.song_num = 0
-        self.songs = auxil.files("music")
+        self.songs = auxil.Auxil.files("music")
         self.volume = 0.00
         song_ended = pygame.USEREVENT + 1
         pygame.mixer.music.set_endevent(song_ended)
