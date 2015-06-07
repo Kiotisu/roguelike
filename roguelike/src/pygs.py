@@ -9,7 +9,7 @@ import os
 from math import ceil, floor, sqrt
 from random import randint
 from characters import Hero
-from equipment import Item, Weapon, Suit
+from equipment import Item, Weapon, Suit, Consumable
 from maps import Map
 from auxil import *
 from music import Music
@@ -236,15 +236,15 @@ class App(object):
                                 (x * 32, y * 32)
                             )
 
-                        else:
+                        elif type(item) is Consumable:
                             self._display_surf.blit(
-                                self._image_library["weapon6.png"],
+                                self._image_library["apple.png"],
                                 (x * 32, y * 32)
                             )
 
                 # hero
                 if (x_o+x, y_o+y) == self._hero.get_position():
-                    self._display_surf.blit(self._image_library["photo.jpg"],
+                    self._display_surf.blit(self._image_library["hero.png"],
                                             (x * 32, y * 32))
 
                 # enemy
@@ -302,29 +302,23 @@ class App(object):
                 )
 
         # backpack
-
-        # wywala się lub nie łapie
-
         i = 0
         lis = self._hero._equipment.get_backpack()
         for item in lis:
-            #print item, type(item)
             if type(item) is Weapon:
                 self._display_surf.blit(
                     self._image_library["weapon3.png"],
                     (615 + (i%5)*40, 100 + (i/5)*40)
                 )
-                print "miecz"
             elif type(item) is Suit:
                 self._display_surf.blit(
                     self._image_library["ar2.png"],
                     (615 + (i%5)*40, 100 + (i/5)*40)
                 )
-                print "zbroja"
-            else:
+            elif type(item) is Consumable:
                 self._display_surf.blit(
-                    self._image_library["weapon6.png"],
-                    (615 + (i%5)*40+5, 600 + (i/5)*40+5)
+                    self._image_library["apple.png"],
+                    (615 + (i%5)*40, 100 + (i/5)*40)
                 )
             i += 1
 
