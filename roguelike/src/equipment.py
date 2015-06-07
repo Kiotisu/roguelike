@@ -99,6 +99,7 @@ class Equipment(object):
                 self._owner.change_armor(self._suit.get_armor())
             elif type(self._backpack[list_positon]) is Consumable:
                 self._backpack[list_positon].eat(self._owner)
+                del self._backpack[list_positon]
             else:
                 pass
         print self._backpack
