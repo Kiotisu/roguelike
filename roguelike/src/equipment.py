@@ -59,11 +59,15 @@ class Suit(Item):
 
 #lista przedmiotów w grze, zostawiane przez przeciwników
 item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
-             Suit('Kolczuga', (7, 7), Armor(0.5, 10), "ar2.png"),
+             Weapon('Maczuga', (7, 7), Damage(0.8, 1.5, 15, 10), "weapon2.png"),
+             Weapon('Berdysz', (7, 7), Damage(1.3, 1.0, 20, 10), "weapon1.png"),
              Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10), "weapon4.png"),
+             Suit('Kolczuga', (7, 7), Armor(0.5, 10), "ar2.png"),
              Consumable('Japko', (0, 0), 15, "apple.png"),
-             Consumable('Dobre Japko', (0, 0), 40, "apple.png"),
-             Consumable('Rogal', (0, 0), 300, "rogal.jpg")]
+             Consumable('Dobre Japko', (0, 0), 35, "apple.png"),
+             Consumable('Pyszne Japko', (0, 0), 50, "apple.png"),
+             Consumable('Rogal', (0, 0), 100, "rogal.jpg"),
+             Consumable('Rogal Mocy', (0, 0), 300, "rogal.jpg")]
 
 def get_random_item():
     return choice(item_list)
