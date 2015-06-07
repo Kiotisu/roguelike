@@ -309,6 +309,15 @@ class App(object):
                                                                 14, 690, 350)
         Auxil.write(self._surface, str(self._hero.get_exp()), 14, 690, 365)
 
+        Auxil.write(self._surface, "Requirements:", 14, 615, 380)
+        Auxil.write(self._surface, "Strength", 14, 615, 395)
+        Auxil.write(self._surface, "Dexterity", 14, 615, 410)
+        if self._marked is not None:
+            mark = self._marked[0] + self._marked[0]*5
+            back = self._hero.get_equip().get_backpack()
+            if mark < len(back):
+                Auxil.write(self._surface, str(back[mark]._requirements[0]), 14, 690, 395)
+                Auxil.write(self._surface, str(back[mark]._requirements[0]), 14, 690, 410)
 
         z = 2
         EQ = self._hero.get_equip()
@@ -435,7 +444,7 @@ class App(object):
 
             elif action_pos[2] == "rf":
                 self._hero.restore_hp(95)
-                self._hero.add_hp()
+                self._hero.gain_exp(100)
                 action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
