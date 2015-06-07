@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """equipment"""
 
-from aux import Damage, Armor
+from auxil import Damage, Armor
 from random import choice
 
 
@@ -57,20 +57,21 @@ class Equipment(object):
         """
         self._weapon = None
         self._suit = None
-        self._backpack = [[None for x in xrange(5)] for x in xrange(5)] #cols_count, rows_count
+        # self._backpack = [[None for x in xrange(5)] for x in xrange(5)] #cols_count, rows_count
+        # ok lista
+        self._backpack = []
 
-    def wear_item(self, row, col, my_stats):
+    def wear_item(self, list_positon, my_stats):
         """
         to do, jeszcze pomyślę
+        napisac jeszcze raz bo teraz _backpack jest lista
         """
-        print self._backpack[col][row]  # debug
+        if list_positon < len(self._backpack):
+            swap = self._weapon
+            self._weapon = self_backpack[list_positon]
+            self_backpack[list_positon] = swap
 
-        #swap = self._wearing[str()]  # jak sprawdzic typ? -type(obiekt)@WJ
-        #self._wearing[str()] = self._backpack[col][row]
-        self._backpack[col][row] = None # = swap
-
-        self.calc_attack()  # wystarczy policzyc przy dodawaniu
-        self.calc_defense()
+        # TODO: calculate stats
 
     def get_damage(self):
         """Podaje zadawane przez bohatera obrażenia"""
@@ -86,20 +87,17 @@ class Equipment(object):
         else:
             return self._suit.get_armor()
 
-    def add_to_backpack(self, what, row, col):
-        """dodaje przedmiot do plecaka na określoną pozycję"""
-        if self._backpack[col][row] is None:
-            self._backpack[col][row] = what
-        else:
-            print "something already there"
 
     def add_to_backpack(self, what):
-        """dodaje przedmiot do plecaka na pierwszą wolną pozycję"""
-        flag = False
-        for row in xrange(5):
-            for slot in xrange(5):
-                if self._backpack[row][slot] is None:
-                    self._backpack[row][slot] = what
-                    flag = True
-        if not flag:
-            print "all slots taken"
+        if len(self._backpack) < 20:
+            self._backpack.append(what)
+
+    def print_backpack(self):
+        for item in self._backpack:
+            print item
+
+    def get_backpack(self):
+        li = []
+        for i in self._backpack:
+            li.append(i)
+        return li

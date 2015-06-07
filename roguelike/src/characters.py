@@ -4,7 +4,7 @@ definicja klas postaci
 """
 from random import random, choice
 from equipment import Equipment, get_random_item
-from aux import Damage, Armor
+from auxil import Damage, Armor
 
 
 class Character(object):
@@ -59,6 +59,10 @@ class Character(object):
     def get_armor(self):
         """zwraca pancerz postaci"""
         return self._armor
+
+    def get_exp(self):
+        """zwraca pancerz postaci"""
+        return self._experience
 
     def get_x(self):
         """zwraca współrzędną x położenia postaci na mapie"""

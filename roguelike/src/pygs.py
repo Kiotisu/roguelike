@@ -11,7 +11,7 @@ from random import randint
 from characters import *
 from equipment import Item, Weapon, Suit
 from maps import Map
-from aux import Aux
+from auxil import Auxil
 from music import Music
 
 HORIZON = 4  # stała zasięgu
@@ -51,15 +51,18 @@ class App(object):
         MUSIC.load_music()
         MUSIC.play_music()
 
-        Aux.do_nice_outlines(self._surface)
+        # Auxil.do_nice_outlines(self._surface)
         pygame.key.set_repeat(5, 50)  #(delay, interval) in milisec
 
-        Aux.write(self._surface, "EQ", 22, 700, 0)
-        Aux.write(self._surface, "Stats:", 14, 615, 240+20)
-        Aux.write(self._surface, "HP", 14, 615, 240+35)  # +15 pix pionowo
-        Aux.write(self._surface, "Attack", 14, 615, 240+50)
-        Aux.write(self._surface, "Defense", 14, 615, 240+65)
-        Aux.write(self._surface, "Armor", 14, 615, 240+80)
+        Auxil.write(self._surface, "EQ", 22, 700, 0)
+        Auxil.write(self._surface, "Backpack", 22, 660, 80)
+        Auxil.write(self._surface, "Stats:", 14, 615, 240+20)
+        Auxil.write(self._surface, "HP", 14, 615, 240+35)  # +15 pix pionowo
+        Auxil.write(self._surface, "Attack", 14, 615, 240+50)
+        Auxil.write(self._surface, "Defense", 14, 615, 240+65)
+        Auxil.write(self._surface, "Armor", 14, 615, 240+80)
+        Auxil.write(self._surface, "Exp", 14, 615, 240+95)
+
 
     def execute(self):
         """ s """
@@ -85,9 +88,6 @@ class App(object):
             -muzyki
             -wyjścia z gry
         """
-        #alternative?
-        # pressedkeys = pygame.key.get_pressed()
-        # if pressedkeys[pygame.K_x]:
 
         if event.type == pygame.QUIT:
             self._running = False
@@ -123,6 +123,15 @@ class App(object):
                         self._action = 'd'
                         self._player_turn = False
 
+                #added picking up items
+                if event.key == LOC.K_RCTRL or event.key == LOC.K_e:
+                    if self._map[self._hero.get_position()][1] is not None:
+                        # pick up - add to backpack
+                        self._hero._equipment.add_to_backpack(self._map[self._hero.get_x(), self._hero.get_y()][1])
+                        # delete item from the floor
+                        self._map[self._hero.get_x(), self._hero.get_y()][1] = None
+                        self._hero._equipment.print_backpack()  # debug
+
             if event.key == LOC.K_ESCAPE:  #quit
                 self._running = False
 
@@ -145,37 +154,38 @@ class App(object):
             if event.button == 1:
                 po_x, po_y = pygame.mouse.get_pos()
                 # mouse pointer in the equipment zone
-                if po_x >= 610 and po_y >= 20 and po_y <= 20+6*40:
+                if po_x >= 610 and po_y >= 100 and po_y <= 100+6*40:
                     (square_x, square_y) = ((po_x-610)/40, (po_y-20)/40)
                     if not self._marked == (square_x, square_y): 
                         # if not already marked
                         self._marked = (square_x, square_y)
                     else:
                         # swap item with wearing
-                        pass
+                        print "swap item with wearing"
+                        if square_y*5+square_x <= len(self._hero._equipment._backpack):
+                            print self._hero._equipment._backpack[square_y*5+square_x]
+                            self._hero._equipment.wear_item(square_y*5+square_x, 0)
 
     def render(self):
         """ in prog """
 
-        side_box = 9
-
-        if self._hero.get_x() < side_box:
+        if self._hero.get_x() < 9:
             x_o = 0
 
-        elif self._hero.get_x() > self._map.size[0]-side_box-1:
-            x_o = self._map.size[0] - (2*side_box+1)
+        elif self._hero.get_x() > self._map.size[0]-9-1:
+            x_o = self._map.size[0] - 19
 
         else:
-            x_o = self._hero.get_x() - side_box
+            x_o = self._hero.get_x() - 9
 
-        if self._hero.get_y() < side_box:
+        if self._hero.get_y() < 9:
             y_o = 0
 
-        elif self._hero.get_y() > self._map.size[1]-side_box-1:
-            y_o = self._map.size[1] - (2*side_box+1)
+        elif self._hero.get_y() > self._map.size[1]-9-1:
+            y_o = self._map.size[1] - 19
 
         else:
-            y_o = self._hero.get_y() - side_box
+            y_o = self._hero.get_y() - 9
 
         floor_list = [self._image_library["texture18.png"],
                       self._image_library["texture16.png"],
@@ -197,7 +207,6 @@ class App(object):
 
                 # pustka
                 else:
-                    # self._display_surf.blit(self.wall, (x * 32, y * 32))
                     pygame.draw.rect(self._surface, (0, 0, 0),
                                      (x * 32, y * 32, 32, 32))
                 
@@ -235,9 +244,7 @@ class App(object):
                                             (x * 32, y * 32))
 
                 # vision
-                if not self.check_horizon(x_o+x, y_o+y):
-                    # (abs(x_o+x - self._posx) <= self._horizon
-                    # and abs(y_o+y - self._posy) <= self._horizon):
+                if not self.check_view(x_o+x, y_o+y):
                     self._display_surf.blit(self._image_library["black.png"],
                                             (x * 32, y * 32))
 
@@ -259,13 +266,59 @@ class App(object):
 
         pygame.display.update()
 
-        Aux.write(self._surface, str(self._hero.get_hp()), 14, 675, 240+35)
-        Aux.write(self._surface, str(self._hero.get_attack()), 14, 675, 240+50)
-        Aux.write(self._surface, str(self._hero.get_defense()), 14, 675, 240+65)
-        Aux.write(self._surface, str(self._hero.get_armor()), 14, 675, 240+80)
+        # nadpisuje czarnym tłem
+        pygame.draw.rect(self._surface, (0, 0, 0), (675, 275, 135, 75))
 
-    def check_horizon(self, x, y):
-        """sprawdza choryzont?! XD"""
+        Auxil.write(self._surface, str(math.floor(self._hero.get_hp())), 14, 675, 240+35)
+        Auxil.write(self._surface, str(self._hero.get_attack()), 14, 675, 240+50)
+        Auxil.write(self._surface, str(self._hero.get_defense()), 14, 675, 240+65)
+        Auxil.write(self._surface, str(self._hero.get_armor()), 14, 675, 240+80)
+        Auxil.write(self._surface, str(self._hero.get_exp()), 14, 675, 240+95)
+
+        pygame.draw.rect(self._surface, (0, 0, 0), (615, 355, 195, 60))
+
+        # EQ
+        if self._hero._equipment._weapon is not None:
+            self._display_surf.blit(
+                    self._image_library["weapon3.png"],
+                    (615, 20)
+                )
+        if self._hero._equipment._suit is not None:
+            self._display_surf.blit(
+                    self._image_library["ar2.png"],
+                    (615+40, 20)
+                )
+
+        # backpack
+
+        # wywala się lub nie łapie
+
+        i = 0
+        lis = self._hero._equipment.get_backpack()
+        for item in lis:
+            # print item, type(item)
+            if isinstance(item, Weapon):
+                self._display_surf.blit(
+                    self._image_library["weapon3.png"],
+                    (615 + (i%5)*40, 100 + (i/5)*40)
+                )
+                print "miecz"
+            elif isinstance(item, Suit):
+                self._display_surf.blit(
+                    self._image_library["ar2.png"],
+                    (615 + (i%5)*40, 100 + (i/5)*40)
+                )
+                print "zbroja"
+            else:
+                self._display_surf.blit(
+                    self._image_library["weapon6.png"],
+                    (615 + (i%5)*40+5, 600 + (i/5)*40+5)
+                )
+            i += 1
+
+
+    def check_view(self, x, y):
+        """sprawdza zasieg wzroku"""
         d = math.ceil(math.sqrt((self._hero.get_x()-x)**2 + (self._hero.get_y()-y)**2))
         return d <= HORIZON
 
@@ -275,7 +328,7 @@ class App(object):
          dobrze jakby ktoś to ogarnął ~WuJo
          load images from /items """
         path = r"./items/"
-        item_list = Aux.files("items")
+        item_list = Auxil.files("items")
         self._image_library = {}
 
         for item in item_list:
@@ -297,6 +350,7 @@ class App(object):
             # atak
             else:
                 print "gracz atakuje"
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()-1][2])
 
                 if result:
@@ -318,6 +372,7 @@ class App(object):
 
             else:
                 print "gracz atakuje"
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()+1][2])
 
                 if result:
@@ -339,6 +394,7 @@ class App(object):
 
             else:
                 print "gracz atakuje"
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
                 result = self._hero.attack(self._map[self._hero.get_x()-1, self._hero.get_y()][2])
 
                 if result:
@@ -359,6 +415,7 @@ class App(object):
 
             else:
                 print "gracz atakuje"
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
                 result = self._hero.attack(self._map[self._hero.get_x()+1, self._hero.get_y()][2])
 
                 if result:
@@ -392,7 +449,8 @@ class App(object):
                                                 (self._hero.get_y()+j)][2])
 
         # to tylko tymczasowo do debugu:
-        print "w poblizu mamy: ", enemy_list
+        if len(enemy_list) > 0: # jak pusta to po co pisac?
+            print "w poblizu mamy: ", enemy_list
 
         # ruszamy enemy
         for enemy in enemy_list:
@@ -446,7 +504,9 @@ class App(object):
 
             if abs(x_distance) == 1 and y_distance == 0 \
                     or x_distance == 0 and abs(y_distance) == 1:
-                print "potworek atakuje gracza"
+                print "potworek atakuje"
+                Auxil.write(self._surface, "potworek atakuje", 14, 615, 240+130)
+                
                 enemy.attack(self._hero)
 
         self._player_turn = True
