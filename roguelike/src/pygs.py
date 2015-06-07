@@ -162,11 +162,8 @@ class App(object):
                     if not self._marked == bp_place:
                         # if not already marked
                         self._marked = bp_place
-                        print self._marked
                     else:
                         # swap item with wearing
-                        print bp_place
-                        print self._hero.get_equip().backpack_len()
                         if bp_place < self._hero.get_equip().backpack_len():
                             self._hero.get_equip().wear_item(bp_place)
 
@@ -297,19 +294,19 @@ class App(object):
         Auxil.write(self._surface, "Defense", 14, 615, 240+65)
         Auxil.write(self._surface, "Strength", 14, 615, 240+80)
         Auxil.write(self._surface, "Dexterity", 14, 615, 240+95)
-        Auxil.write(self._surface, "Armor", 14, 615, 240+120)
-        Auxil.write(self._surface, "Exp", 14, 615, 240+135)
+        Auxil.write(self._surface, "Armor", 14, 615, 240+110)
+        Auxil.write(self._surface, "Exp", 14, 615, 240+125)
 
         #,240 + 15*i)
         Auxil.write(self._surface, str(floor(self._hero.get_hp())),
-                                                                14, 680, 275)
-        Auxil.write(self._surface, str(self._hero.get_attack()), 14, 680, 290)
-        Auxil.write(self._surface, str(self._hero.get_defense()), 14, 680, 305)
-        Auxil.write(self._surface, str(self._hero.get_strength()), 14, 680, 320)
-        Auxil.write(self._surface, str(self._hero.get_dexterity()), 14, 680, 335)
+                                                                14, 690, 275)
+        Auxil.write(self._surface, str(self._hero.get_attack()), 14, 690, 290)
+        Auxil.write(self._surface, str(self._hero.get_defense()), 14, 690, 305)
+        Auxil.write(self._surface, str(self._hero.get_strength()), 14, 690, 320)
+        Auxil.write(self._surface, str(self._hero.get_dexterity()), 14, 690, 335)
         Auxil.write(self._surface, str(self._hero.get_armor().durability),
-                                                                14, 680, 350)
-        Auxil.write(self._surface, str(self._hero.get_exp()), 14, 680, 365)
+                                                                14, 690, 350)
+        Auxil.write(self._surface, str(self._hero.get_exp()), 14, 690, 365)
 
 
         z = 2

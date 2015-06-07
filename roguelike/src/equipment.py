@@ -86,7 +86,8 @@ class Equipment(object):
             else:
                 pass
         print self._backpack
-        [x for x in self._backpack if x is not None]
+        self._backpack = [x for x in self._backpack if x is not None]
+        # delete all None from list
         print "after"
         print self._backpack
 
