@@ -207,8 +207,8 @@ class Enemy(Character):
         """zwraca sprite'a porwora"""
         return self._sprite
 
-enemy_list = [Enemy(7, 5, Damage(0.9, 1.0, 5, 5),Armor(0.25, 15), 20, 0, 0, "enemy1.png"),
-              Enemy(10, 7, Damage(0.8, 1.0, 10, 5),Armor(0.25, 20), 25, 0, 0, "goblin.png"),
+enemy_list = [Enemy(7, 5, Damage(0.9, 1.0, 5, 5),Armor(0.25, 15), 20, 0, 0, "goblin.png"),
+              Enemy(10, 7, Damage(0.8, 1.0, 10, 5),Armor(0.25, 20), 25, 0, 0, "enemy1.png"),
               Enemy(15, 10, Damage(1.1, 1.0, 10, 10),Armor(0.5, 15), 35, 0, 0, "bfm.png")]
 
 def get_random_enemy():
