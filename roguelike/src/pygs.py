@@ -157,15 +157,18 @@ class App(object):
             if event.button == 1:
                 po_x, po_y = pygame.mouse.get_pos()
                 # mouse pointer in the equipment zone
-                if po_x >= 610 and po_y >= 100 and po_y <= 100 + 4*40:
-                    bp_place = (po_x-610)/40 + 5*(po_y-100)/40
-                    if not self._marked == bp_place:
+                if po_x >= 610 and po_y >= 100 and po_y <= 100+4*40:
+                    (square_x, square_y) = ((po_x-610)/40, (po_y-100)/40)
+                    if not self._marked == (square_x, square_y):
                         # if not already marked
-                        self._marked = bp_place
+                        self._marked = (square_x, square_y)
                     else:
                         # swap item with wearing
+                        bp_place = square_y*5+square_x
                         if bp_place < self._hero.get_equip().backpack_len():
+                            print "swap for real", bp_place, self._hero.get_equip().backpack_len()
                             self._hero.get_equip().wear_item(bp_place)
+                            self._marked = None
 
                 # mouse on lvl buttons
                 if self._hero._skill_points != 0\
@@ -390,7 +393,7 @@ class App(object):
             # atak
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
                 result = self._hero.attack(action_pos[2])
 
                 if result:
@@ -413,7 +416,7 @@ class App(object):
 
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
                 result = self._hero.attack(action_pos[2])
 
                 if result:
@@ -436,7 +439,7 @@ class App(object):
 
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
                 result = self._hero.attack(action_pos[2])
 
                 if result:
@@ -458,7 +461,7 @@ class App(object):
 
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
                 result = self._hero.attack(action_pos[2])
 
                 if result:
