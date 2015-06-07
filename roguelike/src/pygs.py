@@ -173,7 +173,6 @@ class App(object):
                         # swap item with wearing
                         bp_place = square_y*5+square_x
                         if bp_place < self._hero.get_equip().backpack_len():
-                            print "swap for real", bp_place, self._hero.get_equip().backpack_len()
                             self._hero.get_equip().use_item(bp_place)
                             self._marked = None
 
