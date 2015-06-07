@@ -6,14 +6,16 @@ from random import choice
 
 
 class Item(object):
-    
+    """"""
+
     def __init__(self, name, use_requirements):
         self._name = name
         self._requirements = use_requirements #(strength_require, dexterity_require)
 
 
 class Weapon(Item):
-    
+    """"""
+
     def __init__(self, name, use_requirements, damage_type):
         super(Weapon, self).__init__(name, use_requirements)
         self._damage = damage_type #namedtuple z characters
@@ -25,6 +27,7 @@ class Weapon(Item):
 
 class Suit(Item):
     """Reprezentuje stroje i pancerze"""
+
     def __init__(self, name, use_requirements, armor_type):
         super(Suit, self).__init__(name, use_requirements)
         self._armor = armor_type #jak damage
@@ -38,8 +41,10 @@ item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5)),
              Suit('Kolczuga', (7, 7), Armor(0.5, 10)),
              Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10))]
 
+
 def get_random_item():
     return choice(item_list)
+
 
 class Equipment(object):
 
@@ -69,19 +74,19 @@ class Equipment(object):
 
     def get_damage(self):
         """Podaje zadawane przez bohatera obrażenia"""
-        if self._weapon == None:
+        if self._weapon is None:
             return Damage(0.5, 1.0, 5, 2)
         else:
             return self._weapon.get_damage()
         
     def get_armor(self):
         """Podaje posiadany przez bohatera pancerz"""
-        if self._suit == None:
+        if self._suit is None:
             return Armor(0.0, 0)
         else:
             return self._suit.get_armor()
 
-    def add_to_backpack(self, what, row, col): 	#add to specific position
+    def add_to_backpack(self, what, row, col):
         """dodaje przedmiot do plecaka na określoną pozycję"""
         if self._backpack[col][row] is None:
             self._backpack[col][row] = what

@@ -126,6 +126,7 @@ class Hero(Character):
 
 class Enemy(Character):
     """Klasa reprezentująca wrogów"""
+
     def __init__(self, attack, defense, damage, armor, hp, x, y):
         super(Enemy, self).__init__(attack, defense, damage, armor, hp, x, y)
 

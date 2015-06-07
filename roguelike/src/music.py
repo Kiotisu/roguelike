@@ -6,6 +6,7 @@ import os
 import pygame
 from aux import Aux
 
+
 class Music(object):
     """ music control """
     def __init__(self):

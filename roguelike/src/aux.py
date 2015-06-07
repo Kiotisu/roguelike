@@ -27,8 +27,6 @@ wytrzymałość(durability) = liczba całkowita
 
 class Aux(object):
     """ auxiliary class """
-    def __init__(self):
-        pass
 
     @staticmethod
     def files(dir_):
@@ -41,34 +39,43 @@ class Aux(object):
             line = pop.readline()
         return files
 
-    def do_nice_outlines(self, surface):
+    @staticmethod
+    def do_nice_outlines(surface):
         """ some outlines """
         red = (128, 0, 0)
+
         # pozioma
         start_1 = (0, 610-1)
         end_1 = (610-1, 610-1)
         width = 5
         pygame.draw.line(surface, red, start_1, end_1, width)
+
         # pionowa
         start_2 = (610-1, 0)
         end_2 = (610-1, 610-1)
         pygame.draw.line(surface, red, start_2, end_2, width)
 
         green = (0, 64, 0)
+
         # draw a rectangle
         for col in xrange(5):
             for row in xrange(6):
+
+                # left top width height
                 pygame.draw.rect(surface, green,
                                  pygame.Rect(610+col*40+2, 20+row*40+2, 40, 2))
-                                 #left top width height
+
                 pygame.draw.rect(surface, green,
                                  pygame.Rect(610+col*40+2, 20+row*40+2, 2, 40))
+
                 pygame.draw.rect(surface, green,
                                  pygame.Rect(610+col*40+40, 20+row*40+2, 2, 40))
+
                 pygame.draw.rect(surface, green,
                                  pygame.Rect(610+col*40+2, 20+row*40+40, 40, 2))
 
-    def write(self, surface, msg, size, where_x, where_y):
+    @staticmethod
+    def write(surface, msg, size, where_x, where_y):
         """ write text """
         font = pygame.font.SysFont('mono', size, bold=True)
         text = font.render(msg, True, (0, 128, 0))

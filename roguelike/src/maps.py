@@ -8,71 +8,84 @@ from characters import Enemy
 
 
 class Map(object):
-    def __init__(self, rmnum, rsize):
+    def __init__(self, rooms_number, room_size):
         """Generacja mapy"""
-        parts_used = [(rmnum/2, rmnum/2)] #wszystkie użyte części
-        rooms = [Room((rmnum/2, rmnum/2))]
+
+        parts_used = [(rooms_number/2, rooms_number/2)] #wszystkie użyte części
+        rooms = [Room((rooms_number/2, rooms_number/2))]
         possible = []
         next_room = 1
+
+         # możliwe stają się przyległe pola
+        if rooms_number != 1:
+            possible.append((rooms_number/2-1, rooms_number/2))
+            possible.append((rooms_number/2, rooms_number/2-1))
+            possible.append((rooms_number/2+1, rooms_number/2))
+            possible.append((rooms_number/2, rooms_number/2+1))
         
-        if rmnum != 1: #możliwe stają się przyległe pola
-            possible.append((rmnum/2-1, rmnum/2))
-            possible.append((rmnum/2, rmnum/2-1))
-            possible.append((rmnum/2+1, rmnum/2))
-            possible.append((rmnum/2, rmnum/2+1))
-        
-        while next_room < rmnum and len(parts_used) < rmnum ** 2:
+        while next_room < rooms_number and len(parts_used) < rooms_number ** 2:
             new = choice(possible)
             possible.remove(new)
             if new not in parts_used:
                 close_parts = [(new[0]-1, new[1]), (new[0], new[1]-1),
                                (new[0]+1, new[1]), (new[0], new[1]+1)]
+
                 if random() > 0.60:#join or new
                     for room in rooms:
                         if any(i in room.get_parts() for i in close_parts):
                             room.append(new)
                             break
+
                 else:
                     rooms.append(Room(new))
                     next_room += 1
+
                 possible.remove(choice(possible))
                 parts_used.append(new)
+
                 for part in close_parts:
                     if part not in parts_used:
                         possible.append(part)
-        #"obcinamy" puste boki
-        maxx = 1
-        maxy = 1
-        minx = rmnum
-        miny = rmnum
+
+        # "obcinamy" puste boki
+        max_x = 1
+        max_y = 1
+        min_x = rooms_number
+        min_y = rooms_number
+
         for part in parts_used:
-            if part[0] < minx:
-                minx = part[0]
-            if part[1] < miny:
-                miny = part[1]
-            if part[0] > maxx:
-                maxx = part[0]
-            if part[1] > maxy:
-                maxy = part[1]
+
+            if part[0] < min_x:
+                min_x = part[0]
+
+            if part[1] < min_y:
+                min_y = part[1]
+
+            if part[0] > max_x:
+                max_x = part[0]
+
+            if part[1] > max_y:
+                max_y = part[1]
         
-        #każde pole jest listą trzyelementową: [typ_pola, przedmioty, postać]
-        self.board = [[['_', None, None] \
-                    for _y in xrange(rsize[1]*miny, rsize[1]*(maxy+1)+1)] \
-                    for _x in xrange(rsize[0]*minx, rsize[0]*(maxx+1)+1)]
+        # każde pole jest listą trzyelementową: [typ_pola, przedmioty, postać]
+        self.board = [[['_', None, None]
+                       for _y in xrange(room_size[1]*min_y, room_size[1]*(max_y+1)+1)]
+                      for _x in xrange(room_size[0]*min_x, room_size[0]*(max_x+1)+1)]
+
         for index in xrange(len(rooms)):
             for part in rooms[index].get_parts():
-                for x in xrange(rsize[0]):
-                    for y in xrange(rsize[1]):
-                        temp_x = (part[0]-minx)*rsize[0]+x
-                        temp_y = (part[1]-miny)*rsize[1]+y
+                for x in xrange(room_size[0]):
+                    for y in xrange(room_size[1]):
+                        temp_x = (part[0]-min_x)*room_size[0]+x
+                        temp_y = (part[1]-min_y)*room_size[1]+y
                         #sprawdzamy czy na krawędzi = sciana
-                        if (x == 0 and ((part[0]-1, part[1]) \
-                                    not in rooms[index].get_parts()))\
-                                or (x == rsize[0]-1 and ((part[0]+1, part[1])\
+                        if (x == 0 and ((part[0]-1, part[1])
+                                        not in rooms[index].get_parts()))\
+                                or (x == room_size[0]-1 and ((part[0]+1, part[1])\
                                     not in rooms[index].get_parts()))\
                                 or (y == 0 and ((part[0], part[1]-1)\
                                     not in rooms[index].get_parts()))\
-                                or (y == rsize[1]-1 and ((part[0], part[1]+1)\
+                                or (y == room_size[1]-1 and ((part[0], part[1]+1)\
                                     not in rooms[index].get_parts())):
                             self.board[temp_x][temp_y][0] = 'w'
 
@@ -83,10 +96,11 @@ class Map(object):
                                     = Enemy(10, 10, Damage(1.0, 1.0, 10, 5),
                                             Armor(0.5, 10), 15, temp_x, temp_y)
         
-        self.size = (maxx+1-minx)*rsize[0], (maxy+1-miny)*rsize[1]
+        self.size = (max_x+1-min_x)*room_size[0], (max_y+1-min_y)*room_size[1]
         
-        #drogi
+        # drogi
         ways = []
+
         for room in rooms:
             chosen_part = choice(room.get_parts())
             
@@ -110,7 +124,6 @@ class Map(object):
                 room.make_way(chosen_part, (chosen_part[0], chosen_part[1]+1))
                 ways.append((chosen_part, (chosen_part[0], chosen_part[1]+1)))
 
-            
             if len(room.get_parts()) > 1:
                 
                 chosen_part = choice(room.get_parts())
@@ -145,28 +158,28 @@ class Map(object):
                 
         for way in ways:
             if way[0][0] == way[1][0] and way[0][1] < way[1][1]:
-                self.board[(way[0][0]-minx)*rsize[0] + (rsize[0]/2)][(way[0][1]-miny)*rsize[1] + rsize[1]-1][0] = 1
-                self.board[(way[1][0]-minx)*rsize[0] + (rsize[0]/2)][(way[1][1]-miny)*rsize[1]][0] = 1
-                self.board[(way[0][0]-minx)*rsize[0] + (rsize[0]/2)-1][(way[0][1]-miny)*rsize[1] + rsize[1]-1][0] = 1
-                self.board[(way[1][0]-minx)*rsize[0] + (rsize[0]/2)-1][(way[1][1]-miny)*rsize[1]][0] = 1
+                self.board[(way[0][0]-min_x)*room_size[0] + (room_size[0]/2)][(way[0][1]-min_y)*room_size[1] + room_size[1]-1][0] = 1
+                self.board[(way[1][0]-min_x)*room_size[0] + (room_size[0]/2)][(way[1][1]-min_y)*room_size[1]][0] = 1
+                self.board[(way[0][0]-min_x)*room_size[0] + (room_size[0]/2)-1][(way[0][1]-min_y)*room_size[1] + room_size[1]-1][0] = 1
+                self.board[(way[1][0]-min_x)*room_size[0] + (room_size[0]/2)-1][(way[1][1]-min_y)*room_size[1]][0] = 1
                 
             if way[0][0] == way[1][0] and way[0][1] > way[1][1]:
-                self.board[(way[0][0]-minx)*rsize[0] + (rsize[0]/2)][(way[0][1]-miny)*rsize[1]][0] = 1
-                self.board[(way[1][0]-minx)*rsize[0] + (rsize[0]/2)][(way[1][1]-miny)*rsize[1] + rsize[1]-1][0] = 1
-                self.board[(way[0][0]-minx)*rsize[0] + (rsize[0]/2)-1][(way[0][1]-miny)*rsize[1]][0] = 1
-                self.board[(way[1][0]-minx)*rsize[0] + (rsize[0]/2)-1][(way[1][1]-miny)*rsize[1] + rsize[1]-1][0] = 1
+                self.board[(way[0][0]-min_x)*room_size[0] + (room_size[0]/2)][(way[0][1]-min_y)*room_size[1]][0] = 1
+                self.board[(way[1][0]-min_x)*room_size[0] + (room_size[0]/2)][(way[1][1]-min_y)*room_size[1] + room_size[1]-1][0] = 1
+                self.board[(way[0][0]-min_x)*room_size[0] + (room_size[0]/2)-1][(way[0][1]-min_y)*room_size[1]][0] = 1
+                self.board[(way[1][0]-min_x)*room_size[0] + (room_size[0]/2)-1][(way[1][1]-min_y)*room_size[1] + room_size[1]-1][0] = 1
             
             if way[0][1] == way[1][1] and way[0][0] < way[1][0]:
-                self.board[(way[0][0]-minx)*rsize[0] + rsize[1]-1][(way[0][1]-miny)*rsize[1] + (rsize[0]/2)][0] = 1
-                self.board[(way[1][0]-minx)*rsize[0]][(way[1][1]-miny)*rsize[1] + (rsize[0]/2)][0] = 1
-                self.board[(way[0][0]-minx)*rsize[0] + rsize[1]-1][(way[0][1]-miny)*rsize[1] + (rsize[0]/2)-1][0] = 1
-                self.board[(way[1][0]-minx)*rsize[0]][(way[1][1]-miny)*rsize[1] + (rsize[0]/2)-1][0] = 1
+                self.board[(way[0][0]-min_x)*room_size[0] + room_size[1]-1][(way[0][1]-min_y)*room_size[1] + (room_size[0]/2)][0] = 1
+                self.board[(way[1][0]-min_x)*room_size[0]][(way[1][1]-min_y)*room_size[1] + (room_size[0]/2)][0] = 1
+                self.board[(way[0][0]-min_x)*room_size[0] + room_size[1]-1][(way[0][1]-min_y)*room_size[1] + (room_size[0]/2)-1][0] = 1
+                self.board[(way[1][0]-min_x)*room_size[0]][(way[1][1]-min_y)*room_size[1] + (room_size[0]/2)-1][0] = 1
             
             if way[0][1] == way[1][1] and way[0][1] > way[1][0]:
-                self.board[(way[0][0]-minx)*rsize[0]][(way[0][1]-miny)*rsize[1] + (rsize[0]/2)][0] = 1
-                self.board[(way[1][0]-minx)*rsize[0] + rsize[1]-1][(way[1][1]-miny)*rsize[1] + (rsize[0]/2)][0] = 1
-                self.board[(way[0][0]-minx)*rsize[0]][(way[0][1]-miny)*rsize[1] + (rsize[0]/2)-1][0] = 1
-                self.board[(way[1][0]-minx)*rsize[0] + rsize[1]-1][(way[1][1]-miny)*rsize[1] + (rsize[0]/2)-1][0] = 1
+                self.board[(way[0][0]-min_x)*room_size[0]][(way[0][1]-min_y)*room_size[1] + (room_size[0]/2)][0] = 1
+                self.board[(way[1][0]-min_x)*room_size[0] + room_size[1]-1][(way[1][1]-min_y)*room_size[1] + (room_size[0]/2)][0] = 1
+                self.board[(way[0][0]-min_x)*room_size[0]][(way[0][1]-min_y)*room_size[1] + (room_size[0]/2)-1][0] = 1
+                self.board[(way[1][0]-min_x)*room_size[0] + room_size[1]-1][(way[1][1]-min_y)*room_size[1] + (room_size[0]/2)-1][0] = 1
     
     def __setitem__(self, pos, item):
         x, y = pos
