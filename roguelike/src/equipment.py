@@ -87,7 +87,7 @@ class Equipment(object):
         else:
             return self._suit.get_armor()
 
-    def backpac_len(self):
+    def backpack_len(self):
         return len(self._backpack)
 
     def add_to_backpack(self, what):

@@ -137,10 +137,10 @@ class App(object):
                     if self._map[self._hero.get_position()][1] is not None:
                         # pick up - add to backpack
                         for item in self._map[self._hero.get_position()][1]:
-                            self._hero.get_equip.add_to_backpack(item)
+                            self._hero.get_equip().add_to_backpack(item)
                         # delete item from the floor
                         self._map[self._hero.get_position()][1] = None
-                        self._hero.get_equip.print_backpack()  # debug
+                        self._hero.get_equip().print_backpack()  # debug
 
             if event.key == LOC.K_ESCAPE:  #quit
                 self._running = False
@@ -172,8 +172,8 @@ class App(object):
                     else:
                         # swap item with wearing
                         bp_place = square_y*5+square_x
-                        if bp_place <= self._hero.get_equip.backpack_len():
-                            self._hero.get_equip.wear_item(bp_place, 0)
+                        if bp_place <= self._hero.get_equip().backpack_len():
+                            self._hero.get_equip().wear_item(bp_place, 0)
 
     def render(self):
         """ in prog """
