@@ -54,7 +54,7 @@ class Suit(Item):
         self._armor = armor_type #jak damage
         
     def get_armor(self):
-        """zwraca obrażenia"""
+        """zwraca pancerz"""
         return self._armor
 
 #lista przedmiotów w grze, zostawiane przez przeciwników
@@ -62,7 +62,8 @@ item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
              Weapon('Maczuga', (7, 7), Damage(0.8, 1.5, 15, 10), "weapon2.png"),
              Weapon('Berdysz', (7, 7), Damage(1.3, 1.0, 20, 10), "weapon1.png"),
              Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10), "weapon4.png"),
-             Suit('Kolczuga', (7, 7), Armor(0.5, 10), "ar2.png"),
+             Suit('Kolczuga', (7, 7), Armor(0.5, 10), "ar3.png"),
+             Suit('Dobra Zbroja', (15, 10), Armor(0.7, 25), "ar2.png"),
              Consumable('Japko', (0, 0), 15, "apple.png"),
              Consumable('Dobre Japko', (0, 0), 35, "apple.png"),
              Consumable('Pyszne Japko', (0, 0), 50, "apple.png"),
