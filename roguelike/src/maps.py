@@ -108,11 +108,12 @@ class Map(object):
                         else:
                             self.board[temp_x][temp_y][0] = index
                             if random() > 0.97:
-                                
                                 self.board[temp_x][temp_y][2]\
                                     = deepcopy(get_random_enemy())
                                 self.board[temp_x][temp_y][2]\
                                     .change_position((temp_x, temp_y))
+                            elif random() > 0.995:
+                                self.board[temp_x][temp_y][2] = "rf"
 
         self.size = (max_x+1-min_x)*room_size[0], (max_y+1-min_y)*room_size[1]
 

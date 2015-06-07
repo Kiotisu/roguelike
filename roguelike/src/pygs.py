@@ -93,7 +93,9 @@ class App(object):
                             and self._map[self._hero.get_x(),
                                           self._hero.get_y()-1][0] != '_'\
                             and self._map[self._hero.get_x(),
-                                          self._hero.get_y()-1][0] != 'w':
+                                          self._hero.get_y()-1][0] != 'w'\
+                            and self._map[self._hero.get_x(),
+                                          self._hero.get_y()-1][2] != 'bf':
                         self._action = 'w'
                         self._player_turn = False
 
@@ -102,7 +104,9 @@ class App(object):
                             and self._map[self._hero.get_x(),
                                           self._hero.get_y()+1][0] != '_'\
                             and self._map[self._hero.get_x(),
-                                          self._hero.get_y()+1][0] != 'w':
+                                          self._hero.get_y()+1][0] != 'w'\
+                            and self._map[self._hero.get_x(),
+                                          self._hero.get_y()+1][2] != 'bf':
                         self._action = 's'
                         self._player_turn = False
 
@@ -111,7 +115,9 @@ class App(object):
                             and self._map[self._hero.get_x()-1,
                                           self._hero.get_y()][0] != '_'\
                             and self._map[self._hero.get_x()-1,
-                                          self._hero.get_y()][0] != 'w':
+                                          self._hero.get_y()][0] != 'w'\
+                            and self._map[self._hero.get_x()-1,
+                                          self._hero.get_y()][2] != 'bf':
                         self._action = 'a'
                         self._player_turn = False
 
@@ -120,7 +126,9 @@ class App(object):
                             and self._map[self._hero.get_x()+1,
                                           self._hero.get_y()][0] != '_'\
                             and self._map[self._hero.get_x()+1,
-                                          self._hero.get_y()][0] != 'w':
+                                          self._hero.get_y()][0] != 'w'\
+                            and self._map[self._hero.get_x()+1,
+                                          self._hero.get_y()][2] != 'bf':
                         self._action = 'd'
                         self._player_turn = False
 
@@ -243,8 +251,14 @@ class App(object):
                     self._display_surf.blit(self._image_library["hero.png"],
                                             (x * 32, y * 32))
 
-                # enemy
-                if pos[2] is not None:
+                # enemy or fountain:
+                if pos[2] == "rf":
+                    self._display_surf.blit(self._image_library["0-redfountain.png"],
+                                            (x * 32, y * 32))
+                elif pos[2] == "bf":
+                    self._display_surf.blit(self._image_library["1-bluefountain.png"],
+                                            (x * 32, y * 32))
+                elif pos[2] is not None:
                     self._display_surf.blit(self._image_library[pos[2].get_sprite()],
                                             (x * 32, y * 32))
 
@@ -364,6 +378,10 @@ class App(object):
                 self._hero.change_y(-1)
 
             # atak
+            elif action_pos[2] == "rf":
+                self._hero.restore_hp(95)
+                self._hero.add_hp()
+                action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
                 Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
@@ -388,6 +406,10 @@ class App(object):
             if action_pos[2] is None:
                 self._hero.change_y(1)
 
+            elif action_pos[2] == "rf":
+                self._hero.restore_hp(95)
+                self._hero.add_hp()
+                action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
                 Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
@@ -412,6 +434,10 @@ class App(object):
             if action_pos[2] is None:
                 self._hero.change_x(-1)
 
+            elif action_pos[2] == "rf":
+                self._hero.restore_hp(95)
+                self._hero.add_hp()
+                action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
                 Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
@@ -435,6 +461,10 @@ class App(object):
             if action_pos[2] is None:
                 self._hero.change_x(1)
 
+            elif action_pos[2] == "rf":
+                self._hero.restore_hp(95)
+                self._hero.add_hp()
+                action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
                 Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
@@ -472,7 +502,11 @@ class App(object):
                         or not (hero_x + i < self._map.size[0])
                         or not (hero_y + j < self._map.size[1])
                         or not (self._map[(hero_x + i),
-                                          (hero_y + j)][2] is not None)):
+                                          (hero_y + j)][2] is not None)
+                        or not (self._map[(hero_x + i),
+                                          (hero_y + j)][2] != "rf")
+                        or not (self._map[(hero_x + i),
+                                          (hero_y + j)][2] != "bf")):
                     enemy_list.append(self._map[(hero_x+i),
                                                 (hero_y+j)][2])
 
