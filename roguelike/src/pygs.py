@@ -11,7 +11,7 @@ from random import randint
 from characters import *
 from equipment import Item, Weapon, Suit
 from maps import Map
-from auxil import Auxil
+import auxil
 from music import Music
 
 HORIZON = 4  # stała zasięgu
@@ -51,17 +51,17 @@ class App(object):
         MUSIC.load_music()
         MUSIC.play_music()
 
-        # Auxil.do_nice_outlines(self._surface)
+        # auxil.do_nice_outlines(self._surface)
         pygame.key.set_repeat(5, 50)  #(delay, interval) in milisec
 
-        Auxil.write(self._surface, "EQ", 22, 700, 0)
-        Auxil.write(self._surface, "Backpack", 22, 660, 80)
-        Auxil.write(self._surface, "Stats:", 14, 615, 240+20)
-        Auxil.write(self._surface, "HP", 14, 615, 240+35)  # +15 pix pionowo
-        Auxil.write(self._surface, "Attack", 14, 615, 240+50)
-        Auxil.write(self._surface, "Defense", 14, 615, 240+65)
-        Auxil.write(self._surface, "Armor", 14, 615, 240+80)
-        Auxil.write(self._surface, "Exp", 14, 615, 240+95)
+        auxil.write(self._surface, "EQ", 22, 700, 0)
+        auxil.write(self._surface, "Backpack", 22, 660, 80)
+        auxil.write(self._surface, "Stats:", 14, 615, 240+20)
+        auxil.write(self._surface, "HP", 14, 615, 240+35)  # +15 pix pionowo
+        auxil.write(self._surface, "Attack", 14, 615, 240+50)
+        auxil.write(self._surface, "Defense", 14, 615, 240+65)
+        auxil.write(self._surface, "Armor", 14, 615, 240+80)
+        auxil.write(self._surface, "Exp", 14, 615, 240+95)
 
 
     def execute(self):
@@ -270,11 +270,11 @@ class App(object):
         # nadpisuje czarnym tłem
         pygame.draw.rect(self._surface, (0, 0, 0), (675, 275, 135, 75))
 
-        Auxil.write(self._surface, str(math.floor(self._hero.get_hp())), 14, 675, 240+35)
-        Auxil.write(self._surface, str(self._hero.get_attack()), 14, 675, 240+50)
-        Auxil.write(self._surface, str(self._hero.get_defense()), 14, 675, 240+65)
-        Auxil.write(self._surface, str(self._hero.get_armor()), 14, 675, 240+80)
-        Auxil.write(self._surface, str(self._hero.get_exp()), 14, 675, 240+95)
+        auxil.write(self._surface, str(math.floor(self._hero.get_hp())), 14, 675, 240+35)
+        auxil.write(self._surface, str(self._hero.get_attack()), 14, 675, 240+50)
+        auxil.write(self._surface, str(self._hero.get_defense()), 14, 675, 240+65)
+        auxil.write(self._surface, str(self._hero.get_armor()), 14, 675, 240+80)
+        auxil.write(self._surface, str(self._hero.get_exp()), 14, 675, 240+95)
 
         pygame.draw.rect(self._surface, (0, 0, 0), (615, 355, 195, 60))
 
@@ -329,7 +329,7 @@ class App(object):
          dobrze jakby ktoś to ogarnął ~WuJo
          load images from /items """
         path = r"./items/"
-        item_list = Auxil.files("items")
+        item_list = auxil.files("items")
         self._image_library = {}
 
         for item in item_list:
@@ -351,7 +351,7 @@ class App(object):
             # atak
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
+                auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()-1][2])
 
                 if result:
@@ -373,7 +373,7 @@ class App(object):
 
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
+                auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
                 result = self._hero.attack(self._map[self._hero.get_x(), self._hero.get_y()+1][2])
 
                 if result:
@@ -395,7 +395,7 @@ class App(object):
 
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
+                auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
                 result = self._hero.attack(self._map[self._hero.get_x()-1, self._hero.get_y()][2])
 
                 if result:
@@ -416,7 +416,7 @@ class App(object):
 
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
+                auxil.write(self._surface, "gracz atakuje", 14, 615, 240+115)
                 result = self._hero.attack(self._map[self._hero.get_x()+1, self._hero.get_y()][2])
 
                 if result:
@@ -506,7 +506,7 @@ class App(object):
             if abs(x_distance) == 1 and y_distance == 0 \
                     or x_distance == 0 and abs(y_distance) == 1:
                 print "potworek atakuje"
-                Auxil.write(self._surface, "potworek atakuje", 14, 615, 240+130)
+                auxil.write(self._surface, "potworek atakuje", 14, 615, 240+130)
                 
                 enemy.attack(self._hero)
 
