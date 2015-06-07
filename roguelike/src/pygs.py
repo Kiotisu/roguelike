@@ -462,7 +462,7 @@ class App(object):
 
             elif action_pos[2] == "rf":
                 self._hero.restore_hp(95)
-                self._hero.add_hp()
+                self._hero.gain_exp(100)
                 action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
