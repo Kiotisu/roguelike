@@ -47,6 +47,10 @@ class Character(object):
     def get_hp(self):
         """zwraca hp postaci"""
         return self._hp
+    
+    def restore_hp(self, how_much):
+        """dodaje hp postaci"""
+        self._hp = min(self._hp+how_much, self._max_hp)
 
     def get_attack(self):
         """zwraca atak postaci"""
@@ -88,7 +92,7 @@ class Character(object):
         """zmienia tylko współrzędną y położenia postaci na mapie"""
         self._position = (self._position[0], self._position[1] + change)
 
-exp_cap = 10000
+exp_cap = 1000
 
 
 class Hero(Character):
@@ -99,6 +103,7 @@ class Hero(Character):
         self._strength = strength
         self._dexterity = dexterity
         self._experience = 0
+        self._skill_points = 0
         
     def set_eq_stats(self):
         """Przekazuje statystyki z ekwipunktu do postaci"""
@@ -122,12 +127,34 @@ class Hero(Character):
         """
         print "I'm learning!"
         self._experience -= exp_cap
-        self._strength += 3 * self._damage.hurt
-        self._dexterity += 3 * self._damage.pierce
-        self._attack += 5 * (self._damage.hurt+self._damage.pierce)/2
-        self._defense += 5 * self._armor.gauge
+        self._skill_points += 5
+
+    def add_strength(self):
+        """Dodaje siły w zamian za punkt umiejętności"""
+        if self._skill_points != 0:
+            self._skill_points -= 1
+            self._strength += 3
+            
+    def add_dexterity(self):
+        """Dodaje zręczności w zamian za punkt umiejętności"""
+        if self._skill_points != 0:
+            self._skill_points -= 1
+            self._dexterity += 3
+            
+    def add_attack(self):
+        """Dodaje ataku w zamian za punkt umiejętności"""
+        if self._skill_points != 0:
+            self._skill_points -= 1
+            self._attack += 1
+            
+    def add_defense(self):
+        """Dodaje obrony w zamian za punkt umiejętności"""
+        if self._skill_points != 0:
+            self._skill_points -= 1
+            self._defense += 1
 
     def get_equip(self):
+        """Zwraca ekwipunek"""
         return self._equipment
 
 class Enemy(Character):

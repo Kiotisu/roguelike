@@ -12,6 +12,17 @@ class Item(object):
         self._name = name
         self._requirements = use_requirements #(strength_require, dexterity_require)
 
+class Consumable(Item):
+    """Jedzenie"""
+
+    def __init__(self, name, use_requirements, restoring_abilities):
+        super(Consumable, self).__init__(name, use_requirements)
+        self._restoring_abilities = restoring_abilities
+        
+    def eat(self, who):
+        """jemy"""
+        who.restore_hp(self._restoring_abilities)
+        self._restoring_abilities = 0
 
 class Weapon(Item):
     """"""
@@ -39,7 +50,8 @@ class Suit(Item):
 #lista przedmiotów w grze, zostawiane przez przeciwników
 item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5)),
              Suit('Kolczuga', (7, 7), Armor(0.5, 10)),
-             Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10))]
+             Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10)),
+             Consumable('Japko', (0, 0), 15)]
 
 
 def get_random_item():
