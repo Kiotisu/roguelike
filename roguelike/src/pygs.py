@@ -127,7 +127,8 @@ class App(object):
                 if event.key == LOC.K_RCTRL or event.key == LOC.K_e:
                     if self._map[self._hero.get_position()][1] is not None:
                         # pick up - add to backpack
-                        self._hero._equipment.add_to_backpack(self._map[self._hero.get_x(), self._hero.get_y()][1])
+                        for item in self._map[self._hero.get_position()][1]:
+                            self._hero._equipment.add_to_backpack(item)
                         # delete item from the floor
                         self._map[self._hero.get_x(), self._hero.get_y()][1] = None
                         self._hero._equipment.print_backpack()  # debug
@@ -296,14 +297,14 @@ class App(object):
         i = 0
         lis = self._hero._equipment.get_backpack()
         for item in lis:
-            # print item, type(item)
-            if isinstance(item, Weapon):
+            #print item, type(item)
+            if type(item) is Weapon:
                 self._display_surf.blit(
                     self._image_library["weapon3.png"],
                     (615 + (i%5)*40, 100 + (i/5)*40)
                 )
                 print "miecz"
-            elif isinstance(item, Suit):
+            elif type(item) is Suit:
                 self._display_surf.blit(
                     self._image_library["ar2.png"],
                     (615 + (i%5)*40, 100 + (i/5)*40)
