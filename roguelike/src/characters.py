@@ -98,7 +98,6 @@ class Character(object):
 
 exp_cap = 1000
 
-
 class Hero(Character):
     """Klasa reprezentująca naszego bohatera"""
     def __init__(self, strength, dexterity, attack, defense, hp, x, y):
@@ -121,7 +120,7 @@ class Hero(Character):
         i ewentualnie wykonuje lvl_up
         """
         self._experience += how_much
-        if self._experience > exp_cap:
+        if self._experience >= exp_cap:
             self.lvl_up()
             
     def lvl_up(self):
@@ -130,6 +129,7 @@ class Hero(Character):
         w oparciu o broń i pancerz
         """
         print "I'm learning!"
+        self._hp = self._max_hp
         self._experience -= exp_cap
         self._skill_points += 5
 
@@ -183,8 +183,9 @@ class Hero(Character):
 class Enemy(Character):
     """Klasa reprezentująca wrogów"""
 
-    def __init__(self, attack, defense, damage, armor, hp, x, y):
+    def __init__(self, attack, defense, damage, armor, hp, x, y, sprite):
         super(Enemy, self).__init__(attack, defense, damage, armor, hp, x, y)
+        self._sprite = sprite
 
     def give_exp(self):
         """ma zwracać exp, który przyznaje po zabiciu?"""
@@ -196,7 +197,16 @@ class Enemy(Character):
         Zwraca przedmiot wyrzucony przez zabitego przeciwnika
         Jeżeli przeciwniki nic nie zostawia, zwraca None
         """
-        if 0.8 < random():
+        if 0.66 < random():
             return get_random_item()
         else:
             return None
+
+    def get_sprite(self):
+        """zwraca sprite'a porwora"""
+        return self._sprite
+
+enemy_list = [Enemy(10, 10, Damage(1.0, 1.0, 10, 5),Armor(0.5, 10), 15, 0, 0, "enemy1.png")]
+
+def get_random_enemy():
+    return choice(enemy_list)

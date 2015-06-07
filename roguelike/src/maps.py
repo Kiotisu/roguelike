@@ -4,7 +4,7 @@ Moduł odpowiedzielany za losowe generowanie mapy
 """
 from random import random, choice
 from auxil import Damage, Armor
-from characters import Enemy
+from characters import get_random_enemy
 
 
 class Map(object):
@@ -106,10 +106,11 @@ class Map(object):
 
                         else:
                             self.board[temp_x][temp_y][0] = index
-                            if random() > 0.99:
-                                self.board[temp_x][temp_y][2] \
-                                    = Enemy(10, 10, Damage(1.0, 1.0, 10, 5),
-                                            Armor(0.5, 10), 15, temp_x, temp_y)
+                            if random() > 0.97:
+                                self.board[temp_x][temp_y][2]\
+                                    = get_random_enemy()
+                                self.board[temp_x][temp_y][2]\
+                                    .change_position((temp_x, temp_y))
 
         self.size = (max_x+1-min_x)*room_size[0], (max_y+1-min_y)*room_size[1]
 

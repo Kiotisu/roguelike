@@ -213,14 +213,14 @@ class App(object):
 
         for y in xrange(19):
             for x in xrange(19):
-
+                pos = self._map[(x_o+x), (y_o+y)]
                 # ściana
-                if self._map[(x_o+x), (y_o+y)][0] == 'w':
+                if pos[0] == 'w':
                     self._display_surf.blit(wall, (x * 32, y * 32))
 
                 # podloga
-                elif self._map[(x_o+x), (y_o+y)][0] != '_':
-                    i = self._map[(x_o+x), (y_o+y)][0]
+                elif pos[0] != '_':
+                    i = pos[0]
                     self._display_surf.blit(floor_list[i % 3],
                                             (x * 32, y * 32))
 
@@ -230,27 +230,13 @@ class App(object):
                                      (x * 32, y * 32, 32, 32))
 
                 # item
-                if self._map[(x_o+x), (y_o+y)][1] is not None:
+                if pos[1] is not None:
 
-                    for item in self._map[(x_o+x), (y_o+y)][1]:
-
-                        if type(item) is Weapon:
-                            self._display_surf.blit(
-                                self._image_library["weapon3.png"],
-                                (x * 32, y * 32)
-                            )
-
-                        elif type(item) is Suit:
-                            self._display_surf.blit(
-                                self._image_library["ar2.png"],
-                                (x * 32, y * 32)
-                            )
-
-                        elif type(item) is Consumable:
-                            self._display_surf.blit(
-                                self._image_library["apple.png"],
-                                (x * 32, y * 32)
-                            )
+                    for item in pos[1]:
+                        self._display_surf.blit(
+                            self._image_library[item.get_sprite()],
+                            (x * 32, y * 32)
+                        )
 
                 # hero
                 if (x_o+x, y_o+y) == self._hero.get_position():
@@ -258,8 +244,8 @@ class App(object):
                                             (x * 32, y * 32))
 
                 # enemy
-                if self._map[(x_o+x), (y_o+y)][2] is not None:
-                    self._display_surf.blit(self._image_library["enemy1.png"],
+                if pos[2] is not None:
+                    self._display_surf.blit(self._image_library[pos[2].get_sprite()],
                                             (x * 32, y * 32))
 
                 # vision
@@ -312,37 +298,25 @@ class App(object):
 
 
         z = 2
-        # EQ
-        if self._hero.get_equip()._weapon is not None:
+        EQ = self._hero.get_equip()
+        if EQ.get_weapon() is not None:
             self._display_surf.blit(
-                    self._image_library["weapon3.png"],
+                    self._image_library[EQ.get_weapon().get_sprite()],
                     (615+z, 20+z)
                 )
-        if self._hero.get_equip()._suit is not None:
+        if EQ.get_suit() is not None:
             self._display_surf.blit(
-                    self._image_library["ar2.png"],
+                    self._image_library[EQ.get_suit().get_sprite()],
                     (615+z+40, 20+z)
                 )
 
         # backpack
         i = 0
-        lis = self._hero.get_equip().get_backpack()
-        for item in lis:
-            if type(item) is Weapon:
-                self._display_surf.blit(
-                    self._image_library["weapon3.png"],
-                    (615 + z + (i%5)*40, 100 + z + (i/5)*40)
-                )
-            elif type(item) is Suit:
-                self._display_surf.blit(
-                    self._image_library["ar2.png"],
-                    (615 + z + (i%5)*40, 100 + z + (i/5)*40)
-                )
-            elif type(item) is Consumable:
-                self._display_surf.blit(
-                    self._image_library["apple.png"],
-                    (615 + z + (i%5)*40, 100 + z + (i/5)*40)
-                )
+        for item in EQ.get_backpack():
+            self._display_surf.blit(
+                self._image_library[item.get_sprite()],
+                (615 + z + (i%5)*40, 100 + z + (i/5)*40)
+            )
             i += 1
 
         # buttons

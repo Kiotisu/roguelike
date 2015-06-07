@@ -8,20 +8,25 @@ from random import choice
 class Item(object):
     """"""
 
-    def __init__(self, name, use_requirements):
+    def __init__(self, name, use_requirements, sprite):
         self._name = name
         self._requirements = use_requirements 
+        self._sprite = sprite
         #(strength_require, dexterity_require)
 
     def can_be_used(self, by_who):
         return self._requirements[0] <= by_who.get_strength()\
                 and self._requirements[1] <= by_who.get_dexterity()
 
+    def get_sprite(self):
+        """zwraca nazwę sprite'a"""
+        return self._sprite
+
 class Consumable(Item):
     """Jedzenie"""
 
-    def __init__(self, name, use_requirements, restoring_abilities):
-        super(Consumable, self).__init__(name, use_requirements)
+    def __init__(self, name, use_requirements, restoring_abilities, sprite):
+        super(Consumable, self).__init__(name, use_requirements, sprite)
         self._restoring_abilities = restoring_abilities
         
     def eat(self, who):
@@ -32,8 +37,8 @@ class Consumable(Item):
 class Weapon(Item):
     """"""
 
-    def __init__(self, name, use_requirements, damage_type):
-        super(Weapon, self).__init__(name, use_requirements)
+    def __init__(self, name, use_requirements, damage_type, sprite):
+        super(Weapon, self).__init__(name, use_requirements, sprite)
         self._damage = damage_type #namedtuple z characters
         
     def get_damage(self):
@@ -44,8 +49,8 @@ class Weapon(Item):
 class Suit(Item):
     """Reprezentuje stroje i pancerze"""
 
-    def __init__(self, name, use_requirements, armor_type):
-        super(Suit, self).__init__(name, use_requirements)
+    def __init__(self, name, use_requirements, armor_type, sprite):
+        super(Suit, self).__init__(name, use_requirements, sprite)
         self._armor = armor_type #jak damage
         
     def get_armor(self):
@@ -53,11 +58,12 @@ class Suit(Item):
         return self._armor
 
 #lista przedmiotów w grze, zostawiane przez przeciwników
-item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5)),
-             Suit('Kolczuga', (7, 7), Armor(0.5, 10)),
-             Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10)),
-             Consumable('Japko', (0, 0), 15)]
-
+item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
+             Suit('Kolczuga', (7, 7), Armor(0.5, 10), "ar2.png"),
+             Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10), "weapon4.png"),
+             Consumable('Japko', (0, 0), 15, "apple.png"),
+             Consumable('Dobre Japko', (0, 0), 40, "apple.png"),
+             Consumable('Rogal', (0, 0), 300, "rogal.jpg")]
 
 def get_random_item():
     return choice(item_list)
@@ -101,6 +107,11 @@ class Equipment(object):
         print "after"
         print self._backpack
 
+    def get_weapon(self):
+        return self._weapon
+
+    def get_suit(self):
+        return self._suit
 
     def backpack_len(self):
         return len(self._backpack)
