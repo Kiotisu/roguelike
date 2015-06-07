@@ -127,6 +127,8 @@ class Hero(Character):
         self._attack += 5 * (self._damage.hurt+self._damage.pierce)/2
         self._defense += 5 * self._armor.gauge
 
+    def get_equip(self):
+        return self._equipment
 
 class Enemy(Character):
     """Klasa reprezentująca wrogów"""

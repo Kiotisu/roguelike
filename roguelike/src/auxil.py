@@ -31,6 +31,7 @@ def files(dir_):
         line = pop.readline()
     return files
 
+#tego chyba nie używamy, nie?
 def do_nice_outlines(surface):
     """ some outlines """
     red = (128, 0, 0)
