@@ -70,7 +70,9 @@ class App(object):
             if not self._lost:
                 self.render()
             else:
-                Auxil.write(self._surface, "GAME OVER", 34, 200, 240)
+                pygame.draw.rect(self._display_surf, (0, 0, 0), (0, 0, 810, 650))
+                Auxil.write(self._display_surf, "GAME OVER", 34, 300, 240)
+                pygame.display.update()
 
     def event(self, event):
         """
@@ -563,7 +565,7 @@ class App(object):
                 print "potworek atakuje"
                 Auxil.write(self._surface, "potwor atakuje", 14, 615, 240+130)
 
-                enemy.attack(self._hero)
+                self._lost = enemy.attack(self._hero)
 
         self._player_turn = True
 
