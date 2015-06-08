@@ -6,7 +6,7 @@ from random import choice
 
 
 class Item(object):
-    """przedmiot"""
+    """Rzecz :D"""
 
     def __init__(self, name, use_requirements, sprite):
         self._name = name
@@ -24,7 +24,7 @@ class Item(object):
 
 
 class Consumable(Item):
-    """jedzenie"""
+    """Jedzenie"""
 
     def __init__(self, name, use_requirements, restoring_abilities, sprite):
         super(Consumable, self).__init__(name, use_requirements, sprite)
@@ -37,7 +37,7 @@ class Consumable(Item):
 
 
 class Weapon(Item):
-    """broń"""
+    """Broń"""
 
     def __init__(self, name, use_requirements, damage_type, sprite):
         super(Weapon, self).__init__(name, use_requirements, sprite)
@@ -59,6 +59,7 @@ class Suit(Item):
         """zwraca pancerz"""
         return self._armor
 
+
 # lista przedmiotów w grze, zostawiane przez przeciwników
 ITEM_LIST = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
              Weapon('Maczuga', (7, 7), Damage(0.8, 1.5, 15, 10), "weapon2.png"),
@@ -71,6 +72,7 @@ ITEM_LIST = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
              Consumable('Pyszne Japko', (0, 0), 50, "apple.png"),
              Consumable('Rogal', (0, 0), 100, "rogal.jpg"),
              Consumable('Rogal Mocy', (0, 0), 300, "rogal.jpg")]
+
 
 def get_random_item():
     return choice(ITEM_LIST)
