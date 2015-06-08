@@ -28,13 +28,12 @@ class Auxil(object):
         """ lists files in a directory """
         files = []
         pop = os.popen("ls \"" + dir_ + "\"", "r")  # \" w przypadku spacji
-        line = pop.readline()  #managery contextu do obslugi plikow!!!!
+        line = pop.readline()  #managery contextu do obslugi plikow?
         while line:
             files.append(line.rstrip('\n'))
             line = pop.readline()
         return files
 
-    #tego chyba nie używamy, nie?
     @staticmethod
     def do_nice_outlines(surface):
         """ some outlines """
@@ -53,35 +52,23 @@ class Auxil(object):
 
         green = (0, 64, 0)
 
-        for col in xrange(5):
-               pygame.draw.rect(surface, green,
-                                 pygame.Rect(610+col*40+2, 20+2, 40, 2))
+        pygame.draw.line(surface, green, (612, 20), (812, 20), 4)
+        pygame.draw.line(surface, green, (612, 60), (812, 60), 4)
 
-               pygame.draw.rect(surface, green,
-                                 pygame.Rect(610+col*40+2, 20+2, 2, 40))
+        for col in xrange(6):
+            pygame.draw.rect(surface, green,
+                              pygame.Rect(610+col*40+2, 20+2, 2, 40))
+            pygame.draw.rect(surface, green,
+                              pygame.Rect(610+col*40+40, 20+2, 2, 40))
 
-               pygame.draw.rect(surface, green,
-                                 pygame.Rect(610+col*40+40, 20+2, 2, 40))
-
-               pygame.draw.rect(surface, green,
-                                 pygame.Rect(610+col*40+2, 20+40, 40, 2))
-
-        # draw a rectangle
-        for col in xrange(5):
-            for row in xrange(4):
-
-                # left top width height
-                pygame.draw.rect(surface, green,
-                                 pygame.Rect(610+col*40+2, 100+row*40+2, 40, 2))
-
-                pygame.draw.rect(surface, green,
-                                 pygame.Rect(610+col*40+2, 100+row*40+2, 2, 40))
-
-                pygame.draw.rect(surface, green,
-                                 pygame.Rect(610+col*40+40, 100+row*40+2, 2, 40))
-
-                pygame.draw.rect(surface, green,
-                                 pygame.Rect(610+col*40+2, 100+row*40+40, 40, 2))
+        for col in xrange(6):
+            pygame.draw.line(surface, green,
+                             (612+col*40, 100),
+                             (612+col*40, 100+4*40), 4)
+        for row in xrange(5):
+            pygame.draw.line(surface, green,
+                             (612, 100+row*40),
+                             (812, 100+row*40), 4)
 
     @staticmethod
     def write(surface, msg, size, where_x, where_y):

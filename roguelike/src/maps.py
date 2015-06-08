@@ -3,7 +3,7 @@
 Moduł odpowiedzielany za losowe generowanie mapy
 """
 from random import random, choice
-from auxil import Damage, Armor
+# from auxil import Damage, Armor
 from characters import get_random_enemy
 from copy import deepcopy
 

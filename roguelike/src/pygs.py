@@ -9,7 +9,7 @@ import os
 from math import ceil, floor, sqrt
 from random import randint
 from characters import Hero
-from equipment import Item, Weapon, Suit, Consumable
+# from equipment import Item, Weapon, Suit, Consumable
 from maps import Map
 from auxil import *
 from music import Music
@@ -25,14 +25,13 @@ class App(object):
         """ s """
         self._running = None
         self._surface = None
-        self._size = self.weight, self.height = 810, 650
+        self._size = self.weight, self.height = 812, 650
         self._map = Map(50, (10, 10))  #rmnum, rsize
         self._player_turn = None
-        self._display_surf = None
         self._image_library = None
         self._action = None
         self._marked = None
-        self._lost  = None
+        self._lost = None
 
         pos_x, pos_y = self.get_start_position()
         self._hero = Hero(10, 5, 10, 10, 200, pos_x, pos_y)
@@ -43,8 +42,6 @@ class App(object):
         pygame.display.set_caption('Rogal')
         self._surface = pygame.display.set_mode(self._size)
         self._running = True
-        self._display_surf = pygame.display.set_mode(self._size,
-                                                     pygame.HWSURFACE)
         self.load_images()
         MUSIC.load_music()
         MUSIC.play_music()
@@ -70,8 +67,9 @@ class App(object):
             if not self._lost:
                 self.render()
             else:
-                pygame.draw.rect(self._display_surf, (0, 0, 0), (0, 0, 810, 650))
-                Auxil.write(self._display_surf, "GAME OVER", 34, 300, 240)
+                pygame.draw.rect(self._surface, (0, 0, 0),
+                                 (0, 0, 812, 650))
+                Auxil.write(self._surface, "GAME OVER", 34, 300, 240)
                 pygame.display.update()
 
     def event(self, event):
@@ -223,12 +221,12 @@ class App(object):
                 pos = self._map[(x_o+x), (y_o+y)]
                 # ściana
                 if pos[0] == 'w':
-                    self._display_surf.blit(wall, (x * 32, y * 32))
+                    self._surface.blit(wall, (x * 32, y * 32))
 
                 # podloga
                 elif pos[0] != '_':
                     i = pos[0]
-                    self._display_surf.blit(floor_list[i % 3],
+                    self._surface.blit(floor_list[i % 3],
                                             (x * 32, y * 32))
 
                 # pustka
@@ -240,34 +238,34 @@ class App(object):
                 if pos[1] is not None:
 
                     for item in pos[1]:
-                        self._display_surf.blit(
+                        self._surface.blit(
                             self._image_library[item.get_sprite()],
                             (x * 32, y * 32)
                         )
 
                 # hero
                 if (x_o+x, y_o+y) == self._hero.get_position():
-                    self._display_surf.blit(self._image_library["hero.png"],
+                    self._surface.blit(self._image_library["hero.png"],
                                             (x * 32, y * 32))
 
                 # enemy or fountain:
                 if pos[2] == "rf":
-                    self._display_surf.blit(self._image_library["0-redfountain.png"],
+                    self._surface.blit(self._image_library["redfountain.png"],
                                             (x * 32, y * 32))
                 elif pos[2] == "bf":
-                    self._display_surf.blit(self._image_library["1-bluefountain.png"],
+                    self._surface.blit(self._image_library["bluefountain.png"],
                                             (x * 32, y * 32))
                 elif pos[2] is not None:
-                    self._display_surf.blit(self._image_library[pos[2].get_sprite()],
+                    self._surface.blit(self._image_library[pos[2].get_sprite()],
                                             (x * 32, y * 32))
 
                 # vision
                 if not self.check_view(x_o+x, y_o+y):
-                    self._display_surf.blit(self._image_library["black.png"],
+                    self._surface.blit(self._image_library["black.png"],
                                             (x * 32, y * 32))
 
         # volume visual
-        self._display_surf.blit(self._image_library["speaker.png"], (0, 612))
+        self._surface.blit(self._image_library["speaker.png"], (0, 612))
         light_straps = (0, 96, 0)
         dark_straps = (0, 32, 0)
         wid = 5
@@ -304,47 +302,50 @@ class App(object):
         Auxil.write(self._surface, str(self._hero.get_attack()), 14, 690, 290)
         Auxil.write(self._surface, str(self._hero.get_defense()), 14, 690, 305)
         Auxil.write(self._surface, str(self._hero.get_strength()), 14, 690, 320)
-        Auxil.write(self._surface, str(self._hero.get_dexterity()), 14, 690, 335)
+        Auxil.write(self._surface, str(self._hero.get_dexterity()),
+                                                                14, 690, 335)
         Auxil.write(self._surface, str(self._hero.get_armor().durability),
                                                                 14, 690, 350)
         Auxil.write(self._surface, str(self._hero.get_exp()), 14, 690, 365)
 
-        Auxil.write(self._surface, "Requirements:", 14, 615, 380)
-        Auxil.write(self._surface, "Strength", 14, 615, 395)
-        Auxil.write(self._surface, "Dexterity", 14, 615, 410)
+        Auxil.write(self._surface, "Requirements:", 14, 615, 395)
+        Auxil.write(self._surface, "Strength", 14, 615, 410)
+        Auxil.write(self._surface, "Dexterity", 14, 615, 425)
         if self._marked is not None:
             mark = self._marked[0] + self._marked[0]*5
             back = self._hero.get_equip().get_backpack()
             if mark < len(back):
-                Auxil.write(self._surface, str(back[mark]._requirements[0]), 14, 690, 395)
-                Auxil.write(self._surface, str(back[mark]._requirements[0]), 14, 690, 410)
+                Auxil.write(self._surface, str(back[mark]._requirements[0]),
+                            14, 690, 410)
+                Auxil.write(self._surface, str(back[mark]._requirements[1]),
+                            14, 690, 425)
 
-        z = 2
+        z = 4
         EQ = self._hero.get_equip()
         if EQ.get_weapon() is not None:
-            self._display_surf.blit(
+            self._surface.blit(
                     self._image_library[EQ.get_weapon().get_sprite()],
-                    (615+z, 20+z)
+                    (612+z, 22+z)
                 )
         if EQ.get_suit() is not None:
-            self._display_surf.blit(
+            self._surface.blit(
                     self._image_library[EQ.get_suit().get_sprite()],
-                    (615+z+40, 20+z)
+                    (612+z+40, 22+z)
                 )
 
         # backpack
         i = 0
         for item in EQ.get_backpack():
-            self._display_surf.blit(
+            self._surface.blit(
                 self._image_library[item.get_sprite()],
-                (615 + z + (i%5)*40, 100 + z + (i/5)*40)
+                (612 + z + (i%5)*40, 102 + z + (i/5)*40)
             )
             i += 1
 
         # buttons
         if self._hero._skill_points != 0:
             for but in xrange(5):
-                self._display_surf.blit(
+                self._surface.blit(
                     self._image_library["button.png"],
                     (780, 275 + but*16)
                 )
@@ -353,8 +354,8 @@ class App(object):
 
     def check_view(self, x, y):
         """sprawdza zasieg wzroku"""
-        d = ceil(sqrt((self._hero.get_x()-x)**2 + (self._hero.get_y()-y)**2))
-        return d <= HORIZON
+        view = ceil(sqrt((self._hero.get_x()-x)**2 + (self._hero.get_y()-y)**2))
+        return view <= HORIZON
 
     def load_images(self):
         """
@@ -392,7 +393,7 @@ class App(object):
                 action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 600)
                 result = self._hero.attack(action_pos[2])
 
                 if result:
@@ -420,7 +421,7 @@ class App(object):
                 action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 600)
                 result = self._hero.attack(action_pos[2])
 
                 if result:
@@ -448,7 +449,7 @@ class App(object):
                 action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 600)
                 result = self._hero.attack(action_pos[2])
 
                 if result:
@@ -475,7 +476,7 @@ class App(object):
                 action_pos[2] = "bf"
             else:
                 print "gracz atakuje"
-                Auxil.write(self._surface, "gracz atakuje", 14, 615, 400)
+                Auxil.write(self._surface, "gracz atakuje", 14, 615, 600)
                 result = self._hero.attack(action_pos[2])
 
                 if result:
@@ -578,7 +579,7 @@ class App(object):
 
             if abs(x_distance) == 1 and y_distance == 0 \
                     or x_distance == 0 and abs(y_distance) == 1:
-                print "potworek atakuje"
+                print "potwor atakuje"
                 Auxil.write(self._surface, "potwor atakuje", 14, 615, 240+130)
 
                 self._lost = enemy.attack(self._hero)
