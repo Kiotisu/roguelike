@@ -6,21 +6,22 @@ from random import choice
 
 
 class Item(object):
-    """"""
+    """Rzecz :D"""
 
     def __init__(self, name, use_requirements, sprite):
         self._name = name
         self._requirements = use_requirements 
         self._sprite = sprite
-        #(strength_require, dexterity_require)
+        # (strength_require, dexterity_require)
 
     def can_be_used(self, by_who):
-        return self._requirements[0] <= by_who.get_strength()\
-                and self._requirements[1] <= by_who.get_dexterity()
+        return self._requirements[0] <= by_who.get_strength() \
+               and self._requirements[1] <= by_who.get_dexterity()
 
     def get_sprite(self):
         """zwraca nazwę sprite'a"""
         return self._sprite
+
 
 class Consumable(Item):
     """Jedzenie"""
@@ -34,8 +35,9 @@ class Consumable(Item):
         who.restore_hp(self._restoring_abilities)
         self._restoring_abilities = 0
 
+
 class Weapon(Item):
-    """"""
+    """Broń"""
 
     def __init__(self, name, use_requirements, damage_type, sprite):
         super(Weapon, self).__init__(name, use_requirements, sprite)
@@ -57,8 +59,9 @@ class Suit(Item):
         """zwraca pancerz"""
         return self._armor
 
-#lista przedmiotów w grze, zostawiane przez przeciwników
-item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
+
+# lista przedmiotów w grze, zostawiane przez przeciwników
+ITEM_LIST = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
              Weapon('Maczuga', (7, 7), Damage(0.8, 1.5, 15, 10), "weapon2.png"),
              Weapon('Berdysz', (7, 7), Damage(1.3, 1.0, 20, 10), "weapon1.png"),
              Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10), "weapon4.png"),
@@ -70,8 +73,9 @@ item_list = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
              Consumable('Rogal', (0, 0), 100, "rogal.jpg"),
              Consumable('Rogal Mocy', (0, 0), 300, "rogal.jpg")]
 
+
 def get_random_item():
-    return choice(item_list)
+    return choice(ITEM_LIST)
 
 
 class Equipment(object):
@@ -90,8 +94,8 @@ class Equipment(object):
         używanie przedmiotu
         -pancerze i miecze zakłada a jabłko je
         """
-        if list_positon < len(self._backpack)\
-            and self._backpack[list_positon].can_be_used(self._owner):
+        if list_positon < len(self._backpack) \
+                and self._backpack[list_positon].can_be_used(self._owner):
             if type(self._backpack[list_positon]) is Weapon:
                 swap = self._weapon
                 self._weapon = self._backpack[list_positon]
