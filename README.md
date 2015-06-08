@@ -14,7 +14,7 @@ python pygs.py
  * sprawdzanie wymagań przedmiotu - pojedyncze kliknięcie
  * przyciszanie/przygłaśnianie muzyki - n/m
 
-#### TODO
+#### TODO:
  * podział na moduły
  * questy
 
