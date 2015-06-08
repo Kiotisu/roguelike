@@ -18,5 +18,6 @@ python pygs.py
 #### TODO:
  * podział na moduły
  * questy
+ * porządna dokumentacja
 
 Opis klas jest w docstringach.
