@@ -99,6 +99,7 @@ class Character(object):
 
 EXP_CAP = 1000
 
+
 class Hero(Character):
     """Klasa reprezentująca naszego bohatera"""
     def __init__(self, strength, dexterity, attack, defense, hp, x, y):
@@ -179,8 +180,13 @@ class Hero(Character):
         return self._experience
 
     def get_equip(self):
-        """Zwraca ekwipunek"""
+        """zwraca ekwipunek"""
         return self._equipment
+
+    def get_skill_points(self):
+        """zwraca dostępne do rozdania punkty umiejętności"""
+        return self._skill_points
+
 
 class Enemy(Character):
     """Klasa reprezentująca wrogów"""
@@ -190,7 +196,7 @@ class Enemy(Character):
         self._sprite = sprite
 
     def give_exp(self):
-        """ma zwracać exp, który przyznaje po zabiciu?"""
+        """ma zwracać exp, który przyznaje po zabiciu"""
         return self._attack*(self._damage.base+self._damage.extra) + \
                self._defense*self._armor.gauge*self._armor.durability
 
@@ -205,10 +211,10 @@ class Enemy(Character):
             return None
 
     def get_sprite(self):
-        """zwraca sprite'a porwora"""
+        """zwraca sprite'a potwora"""
         return self._sprite
 
-enemy_list = [Enemy(7, 5, Damage(0.9, 1.0, 5, 5),
+ENEMY_LIST = [Enemy(7, 5, Damage(0.9, 1.0, 5, 5),
               Armor(0.25, 15), 20, 0, 0, "enemy1.png"),
               Enemy(10, 7, Damage(0.8, 1.0, 10, 5),
               Armor(0.25, 20), 25, 0, 0, "goblin.png"),
@@ -217,4 +223,4 @@ enemy_list = [Enemy(7, 5, Damage(0.9, 1.0, 5, 5),
 
 def get_random_enemy():
     """ losuje wroga """
-    return choice(enemy_list)
+    return choice(ENEMY_LIST)

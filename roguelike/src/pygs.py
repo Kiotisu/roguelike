@@ -19,14 +19,14 @@ MUSIC = Music()
 
 
 class App(object):
-    """ doc """
+    """Główna klasa gry odpowiedzialna za rozgrywkę"""
 
     def __init__(self):
         """ s """
         self._running = None
         self._surface = None
         self._size = self.weight, self.height = 812, 650
-        self._map = Map(50, (10, 10))  #rmnum, rsize
+        self._map = Map(50, (10, 10))
         self._player_turn = None
         self._image_library = None
         self._action = None
@@ -37,7 +37,7 @@ class App(object):
         self._hero = Hero(10, 5, 10, 10, 200, pos_x, pos_y)
 
     def init(self):
-        """ s """
+        """startowa inicjalizacja potrzebnych zmiennych"""
         pygame.init()
         pygame.display.set_caption('Rogal')
         self._surface = pygame.display.set_mode(self._size)
@@ -50,7 +50,7 @@ class App(object):
         self._lost = False
 
     def execute(self):
-        """ s """
+        """głowna pętla"""
 
         self.init()
         self._player_turn = True
@@ -70,6 +70,8 @@ class App(object):
                 pygame.draw.rect(self._surface, (0, 0, 0),
                                  (0, 0, 812, 650))
                 Auxil.write(self._surface, "GAME OVER", 34, 300, 240)
+                self._surface.blit(self._image_library["photo.png"],
+                                            (x * 32, y * 32))
                 pygame.display.update()
 
     def event(self, event):
@@ -175,9 +177,9 @@ class App(object):
                             self._marked = None
 
                 # mouse on lvl buttons
-                if self._hero._skill_points != 0\
-                    and po_x >= 780 and po_x <= 780 + 16\
-                    and po_y >= 275 and po_y <= 275 + 5*16:
+                if self._hero._skill_points != 0 \
+                        and po_x >= 780 and po_x <= 780 + 16 \
+                        and po_y >= 275 and po_y <= 275 + 5*16:
                     num = (po_y-275)/16
                     if num == 0:
                         self._hero.add_hp()
@@ -191,7 +193,7 @@ class App(object):
                         self._hero.add_dexterity()
 
     def render(self):
-        """ in prog """
+        """odpowiedzialne za wyświetlanie"""
 
         if self._hero.get_x() < 9:
             x_o = 0
@@ -321,29 +323,29 @@ class App(object):
                             14, 690, 425)
 
         z = 4
-        EQ = self._hero.get_equip()
-        if EQ.get_weapon() is not None:
+        eq = self._hero.get_equip()
+        if eq.get_weapon() is not None:
             self._surface.blit(
-                    self._image_library[EQ.get_weapon().get_sprite()],
-                    (612+z, 22+z)
-                )
-        if EQ.get_suit() is not None:
+                self._image_library[eq.get_weapon().get_sprite()],
+                (612+z, 22+z)
+            )
+        if eq.get_suit() is not None:
             self._surface.blit(
-                    self._image_library[EQ.get_suit().get_sprite()],
-                    (612+z+40, 22+z)
-                )
+                self._image_library[eq.get_suit().get_sprite()],
+                (612+z+40, 22+z)
+            )
 
         # backpack
         i = 0
-        for item in EQ.get_backpack():
+        for item in eq.get_backpack():
             self._surface.blit(
                 self._image_library[item.get_sprite()],
-                (612 + z + (i%5)*40, 102 + z + (i/5)*40)
+                (612 + z + (i % 5)*40, 102 + z + (i/5)*40)
             )
             i += 1
 
         # buttons
-        if self._hero._skill_points != 0:
+        if self._hero.get_skill_points() != 0:
             for but in xrange(5):
                 self._surface.blit(
                     self._image_library["button.png"],
@@ -358,10 +360,7 @@ class App(object):
         return view <= HORIZON
 
     def load_images(self):
-        """
-         Chciałem to wydzielić do innego pliku, ale mi nie wyszło,
-         dobrze jakby ktoś to ogarnął ~WuJo
-         load images from /items """
+        """wczytuje sprity"""
         path = r"./items/"
         item_list = Auxil.files("items")
         self._image_library = {}
@@ -531,47 +530,7 @@ class App(object):
             x_distance = hero_x - x_enemy
             y_distance = hero_y - y_enemy
 
-            # ruszamy się po manhatanie, próbujemy po dłuższej odległości
-
-            if abs(x_distance) > abs(y_distance):
-
-                if (x_distance > 1 or
-                    (x_distance == 1 and abs(y_distance) == 1))\
-                        and self._map[x_enemy+1, y_enemy][2] is None\
-                        and self._map[x_enemy+1, y_enemy][0] != 'w'\
-                        and self._map[x_enemy+1, y_enemy][0] != '_':
-                    enemy.change_position((x_enemy+1, y_enemy))
-                    self._map[x_enemy, y_enemy][2] = None
-                    self._map[x_enemy+1, y_enemy][2] = enemy
-
-                elif (x_distance < -1 or
-                      (x_distance == -1 and abs(y_distance) == 1))\
-                        and self._map[x_enemy-1, y_enemy][2] is None\
-                        and self._map[x_enemy-1, y_enemy][0] != 'w'\
-                        and self._map[x_enemy-1, y_enemy][0] != '_':
-                    enemy.change_position((x_enemy-1, y_enemy))
-                    self._map[x_enemy, y_enemy][2] = None
-                    self._map[x_enemy-1, y_enemy][2] = enemy
-
-            else:
-
-                if (y_distance > 1 or
-                    (y_distance == 1 and abs(x_distance) == 1))\
-                        and self._map[x_enemy, y_enemy+1][2] is None\
-                        and self._map[x_enemy, y_enemy+1][0] != 'w'\
-                        and self._map[x_enemy, y_enemy+1][0] != '_':
-                    enemy.change_position((x_enemy, y_enemy+1))
-                    self._map[x_enemy, y_enemy][2] = None
-                    self._map[x_enemy, y_enemy+1][2] = enemy
-
-                elif (y_distance < -1 or
-                      (y_distance == -1 and abs(x_distance) == 1))\
-                        and self._map[x_enemy, y_enemy-1][2] is None\
-                        and self._map[x_enemy, y_enemy-1][0] != 'w'\
-                        and self._map[x_enemy, y_enemy-1][0] != '_':
-                    enemy.change_position((x_enemy, y_enemy-1))
-                    self._map[x_enemy, y_enemy][2] = None
-                    self._map[x_enemy, y_enemy-1][2] = enemy
+            is_moved = False
 
             # sprawdzamy czy można zaatakować i ewentualnie atakujemy:
             x_distance = hero_x - enemy.get_x()
@@ -582,7 +541,53 @@ class App(object):
                 print "potwor atakuje"
                 Auxil.write(self._surface, "potwor atakuje", 14, 615, 240+130)
 
+                is_moved = True
+
                 self._lost = enemy.attack(self._hero)
+
+            if not is_moved:
+
+                if (x_distance > 1 or
+                    (x_distance == 1 and abs(y_distance) == 1))\
+                        and self._map[x_enemy+1, y_enemy][2] is None\
+                        and self._map[x_enemy+1, y_enemy][0] != 'w'\
+                        and self._map[x_enemy+1, y_enemy][0] != '_':
+                    enemy.change_position((x_enemy+1, y_enemy))
+                    self._map[x_enemy, y_enemy][2] = None
+                    self._map[x_enemy+1, y_enemy][2] = enemy
+                    is_moved = True
+
+                elif (x_distance < -1 or
+                      (x_distance == -1 and abs(y_distance) == 1))\
+                        and self._map[x_enemy-1, y_enemy][2] is None\
+                        and self._map[x_enemy-1, y_enemy][0] != 'w'\
+                        and self._map[x_enemy-1, y_enemy][0] != '_':
+                    enemy.change_position((x_enemy-1, y_enemy))
+                    self._map[x_enemy, y_enemy][2] = None
+                    self._map[x_enemy-1, y_enemy][2] = enemy
+                    is_moved = True
+
+            if not is_moved:
+
+                if (y_distance > 1 or
+                    (y_distance == 1 and abs(x_distance) == 1))\
+                        and self._map[x_enemy, y_enemy+1][2] is None\
+                        and self._map[x_enemy, y_enemy+1][0] != 'w'\
+                        and self._map[x_enemy, y_enemy+1][0] != '_':
+                    enemy.change_position((x_enemy, y_enemy+1))
+                    self._map[x_enemy, y_enemy][2] = None
+                    self._map[x_enemy, y_enemy+1][2] = enemy
+                    is_moved = True
+
+                elif (y_distance < -1 or
+                      (y_distance == -1 and abs(x_distance) == 1))\
+                        and self._map[x_enemy, y_enemy-1][2] is None\
+                        and self._map[x_enemy, y_enemy-1][0] != 'w'\
+                        and self._map[x_enemy, y_enemy-1][0] != '_':
+                    enemy.change_position((x_enemy, y_enemy-1))
+                    self._map[x_enemy, y_enemy][2] = None
+                    self._map[x_enemy, y_enemy-1][2] = enemy
+                    is_moved = True
 
         self._player_turn = True
 
