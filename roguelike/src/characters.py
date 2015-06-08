@@ -32,7 +32,7 @@ class Character(object):
         -broń zadaje "domyślnie" obrażenia z zakresu base do base+extra
         -bierzemy poprawkę na grubość pancerza
         -oraz jego jakość
-        -finalnie mnożymy jeszcze zredukowane obrażenia przez współczynnik zranienia
+        -finalnie mnożymy zredukowane obrażenia przez współczynnik zranienia
         """
         armor = self._armor #just for beauty :)
         delivered_damage = damage.base + (random() * damage.extra)
@@ -48,7 +48,7 @@ class Character(object):
     def get_hp(self):
         """zwraca hp postaci"""
         return self._hp
-    
+
     def restore_hp(self, how_much):
         """dodaje hp postaci"""
         self._hp = min(self._hp+how_much, self._max_hp)
@@ -68,7 +68,7 @@ class Character(object):
     def get_armor(self):
         """zwraca pancerz postaci"""
         return self._armor
-    
+
     def change_armor(self, armor):
         """zmienia pancerz postaci"""
         self._armor = armor
@@ -97,19 +97,21 @@ class Character(object):
         """zmienia tylko współrzędną y położenia postaci na mapie"""
         self._position = (self._position[0], self._position[1] + change)
 
-exp_cap = 1000
+EXP_CAP = 1000
+
 
 
 class Hero(Character):
     """Klasa reprezentująca naszego bohatera"""
     def __init__(self, strength, dexterity, attack, defense, hp, x, y):
-        super(Hero, self).__init__(attack, defense, Damage(0.5, 1.0, 5, 2), Armor(0.0, 0), hp, x, y)
+        super(Hero, self).__init__(attack, defense, Damage(0.5, 1.0, 5, 2),
+                                    Armor(0.0, 0), hp, x, y)
         self._equipment = Equipment(self)
         self._strength = strength
         self._dexterity = dexterity
         self._experience = 0
         self._skill_points = 0
-        
+
     def set_eq_stats(self):
         """Przekazuje statystyki z ekwipunktu do postaci"""
         self._damage = self._equipment.get_damage()
@@ -118,13 +120,13 @@ class Hero(Character):
     def gain_exp(self, how_much):
         """
         Dodaje doświadczenie,
-        sprawdza poziom 
+        sprawdza poziom
         i ewentualnie wykonuje lvl_up
         """
         self._experience += how_much
-        if self._experience >= exp_cap:
+        if self._experience >= EXP_CAP:
             self.lvl_up()
-            
+
     def lvl_up(self):
         """
         Podnosi statystyki za doświadczenie
@@ -132,7 +134,7 @@ class Hero(Character):
         """
         print "I'm learning!"
         self._hp = self._max_hp
-        self._experience -= exp_cap
+        self._experience -= EXP_CAP
         self._skill_points += 5
 
     def add_hp(self):
@@ -147,19 +149,19 @@ class Hero(Character):
         if self._skill_points != 0:
             self._skill_points -= 1
             self._strength += 3
-            
+
     def add_dexterity(self):
         """Dodaje zręczności w zamian za punkt umiejętności"""
         if self._skill_points != 0:
             self._skill_points -= 1
             self._dexterity += 3
-            
+
     def add_attack(self):
         """Dodaje ataku w zamian za punkt umiejętności"""
         if self._skill_points != 0:
             self._skill_points -= 1
             self._attack += 1
-            
+
     def add_defense(self):
         """Dodaje obrony w zamian za punkt umiejętności"""
         if self._skill_points != 0:
@@ -195,10 +197,10 @@ class Enemy(Character):
         self._sprite = sprite
 
     def give_exp(self):
-        """ma zwracać exp, który przyznaje po zabiciu?"""
+        """ma zwracać exp, który przyznaje po zabiciu"""
         return self._attack*(self._damage.base+self._damage.extra) + \
                self._defense*self._armor.gauge*self._armor.durability
-    
+
     def leave_items(self):
         """
         Zwraca przedmiot wyrzucony przez zabitego przeciwnika
@@ -210,13 +212,27 @@ class Enemy(Character):
             return None
 
     def get_sprite(self):
-        """zwraca sprite'a porwora"""
+        """zwraca sprite'a potwora"""
         return self._sprite
 
+<<<<<<< HEAD
+ENEMY_LIST = [Enemy(7, 5, Damage(0.9, 1.0, 5, 5),
+              Armor(0.25, 15), 20, 0, 0, "enemy1.png"),
+              Enemy(10, 7, Damage(0.8, 1.0, 10, 5),
+              Armor(0.25, 20), 25, 0, 0, "goblin.png"),
+              Enemy(15, 10, Damage(1.1, 1.0, 10, 10),
+              Armor(0.5, 15), 35, 0, 0, "bfm.png")]
+=======
 ENEMY_LIST = [Enemy(7, 5, Damage(0.9, 1.0, 5, 5),Armor(0.25, 15), 20, 0, 0, "goblin.png"),
               Enemy(10, 7, Damage(0.8, 1.0, 10, 5),Armor(0.25, 20), 25, 0, 0, "enemy1.png"),
               Enemy(15, 10, Damage(1.1, 1.0, 10, 10),Armor(0.5, 15), 35, 0, 0, "bfm.png")]
+>>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
 
 
 def get_random_enemy():
+<<<<<<< HEAD
+    """ losuje wroga """
     return choice(ENEMY_LIST)
+=======
+    return choice(ENEMY_LIST)
+>>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d

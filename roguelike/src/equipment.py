@@ -6,7 +6,11 @@ from random import choice
 
 
 class Item(object):
+<<<<<<< HEAD
+    """przedmiot"""
+=======
     """Rzecz :D"""
+>>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
 
     def __init__(self, name, use_requirements, sprite):
         self._name = name
@@ -24,7 +28,7 @@ class Item(object):
 
 
 class Consumable(Item):
-    """Jedzenie"""
+    """jedzenie"""
 
     def __init__(self, name, use_requirements, restoring_abilities, sprite):
         super(Consumable, self).__init__(name, use_requirements, sprite)
@@ -37,7 +41,11 @@ class Consumable(Item):
 
 
 class Weapon(Item):
+<<<<<<< HEAD
+    """broń"""
+=======
     """Broń"""
+>>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
 
     def __init__(self, name, use_requirements, damage_type, sprite):
         super(Weapon, self).__init__(name, use_requirements, sprite)
@@ -59,7 +67,10 @@ class Suit(Item):
         """zwraca pancerz"""
         return self._armor
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
 # lista przedmiotów w grze, zostawiane przez przeciwników
 ITEM_LIST = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
              Weapon('Maczuga', (7, 7), Damage(0.8, 1.5, 15, 10), "weapon2.png"),
