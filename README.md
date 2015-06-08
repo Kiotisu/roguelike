@@ -9,10 +9,11 @@ python pygs.py
 #### Sterowanie w grze:
  * przemieszczanie - wsad lub strzałki
  * atak - wsad lub strzałki(gdy stykamy się z przeciwnikiem)
- * podnoszenie przedmiotów - e
+ * podnoszenie przedmiotów - e lub prawy ctrl
  * zakładanie przedmiotów - dwukrotne kliknięcie lewym przyciskiem myszki na przedmiot w plecaku
  * sprawdzanie wymagań przedmiotu - pojedyncze kliknięcie
  * przyciszanie/przygłaśnianie muzyki - n/m
+ * wyjście z gry - Esc
 
 #### TODO:
  * podział na moduły
