@@ -24,11 +24,7 @@ class App(object):
     def __init__(self):
         self._running = None
         self._surface = None
-<<<<<<< HEAD
         self._size = self.weight, self.height = 812, 650
-=======
-        self._size = self.weight, self.height = 810, 650
->>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
         self._map = Map(50, (10, 10))
         self._player_turn = None
         self._image_library = None
@@ -40,11 +36,7 @@ class App(object):
         self._hero = Hero(10, 5, 10, 10, 200, pos_x, pos_y)
 
     def init(self):
-<<<<<<< HEAD
         """startowa inicjalizacja potrzebnych zmiennych"""
-=======
-        """startowa inicjalizacja kilku potrzebnych rzeczy"""
->>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
         pygame.init()
         pygame.display.set_caption('Rogal')
         self._surface = pygame.display.set_mode(self._size)
@@ -57,12 +49,7 @@ class App(object):
         self._lost = False
 
     def execute(self):
-<<<<<<< HEAD
         """głowna pętla"""
-=======
-        """głowna pętla gry"""
->>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
-
         self.init()
         self._player_turn = True
 
@@ -81,8 +68,7 @@ class App(object):
                 pygame.draw.rect(self._surface, (0, 0, 0),
                                  (0, 0, 812, 650))
                 Auxil.write(self._surface, "GAME OVER", 34, 300, 240)
-                self._surface.blit(self._image_library["photo.png"],
-                                            (x * 32, y * 32))
+                
                 pygame.display.update()
 
     def event(self, event):
@@ -204,11 +190,7 @@ class App(object):
                         self._hero.add_dexterity()
 
     def render(self):
-<<<<<<< HEAD
         """odpowiedzialne za wyświetlanie"""
-=======
-        """odpowiedzialne za renderowanie"""
->>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
 
         if self._hero.get_x() < 9:
             x_o = 0
@@ -332,7 +314,6 @@ class App(object):
             mark = self._marked[0] + self._marked[0]*5
             back = self._hero.get_equip().get_backpack()
             if mark < len(back):
-<<<<<<< HEAD
                 Auxil.write(self._surface, str(back[mark]._requirements[0]),
                             14, 690, 410)
                 Auxil.write(self._surface, str(back[mark]._requirements[1]),
@@ -349,36 +330,14 @@ class App(object):
             self._surface.blit(
                 self._image_library[eq.get_suit().get_sprite()],
                 (612+z+40, 22+z)
-=======
-                Auxil.write(self._surface, str(back[mark]._requirements[0]), 14, 690, 395)
-                Auxil.write(self._surface, str(back[mark]._requirements[0]), 14, 690, 410)
-
-        z = 2
-        eq = self._hero.get_equip()
-        if eq.get_weapon() is not None:
-            self._display_surf.blit(
-                self._image_library[eq.get_weapon().get_sprite()],
-                (615+z, 20+z)
-            )
-        if eq.get_suit() is not None:
-            self._display_surf.blit(
-                self._image_library[eq.get_suit().get_sprite()],
-                (615+z+40, 20+z)
->>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
             )
 
         # backpack
         i = 0
         for item in eq.get_backpack():
-<<<<<<< HEAD
             self._surface.blit(
                 self._image_library[item.get_sprite()],
                 (612 + z + (i % 5)*40, 102 + z + (i/5)*40)
-=======
-            self._display_surf.blit(
-                self._image_library[item.get_sprite()],
-                (615 + z + (i % 5)*40, 100 + z + (i/5)*40)
->>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
             )
             i += 1
 
@@ -398,11 +357,7 @@ class App(object):
         return view <= HORIZON
 
     def load_images(self):
-<<<<<<< HEAD
         """wczytuje sprity"""
-=======
-        """Wczytuje sprity"""
->>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
         path = r"./items/"
         item_list = Auxil.files("items")
         self._image_library = {}
@@ -573,7 +528,6 @@ class App(object):
             y_distance = hero_y - y_enemy
 
             is_moved = False
-<<<<<<< HEAD
 
             # sprawdzamy czy można zaatakować i ewentualnie atakujemy:
             x_distance = hero_x - enemy.get_x()
@@ -588,22 +542,7 @@ class App(object):
 
                 self._lost = enemy.attack(self._hero)
 
-=======
 
-            # sprawdzamy czy można zaatakować i ewentualnie atakujemy:
-            x_distance = hero_x - enemy.get_x()
-            y_distance = hero_y - enemy.get_y()
-
-            if abs(x_distance) == 1 and y_distance == 0 \
-                    or x_distance == 0 and abs(y_distance) == 1:
-                print "potworek atakuje"
-                Auxil.write(self._surface, "potwor atakuje", 14, 615, 240+130)
-
-                is_moved = True
-
-                self._lost = enemy.attack(self._hero)
-
->>>>>>> 40f0115c63772c1421aa9fd24bb91460e84f4a5d
             if not is_moved:
 
                 if (x_distance > 1 or
