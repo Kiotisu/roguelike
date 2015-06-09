@@ -76,4 +76,4 @@ class Auxil(object):
         font = pygame.font.SysFont('mono', size, bold=True)
         text = font.render(msg, True, (0, 128, 0))
         text = text.convert_alpha()
-        surface.blit(text, (where_x, where_y)) 
+        surface.blit(text, (where_x, where_y))

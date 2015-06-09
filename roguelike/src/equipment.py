@@ -10,11 +10,12 @@ class Item(object):
 
     def __init__(self, name, use_requirements, sprite):
         self._name = name
-        self._requirements = use_requirements 
+        self._requirements = use_requirements
         self._sprite = sprite
         # (strength_require, dexterity_require)
 
     def can_be_used(self, by_who):
+        """Sprawdza czy spełnione są wymagania użycia przedmiotu"""
         return self._requirements[0] <= by_who.get_strength() \
                and self._requirements[1] <= by_who.get_dexterity()
 
@@ -29,7 +30,7 @@ class Consumable(Item):
     def __init__(self, name, use_requirements, restoring_abilities, sprite):
         super(Consumable, self).__init__(name, use_requirements, sprite)
         self._restoring_abilities = restoring_abilities
-        
+
     def eat(self, who):
         """jemy"""
         who.restore_hp(self._restoring_abilities)
@@ -41,8 +42,8 @@ class Weapon(Item):
 
     def __init__(self, name, use_requirements, damage_type, sprite):
         super(Weapon, self).__init__(name, use_requirements, sprite)
-        self._damage = damage_type #namedtuple z characters
-        
+        self._damage = damage_type  # namedtuple z characters
+
     def get_damage(self):
         """zwraca obrażenia"""
         return self._damage
@@ -53,8 +54,8 @@ class Suit(Item):
 
     def __init__(self, name, use_requirements, armor_type, sprite):
         super(Suit, self).__init__(name, use_requirements, sprite)
-        self._armor = armor_type #jak damage
-        
+        self._armor = armor_type  # jak damage
+
     def get_armor(self):
         """zwraca pancerz"""
         return self._armor
@@ -63,7 +64,8 @@ class Suit(Item):
 ITEM_LIST = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
              Weapon('Maczuga', (7, 7), Damage(0.8, 1.5, 15, 10), "weapon2.png"),
              Weapon('Berdysz', (7, 7), Damage(1.3, 1.0, 20, 10), "weapon1.png"),
-             Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10), "weapon4.png"),
+             Weapon('Miecz Dwuręczny', (20, 3), Damage(1.0, 1.2, 30, 10),
+                    "weapon4.png"),
              Suit('Kolczuga', (7, 7), Armor(0.5, 10), "ar3.png"),
              Suit('Dobra Zbroja', (15, 10), Armor(0.7, 25), "ar2.png"),
              Consumable('Japko', (0, 0), 15, "apple.png"),
@@ -74,15 +76,16 @@ ITEM_LIST = [Weapon('Miecz', (10, 5), Damage(1.1, 1.0, 20, 5), "weapon3.png"),
 
 
 def get_random_item():
+    """zwraca losowy przedmiot z listy przedmiotów"""
     return choice(ITEM_LIST)
 
 
 class Equipment(object):
+    """
+        bron, zbroja, plecak
+    """
 
     def __init__(self, owner):
-        """
-        bron, zbroja, plecak
-        """
         self._owner = owner
         self._weapon = None
         self._suit = None
@@ -117,17 +120,22 @@ class Equipment(object):
         print self._backpack
 
     def get_weapon(self):
+        """zwraca broń"""
         return self._weapon
 
     def get_suit(self):
+        """zwraca zbroję(?)"""
         return self._suit
 
     def backpack_len(self):
+        """zwraca zapełnienie plecaka"""
         return len(self._backpack)
 
     def add_to_backpack(self, what):
+        """dodaje przedmiot do plecaka"""
         if len(self._backpack) < 20:
             self._backpack.append(what)
 
     def get_backpack(self):
+        """zwraca plecak"""
         return self._backpack

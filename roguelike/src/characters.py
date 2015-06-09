@@ -100,12 +100,11 @@ class Character(object):
 EXP_CAP = 1000
 
 
-
 class Hero(Character):
     """Klasa reprezentująca naszego bohatera"""
     def __init__(self, strength, dexterity, attack, defense, hp, x, y):
         super(Hero, self).__init__(attack, defense, Damage(0.5, 1.0, 5, 2),
-                                    Armor(0.0, 0), hp, x, y)
+                                   Armor(0.0, 0), hp, x, y)
         self._equipment = Equipment(self)
         self._strength = strength
         self._dexterity = dexterity
