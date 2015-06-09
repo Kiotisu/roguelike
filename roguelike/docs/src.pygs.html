@@ -1,0 +1,111 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module src.pygs</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="src.html"><font color="#ffffff">src</font></a>.pygs</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/wiktor/Roguelike/roguelike/src/pygs.py">/home/wiktor/Roguelike/roguelike/src/pygs.py</a></font></td></tr></table>
+    <p><tt>main&nbsp;app</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="pygame.locals.html">pygame.locals</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="pygame.html">pygame</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="src.pygs.html#App">App</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="App">class <strong>App</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Główna&nbsp;klasa&nbsp;gry&nbsp;odpowiedzialna&nbsp;za&nbsp;rozgrywkę<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="App-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="App-check_view"><strong>check_view</strong></a>(self, x, y)</dt><dd><tt>sprawdza&nbsp;zasieg&nbsp;wzroku</tt></dd></dl>
+
+<dl><dt><a name="App-enemy_turn"><strong>enemy_turn</strong></a>(self)</dt><dd><tt>Symulacja&nbsp;tury&nbsp;przeciwników.<br>
+W&nbsp;praktyce&nbsp;poruszają&nbsp;się&nbsp;tylko&nbsp;ci&nbsp;w&nbsp;zasięgu&nbsp;naszego&nbsp;wzroku</tt></dd></dl>
+
+<dl><dt><a name="App-event"><strong>event</strong></a>(self, event)</dt><dd><tt>Obsługa&nbsp;eventów:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-wciśniętych&nbsp;klawiszy<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-muzyki<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-wyjścia&nbsp;z&nbsp;gry</tt></dd></dl>
+
+<dl><dt><a name="App-execute"><strong>execute</strong></a>(self)</dt><dd><tt>głowna&nbsp;pętla</tt></dd></dl>
+
+<dl><dt><a name="App-get_start_position"><strong>get_start_position</strong></a>(self)</dt><dd><tt>Zwraca&nbsp;prawidłową,&nbsp;losową&nbsp;pozycję&nbsp;startową&nbsp;dla&nbsp;naszego&nbsp;bohatera</tt></dd></dl>
+
+<dl><dt><a name="App-init"><strong>init</strong></a>(self)</dt><dd><tt>startowa&nbsp;inicjalizacja&nbsp;potrzebnych&nbsp;zmiennych</tt></dd></dl>
+
+<dl><dt><a name="App-load_images"><strong>load_images</strong></a>(self)</dt><dd><tt>wczytuje&nbsp;sprity</tt></dd></dl>
+
+<dl><dt><a name="App-player_action"><strong>player_action</strong></a>(self)</dt><dd><tt>Sprawdza&nbsp;ostatnią&nbsp;akcję&nbsp;gracza<br>
+w&nbsp;zależności&nbsp;od&nbsp;tego&nbsp;czy&nbsp;nachodzimy<br>
+atakuje&nbsp;lub&nbsp;po&nbsp;prostu&nbsp;się&nbsp;przemieszcza</tt></dd></dl>
+
+<dl><dt><a name="App-render"><strong>render</strong></a>(self)</dt><dd><tt>odpowiedzialne&nbsp;za&nbsp;wyświetlanie</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-ceil"><strong>ceil</strong></a>(...)</dt><dd><tt><a href="#-ceil">ceil</a>(x)<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;ceiling&nbsp;of&nbsp;x&nbsp;as&nbsp;a&nbsp;float.<br>
+This&nbsp;is&nbsp;the&nbsp;smallest&nbsp;integral&nbsp;value&nbsp;&gt;=&nbsp;x.</tt></dd></dl>
+ <dl><dt><a name="-floor"><strong>floor</strong></a>(...)</dt><dd><tt><a href="#-floor">floor</a>(x)<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;floor&nbsp;of&nbsp;x&nbsp;as&nbsp;a&nbsp;float.<br>
+This&nbsp;is&nbsp;the&nbsp;largest&nbsp;integral&nbsp;value&nbsp;&lt;=&nbsp;x.</tt></dd></dl>
+ <dl><dt><a name="-sqrt"><strong>sqrt</strong></a>(...)</dt><dd><tt><a href="#-sqrt">sqrt</a>(x)<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;square&nbsp;root&nbsp;of&nbsp;x.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>HORIZON</strong> = 4<br>
+<strong>MUSIC</strong> = &lt;src.music.Music object&gt;<br>
+<strong>__warningregistry__</strong> = {("Not importing directory './src/music': missing __init__.py", &lt;type 'exceptions.ImportWarning'&gt;, 15): True}</td></tr></table>
+</body></html>
