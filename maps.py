@@ -27,12 +27,12 @@ class Map(object):
             z których tworzymy przejścia
         """
 
-        parts_used = [(rooms_number/2, rooms_number/2)] #wszystkie użyte części
+        parts_used = [(rooms_number/2, rooms_number/2)]  # wszystkie użyte części
         self._rooms = [Room((rooms_number/2, rooms_number/2))]
         possible = []
         next_room = 1
 
-         # możliwe stają się przyległe pola
+        # możliwe stają się przyległe pola
         if rooms_number != 1:
             possible.append((rooms_number/2-1, rooms_number/2))
             possible.append((rooms_number/2, rooms_number/2-1))
@@ -48,7 +48,7 @@ class Map(object):
 
                 if random() > 0.60:#join or new
                     for room in self._rooms:
-                        if any(i in room.get_parts() for i in close_parts):
+                        if any(i in room.parts for i in close_parts):
                             room.append(new)
                             break
 
@@ -84,25 +84,27 @@ class Map(object):
                 max_y = part[1]
 
         # każde pole jest listą trzyelementową: [typ_pola, przedmioty, postać]
-        self.board = [[['_', None, None]
-            for _ in xrange(room_size[1]*min_y, room_size[1]*(max_y+1)+1)]
-            for _ in xrange(room_size[0]*min_x, room_size[0]*(max_x+1)+1)]
+        self.board = [
+            [['_', None, None]
+             for _ in xrange(room_size[1]*min_y, room_size[1]*(max_y+1)+1)]
+            for _ in xrange(room_size[0]*min_x, room_size[0]*(max_x+1)+1)
+        ]
 
         for index in xrange(len(self._rooms)):
-            for part in self._rooms[index].get_parts():
+            for part in self._rooms[index].parts:
                 for x in xrange(room_size[0]):
                     for y in xrange(room_size[1]):
                         temp_x = (part[0]-min_x)*room_size[0]+x
                         temp_y = (part[1]-min_y)*room_size[1]+y
                         #sprawdzamy czy na krawędzi = sciana
                         if (x == 0 and ((part[0]-1, part[1])
-                                not in self._rooms[index].get_parts()))\
+                                not in self._rooms[index].parts))\
                             or (x == room_size[0]-1 and ((part[0]+1, part[1])\
-                                not in self._rooms[index].get_parts()))\
+                                not in self._rooms[index].parts))\
                             or (y == 0 and ((part[0], part[1]-1)\
-                                not in self._rooms[index].get_parts()))\
+                                not in self._rooms[index].parts))\
                             or (y == room_size[1]-1 and ((part[0], part[1]+1)\
-                                not in self._rooms[index].get_parts())):
+                                not in self._rooms[index].parts)):
                             self.board[temp_x][temp_y][0] = 'w'
 
                         else:
@@ -115,60 +117,60 @@ class Map(object):
                             elif random() > 0.995:
                                 self.board[temp_x][temp_y][2] = "rf"
 
-        self.size = (max_x+1-min_x)*room_size[0], (max_y+1-min_y)*room_size[1]
+        self._size = (max_x+1-min_x)*room_size[0], (max_y+1-min_y)*room_size[1]
 
         # drogi
         ways = []
 
         for room in self._rooms:
-            chosen_part = choice(room.get_parts())
+            chosen_part = choice(room.parts)
 
-            if (chosen_part[0]-1, chosen_part[1]) not in room.get_parts()\
+            if (chosen_part[0]-1, chosen_part[1]) not in room.parts\
                     and (chosen_part[0]-1, chosen_part[1]) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0]-1, chosen_part[1]))
                 ways.append((chosen_part, (chosen_part[0]-1, chosen_part[1])))
 
-            if (chosen_part[0]+1, chosen_part[1]) not in room.get_parts()\
+            if (chosen_part[0]+1, chosen_part[1]) not in room.parts\
                     and (chosen_part[0]+1, chosen_part[1]) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0]+1, chosen_part[1]))
                 ways.append((chosen_part, (chosen_part[0]+1, chosen_part[1])))
 
-            if (chosen_part[0], chosen_part[1]-1) not in room.get_parts()\
+            if (chosen_part[0], chosen_part[1]-1) not in room.parts\
                     and (chosen_part[0], chosen_part[1]-1) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0], chosen_part[1]-1))
                 ways.append((chosen_part, (chosen_part[0], chosen_part[1]-1)))
 
-            if (chosen_part[0], chosen_part[1]+1) not in room.get_parts()\
+            if (chosen_part[0], chosen_part[1]+1) not in room.parts\
                     and (chosen_part[0], chosen_part[1]+1) in parts_used:
                 room.make_way(chosen_part, (chosen_part[0], chosen_part[1]+1))
                 ways.append((chosen_part, (chosen_part[0], chosen_part[1]+1)))
 
-            if len(room.get_parts()) > 1:
+            if len(room.parts) > 1:
 
-                chosen_part = choice(room.get_parts())
+                chosen_part = choice(room.parts)
 
-                if (chosen_part[0]-1, chosen_part[1]) not in room.get_parts()\
+                if (chosen_part[0]-1, chosen_part[1]) not in room.parts\
                         and (chosen_part[0]-1, chosen_part[1]) in parts_used:
                     room.make_way(chosen_part,
                                   (chosen_part[0]-1, chosen_part[1]))
                     ways.append((chosen_part,
                                  (chosen_part[0]-1, chosen_part[1])))
 
-                if (chosen_part[0]+1, chosen_part[1]) not in room.get_parts()\
+                if (chosen_part[0]+1, chosen_part[1]) not in room.parts\
                         and (chosen_part[0]+1, chosen_part[1]) in parts_used:
                     room.make_way(chosen_part,
                                   (chosen_part[0]+1, chosen_part[1]))
                     ways.append((chosen_part,
                                  (chosen_part[0]+1, chosen_part[1])))
 
-                if (chosen_part[0], chosen_part[1]-1) not in room.get_parts()\
+                if (chosen_part[0], chosen_part[1]-1) not in room.parts\
                         and (chosen_part[0], chosen_part[1]-1) in parts_used:
                     room.make_way(chosen_part,
                                   (chosen_part[0], chosen_part[1]-1))
                     ways.append((chosen_part,
                                  (chosen_part[0], chosen_part[1]-1)))
 
-                if (chosen_part[0], chosen_part[1]+1) not in room.get_parts()\
+                if (chosen_part[0], chosen_part[1]+1) not in room.parts\
                         and (chosen_part[0], chosen_part[1]+1) in parts_used:
                     room.make_way(chosen_part,
                                   (chosen_part[0], chosen_part[1]+1))
@@ -223,14 +225,16 @@ class Map(object):
     def __getitem__(self, pos):
         x, y = pos
         return self.board[x][y]
-
-    def get_size(self):
+    
+    @property
+    def size(self):
         """zwraca rozmiar mapy - parę"""
-        return self.size
-
-    def get_rooms(self):
+        return self._size
+    
+    @property
+    def rooms(self):
         """zwraca listę pokoi"""
-        return self.size
+        return self._size
 
 
 class Room(object):
@@ -240,11 +244,13 @@ class Room(object):
         self._parts = [first_part]
         self._ways = []
 
-    def get_parts(self):
+    @property
+    def parts(self):
         """zwraca listę części"""
         return self._parts
 
-    def get_ways(self):
+    @property
+    def ways(self):
         """zwraca listę ścieżek"""
         return self._ways
 

@@ -20,9 +20,9 @@ class Character(object):
         self._hp = hp
         self._position = (x, y)
 
-    def attack(self, opponent):
+    def do_attack(self, opponent):
         """Atak - "Rzut" przeciwko stosunkowi ataku do obrony przeciwnika"""
-        if (self._attack/opponent.get_defense())*0.5 > random():
+        if (self._attack/opponent.defense)*0.5 > random():
             opponent.hurt(self._damage)
         return opponent.is_dead()
 
@@ -45,7 +45,8 @@ class Character(object):
         i zwraca true jeśli zginęła, false w przeciwnym wypadku"""
         return self._hp <= 0
 
-    def get_hp(self):
+    @property
+    def hp(self):
         """zwraca hp postaci"""
         return self._hp
 
@@ -53,11 +54,13 @@ class Character(object):
         """dodaje hp postaci"""
         self._hp = min(self._hp+how_much, self._max_hp)
 
-    def get_attack(self):
+    @property
+    def attack(self):
         """zwraca atak postaci"""
         return self._attack
 
-    def get_defense(self):
+    @property
+    def defense(self):
         """zwraca obrone postaci"""
         return self._defense
 
@@ -65,7 +68,8 @@ class Character(object):
         """zmienia obrażenia postaci"""
         self._damage = damage
 
-    def get_armor(self):
+    @property
+    def armor(self):
         """zwraca pancerz postaci"""
         return self._armor
 
@@ -73,15 +77,26 @@ class Character(object):
         """zmienia pancerz postaci"""
         self._armor = armor
 
-    def get_x(self):
+    @property
+    def x(self):
         """zwraca współrzędną x położenia postaci na mapie"""
         return self._position[0]
 
-    def get_y(self):
+    def change_x(self, change):
+        """zmienia tylko współrzędną x położenia postaci na mapie"""
+        self._position = (self._position[0] + change, self._position[1])
+
+    @property
+    def y(self):
         """zwraca współrzędną y położenia postaci na mapie"""
         return self._position[1]
 
-    def get_position(self):
+    def change_y(self, change):
+        """zmienia tylko współrzędną y położenia postaci na mapie"""
+        self._position = (self._position[0], self._position[1] + change)
+
+    @property
+    def position(self):
         """zwraca położenie postaci na mapie"""
         return self._position
 
@@ -89,13 +104,6 @@ class Character(object):
         """zmienia współrzędne postaci na mapie na podane jako argument"""
         self._position = position
 
-    def change_x(self, change):
-        """zmienia tylko współrzędną x położenia postaci na mapie"""
-        self._position = (self._position[0] + change, self._position[1])
-
-    def change_y(self, change):
-        """zmienia tylko współrzędną y położenia postaci na mapie"""
-        self._position = (self._position[0], self._position[1] + change)
 
 EXP_CAP = 1000
 
@@ -113,8 +121,8 @@ class Hero(Character):
 
     def set_eq_stats(self):
         """Przekazuje statystyki z ekwipunktu do postaci"""
-        self._damage = self._equipment.get_damage()
-        self._armor = self._equipment.get_armor()
+        self._damage = self._equipment.damage
+        self._armor = self._equipment.armor
 
     def gain_exp(self, how_much):
         """
@@ -145,45 +153,50 @@ class Hero(Character):
 
     def add_strength(self):
         """Dodaje siły w zamian za punkt umiejętności"""
-        if self._skill_points != 0:
+        if self._skill_points > 0:
             self._skill_points -= 1
             self._strength += 3
 
     def add_dexterity(self):
         """Dodaje zręczności w zamian za punkt umiejętności"""
-        if self._skill_points != 0:
+        if self._skill_points > 0:
             self._skill_points -= 1
             self._dexterity += 3
 
     def add_attack(self):
         """Dodaje ataku w zamian za punkt umiejętności"""
-        if self._skill_points != 0:
+        if self._skill_points > 0:
             self._skill_points -= 1
             self._attack += 1
 
     def add_defense(self):
         """Dodaje obrony w zamian za punkt umiejętności"""
-        if self._skill_points != 0:
+        if self._skill_points > 0:
             self._skill_points -= 1
             self._defense += 1
 
-    def get_strength(self):
+    @property
+    def strength(self):
         """zwraca siłę postaci"""
         return self._strength
 
-    def get_dexterity(self):
+    @property
+    def dexterity(self):
         """zwraca zręczność postaci"""
         return self._dexterity
 
-    def get_exp(self):
+    @property
+    def exp(self):
         """zwraca doświadczenie postaci"""
         return self._experience
 
-    def get_equip(self):
+    @property
+    def equipment(self):
         """zwraca ekwipunek"""
         return self._equipment
 
-    def get_skill_points(self):
+    @property
+    def skill_points(self):
         """zwraca dostępne do rozdania punkty umiejętności"""
         return self._skill_points
 
@@ -200,7 +213,8 @@ class Enemy(Character):
         return self._attack*(self._damage.base+self._damage.extra) + \
                self._defense*self._armor.gauge*self._armor.durability
 
-    def leave_items(self):
+    @staticmethod
+    def leave_items():
         """
         Zwraca przedmiot wyrzucony przez zabitego przeciwnika
         Jeżeli przeciwniki nic nie zostawia, zwraca None
@@ -210,7 +224,8 @@ class Enemy(Character):
         else:
             return None
 
-    def get_sprite(self):
+    @property
+    def sprite(self):
         """zwraca sprite'a potwora"""
         return self._sprite
 

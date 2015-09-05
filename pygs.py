@@ -86,58 +86,58 @@ class App(object):
             if self._player_turn:
 
                 if event.key == LOC.K_UP or event.key == LOC.K_w:
-                    if self._hero.get_y() > 0\
-                            and self._map[self._hero.get_x(),
-                                          self._hero.get_y()-1][0] != '_'\
-                            and self._map[self._hero.get_x(),
-                                          self._hero.get_y()-1][0] != 'w'\
-                            and self._map[self._hero.get_x(),
-                                          self._hero.get_y()-1][2] != 'bf':
+                    if self._hero.y > 0\
+                            and self._map[self._hero.x,
+                                          self._hero.y-1][0] != '_'\
+                            and self._map[self._hero.x,
+                                          self._hero.y-1][0] != 'w'\
+                            and self._map[self._hero.x,
+                                          self._hero.y-1][2] != 'bf':
                         self._action = 'w'
                         self._player_turn = False
 
                 if event.key == LOC.K_DOWN or event.key == LOC.K_s:
-                    if self._hero.get_y() < self._map.size[1]-1\
-                            and self._map[self._hero.get_x(),
-                                          self._hero.get_y()+1][0] != '_'\
-                            and self._map[self._hero.get_x(),
-                                          self._hero.get_y()+1][0] != 'w'\
-                            and self._map[self._hero.get_x(),
-                                          self._hero.get_y()+1][2] != 'bf':
+                    if self._hero.y < self._map.size[1]-1\
+                            and self._map[self._hero.x,
+                                          self._hero.y+1][0] != '_'\
+                            and self._map[self._hero.x,
+                                          self._hero.y+1][0] != 'w'\
+                            and self._map[self._hero.x,
+                                          self._hero.y+1][2] != 'bf':
                         self._action = 's'
                         self._player_turn = False
 
                 if event.key == LOC.K_LEFT or event.key == LOC.K_a:
-                    if self._hero.get_x() > 0\
-                            and self._map[self._hero.get_x()-1,
-                                          self._hero.get_y()][0] != '_'\
-                            and self._map[self._hero.get_x()-1,
-                                          self._hero.get_y()][0] != 'w'\
-                            and self._map[self._hero.get_x()-1,
-                                          self._hero.get_y()][2] != 'bf':
+                    if self._hero.x > 0\
+                            and self._map[self._hero.x-1,
+                                          self._hero.y][0] != '_'\
+                            and self._map[self._hero.x-1,
+                                          self._hero.y][0] != 'w'\
+                            and self._map[self._hero.x-1,
+                                          self._hero.y][2] != 'bf':
                         self._action = 'a'
                         self._player_turn = False
 
                 if event.key == LOC.K_RIGHT or event.key == LOC.K_d:
-                    if self._hero.get_x() < self._map.size[0]-1\
-                            and self._map[self._hero.get_x()+1,
-                                          self._hero.get_y()][0] != '_'\
-                            and self._map[self._hero.get_x()+1,
-                                          self._hero.get_y()][0] != 'w'\
-                            and self._map[self._hero.get_x()+1,
-                                          self._hero.get_y()][2] != 'bf':
+                    if self._hero.x < self._map.size[0]-1\
+                            and self._map[self._hero.x+1,
+                                          self._hero.y][0] != '_'\
+                            and self._map[self._hero.x+1,
+                                          self._hero.y][0] != 'w'\
+                            and self._map[self._hero.x+1,
+                                          self._hero.y][2] != 'bf':
                         self._action = 'd'
                         self._player_turn = False
 
                 #added picking up items
-                if event.key == LOC.K_RCTRL or event.key == LOC.K_e:
-                    if self._map[self._hero.get_position()][1] is not None:
+                if event.key ==  LOC.K_RCTRL or event.key == LOC.K_e:
+                    if self._map[self._hero.position][1] is not None:
                         # pick up - add to backpack
-                        for item in self._map[self._hero.get_position()][1]:
-                            self._hero.get_equip().add_to_backpack(item)
+                        for item in self._map[self._hero.position][1]:
+                            self._hero.equipment.add_to_backpack(item)
                         # delete item from the floor
-                        self._map[self._hero.get_position()][1] = None
-                        print self._hero.get_equip().get_backpack()  # debug
+                        self._map[self._hero.position][1] = None
+                        print self._hero.equipment.backpack  # debug
 
             if event.key == LOC.K_ESCAPE:  #quit
                 self._running = False
@@ -169,8 +169,8 @@ class App(object):
                     else:
                         # swap item with wearing
                         bp_place = square_y*5+square_x
-                        if bp_place < self._hero.get_equip().backpack_len():
-                            self._hero.get_equip().use_item(bp_place)
+                        if bp_place < self._hero.equipment.backpack_len():
+                            self._hero.equipment.use_item(bp_place)
                             self._marked = None
 
                 # mouse on lvl buttons
@@ -192,23 +192,23 @@ class App(object):
     def render(self):
         """odpowiedzialne za wyświetlanie"""
 
-        if self._hero.get_x() < 9:
+        if self._hero.x < 9:
             x_o = 0
 
-        elif self._hero.get_x() > self._map.size[0]-9-1:
+        elif self._hero.x > self._map.size[0]-9-1:
             x_o = self._map.size[0] - 19
 
         else:
-            x_o = self._hero.get_x() - 9
+            x_o = self._hero.x - 9
 
-        if self._hero.get_y() < 9:
+        if self._hero.y < 9:
             y_o = 0
 
-        elif self._hero.get_y() > self._map.size[1]-9-1:
+        elif self._hero.y > self._map.size[1]-9-1:
             y_o = self._map.size[1] - 19
 
         else:
-            y_o = self._hero.get_y() - 9
+            y_o = self._hero.y - 9
 
         floor_list = [self._image_library["texture18.png"],
                       self._image_library["texture16.png"],
@@ -238,12 +238,12 @@ class App(object):
 
                     for item in pos[1]:
                         self._surface.blit(
-                            self._image_library[item.get_sprite()],
+                            self._image_library[item.sprite],
                             (x * 32, y * 32)
                         )
 
                 # hero
-                if (x_o+x, y_o+y) == self._hero.get_position():
+                if (x_o+x, y_o+y) == self._hero.position:
                     self._surface.blit(self._image_library["hero.png"],
                                             (x * 32, y * 32))
 
@@ -255,7 +255,7 @@ class App(object):
                     self._surface.blit(self._image_library["bluefountain.png"],
                                             (x * 32, y * 32))
                 elif pos[2] is not None:
-                    self._surface.blit(self._image_library[pos[2].get_sprite()],
+                    self._surface.blit(self._image_library[pos[2].sprite],
                                             (x * 32, y * 32))
 
                 # vision
@@ -296,23 +296,23 @@ class App(object):
         Auxil.write(self._surface, "Exp", 14, 615, 240+125)
 
         #,240 + 15*i)
-        Auxil.write(self._surface, str(floor(self._hero.get_hp())),
+        Auxil.write(self._surface, str(floor(self._hero.hp)),
                                                                 14, 690, 275)
-        Auxil.write(self._surface, str(self._hero.get_attack()), 14, 690, 290)
-        Auxil.write(self._surface, str(self._hero.get_defense()), 14, 690, 305)
-        Auxil.write(self._surface, str(self._hero.get_strength()), 14, 690, 320)
-        Auxil.write(self._surface, str(self._hero.get_dexterity()),
+        Auxil.write(self._surface, str(self._hero.attack), 14, 690, 290)
+        Auxil.write(self._surface, str(self._hero.defense), 14, 690, 305)
+        Auxil.write(self._surface, str(self._hero.strength), 14, 690, 320)
+        Auxil.write(self._surface, str(self._hero.dexterity),
                                                                 14, 690, 335)
-        Auxil.write(self._surface, str(self._hero.get_armor().durability),
+        Auxil.write(self._surface, str(self._hero.armor.durability),
                                                                 14, 690, 350)
-        Auxil.write(self._surface, str(self._hero.get_exp()), 14, 690, 365)
+        Auxil.write(self._surface, str(self._hero.exp), 14, 690, 365)
 
         Auxil.write(self._surface, "Requirements:", 14, 615, 395)
         Auxil.write(self._surface, "Strength", 14, 615, 410)
         Auxil.write(self._surface, "Dexterity", 14, 615, 425)
         if self._marked is not None:
             mark = self._marked[0] + self._marked[0]*5
-            back = self._hero.get_equip().get_backpack()
+            back = self._hero.equipment.backpack
             if mark < len(back):
                 Auxil.write(self._surface, str(back[mark]._requirements[0]),
                             14, 690, 410)
@@ -320,29 +320,29 @@ class App(object):
                             14, 690, 425)
 
         z = 4
-        eq = self._hero.get_equip()
-        if eq.get_weapon() is not None:
+        eq = self._hero.equipment
+        if eq.weapon is not None:
             self._surface.blit(
-                self._image_library[eq.get_weapon().get_sprite()],
+                self._image_library[eq.weapon.sprite],
                 (612+z, 22+z)
             )
-        if eq.get_suit() is not None:
+        if eq.suit is not None:
             self._surface.blit(
-                self._image_library[eq.get_suit().get_sprite()],
+                self._image_library[eq.suit.sprite],
                 (612+z+40, 22+z)
             )
 
         # backpack
         i = 0
-        for item in eq.get_backpack():
+        for item in eq.backpack:
             self._surface.blit(
-                self._image_library[item.get_sprite()],
+                self._image_library[item.sprite],
                 (612 + z + (i % 5)*40, 102 + z + (i/5)*40)
             )
             i += 1
 
         # buttons
-        if self._hero.get_skill_points() != 0:
+        if self._hero.skill_points > 0:
             for but in xrange(5):
                 self._surface.blit(
                     self._image_library["button.png"],
@@ -353,7 +353,7 @@ class App(object):
 
     def check_view(self, x, y):
         """sprawdza zasieg wzroku"""
-        view = ceil(sqrt((self._hero.get_x()-x)**2 + (self._hero.get_y()-y)**2))
+        view = ceil(sqrt((self._hero.x-x)**2 + (self._hero.y-y)**2))
         return view <= HORIZON
 
     def load_images(self):
@@ -377,7 +377,7 @@ class App(object):
 
         if self._action == 'w':
 
-            action_pos = self._map[self._hero.get_x(), self._hero.get_y()-1]
+            action_pos = self._map[self._hero.x, self._hero.y-1]
             # brak wroga
             if action_pos[2] is None:
                 self._hero.change_y(-1)
@@ -390,7 +390,7 @@ class App(object):
             else:
                 print "gracz atakuje"
                 Auxil.write(self._surface, "gracz atakuje", 14, 615, 600)
-                result = self._hero.attack(action_pos[2])
+                result = self._hero.do_attack(action_pos[2])
 
                 if result:
                     self._hero.gain_exp(action_pos[2].give_exp())
@@ -407,7 +407,7 @@ class App(object):
 
         if self._action == 's':
 
-            action_pos = self._map[self._hero.get_x(), self._hero.get_y()+1]
+            action_pos = self._map[self._hero.x, self._hero.y+1]
             if action_pos[2] is None:
                 self._hero.change_y(1)
 
@@ -418,7 +418,7 @@ class App(object):
             else:
                 print "gracz atakuje"
                 Auxil.write(self._surface, "gracz atakuje", 14, 615, 600)
-                result = self._hero.attack(action_pos[2])
+                result = self._hero.do_attack(action_pos[2])
 
                 if result:
                     self._hero.gain_exp(action_pos[2].give_exp())
@@ -435,7 +435,7 @@ class App(object):
 
         if self._action == 'a':
 
-            action_pos = self._map[self._hero.get_x()-1, self._hero.get_y()]
+            action_pos = self._map[self._hero.x-1, self._hero.y]
             if action_pos[2] is None:
                 self._hero.change_x(-1)
 
@@ -446,7 +446,7 @@ class App(object):
             else:
                 print "gracz atakuje"
                 Auxil.write(self._surface, "gracz atakuje", 14, 615, 600)
-                result = self._hero.attack(action_pos[2])
+                result = self._hero.do_attack(action_pos[2])
 
                 if result:
                     self._hero.gain_exp(action_pos[2].give_exp())
@@ -462,7 +462,7 @@ class App(object):
 
         if self._action == 'd':
 
-            action_pos = self._map[self._hero.get_x()+1, self._hero.get_y()]
+            action_pos = self._map[self._hero.x+1, self._hero.y]
             if action_pos[2] is None:
                 self._hero.change_x(1)
 
@@ -473,7 +473,7 @@ class App(object):
             else:
                 print "gracz atakuje"
                 Auxil.write(self._surface, "gracz atakuje", 14, 615, 600)
-                result = self._hero.attack(action_pos[2])
+                result = self._hero.do_attack(action_pos[2])
 
                 if result:
                     self._hero.gain_exp(action_pos[2].give_exp())
@@ -498,8 +498,8 @@ class App(object):
         enemy_list = []
 
         # szukamy przeciwników w zasięgu wzroku
-        hero_x = self._hero.get_x()
-        hero_y = self._hero.get_y()
+        hero_x = self._hero.x
+        hero_y = self._hero.y
         for i in xrange(-HORIZON, HORIZON):
             for j in xrange(-HORIZON, HORIZON):
                 if not (not (hero_x + i >= 0)
@@ -522,7 +522,7 @@ class App(object):
         # ruszamy enemy
         for enemy in enemy_list:
 
-            x_enemy, y_enemy = enemy.get_position()
+            x_enemy, y_enemy = enemy.position
 
             x_distance = hero_x - x_enemy
             y_distance = hero_y - y_enemy
@@ -530,8 +530,8 @@ class App(object):
             is_moved = False
 
             # sprawdzamy czy można zaatakować i ewentualnie atakujemy:
-            x_distance = hero_x - enemy.get_x()
-            y_distance = hero_y - enemy.get_y()
+            x_distance = hero_x - enemy.x
+            y_distance = hero_y - enemy.y
 
             if abs(x_distance) == 1 and y_distance == 0 \
                     or x_distance == 0 and abs(y_distance) == 1:
@@ -540,7 +540,7 @@ class App(object):
 
                 is_moved = True
 
-                self._lost = enemy.attack(self._hero)
+                self._lost = enemy.do_attack(self._hero)
 
 
             if not is_moved:
@@ -592,7 +592,7 @@ class App(object):
     def get_start_position(self):
         """Zwraca prawidłową, losową pozycję startową dla naszego bohatera"""
 
-        map_size = self._map.get_size()
+        map_size = self._map.size
         x = randint(0, map_size[0]-1)
         y = randint(0, map_size[1]-1)
 

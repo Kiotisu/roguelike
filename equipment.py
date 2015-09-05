@@ -16,10 +16,11 @@ class Item(object):
 
     def can_be_used(self, by_who):
         """Sprawdza czy spełnione są wymagania użycia przedmiotu"""
-        return self._requirements[0] <= by_who.get_strength() \
-               and self._requirements[1] <= by_who.get_dexterity()
+        return (self._requirements[0] <= by_who.strength
+                and self._requirements[1] <= by_who.dexterity)
 
-    def get_sprite(self):
+    @property
+    def sprite(self):
         """zwraca nazwę sprite'a"""
         return self._sprite
 
@@ -44,7 +45,8 @@ class Weapon(Item):
         super(Weapon, self).__init__(name, use_requirements, sprite)
         self._damage = damage_type  # namedtuple z characters
 
-    def get_damage(self):
+    @property
+    def damage(self):
         """zwraca obrażenia"""
         return self._damage
 
@@ -56,7 +58,8 @@ class Suit(Item):
         super(Suit, self).__init__(name, use_requirements, sprite)
         self._armor = armor_type  # jak damage
 
-    def get_armor(self):
+    @property
+    def armor(self):
         """zwraca pancerz"""
         return self._armor
 
@@ -119,14 +122,6 @@ class Equipment(object):
         print "after"
         print self._backpack
 
-    def get_weapon(self):
-        """zwraca broń"""
-        return self._weapon
-
-    def get_suit(self):
-        """zwraca zbroję(?)"""
-        return self._suit
-
     def backpack_len(self):
         """zwraca zapełnienie plecaka"""
         return len(self._backpack)
@@ -136,6 +131,17 @@ class Equipment(object):
         if len(self._backpack) < 20:
             self._backpack.append(what)
 
-    def get_backpack(self):
+    @property
+    def backpack(self):
         """zwraca plecak"""
         return self._backpack
+
+    @property
+    def weapon(self):
+        """zwraca broń"""
+        return self._weapon
+
+    @property
+    def suit(self):
+        """zwraca zbroję(?)"""
+        return self._suit

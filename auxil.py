@@ -20,6 +20,7 @@ Armor = namedtuple('Armor', 'gauge durability')
 #kaliber(gauge) = liczba z zakresu <0.0 , 1.0>
 #wytrzymałość(durability) = liczba całkowita
 
+
 class Auxil(object):
     """ auxiliary class """
 
